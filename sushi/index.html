@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запечённые роллы в аэрогриле</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ffe66d;
+            --background-color: #f7fff7;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(78, 205, 196, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(255, 230, 109, 0.05) 0%, transparent 35%);
+            animation: backgroundMove 20s infinite alternate ease-in-out;
+        }
+        
+        @keyframes backgroundMove {
+            0% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+            100% { background-position: 100% 100%, 0% 0%, 30% 70%; }
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-color), #ff8e8e);
+            border-radius: 20px;
+            color: white;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            animation: headerSlide 1s ease-out;
+        }
+        
+        @keyframes headerSlide {
+            0% { transform: translateY(-30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: floatBackground 30s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes floatBackground {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-40px, -40px) rotate(360deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: textGlow 3s infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); }
+            100% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.2); }
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .controls-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin: 20px 0;
+            animation: fadeInUp 0.8s 0.2s both;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .control-group {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            min-width: 250px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .control-group:hover {
+            transform: translateY(-5px);
+        }
+        
+        .control-group h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-color);
+        }
+        
+        .control-group h3 i {
+            font-size: 1.2rem;
+        }
+        
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 12px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+            border: 3px solid white;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 230, 109, 0.8);
+        }
+        
+        .slider-value-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: background 0.3s;
+        }
+        
+        .option-row:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .option-row input[type="radio"], 
+        .option-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--secondary-color);
+        }
+        
+        .option-label {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .option-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .option-price {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .cost-summary {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            min-width: 250px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s 0.4s both;
+        }
+        
+        .cost-summary h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cost-breakdown {
+            margin-bottom: 15px;
+        }
+        
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .cost-row.total {
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+        
+        .cost-amount {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            gap: 15px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s 0.6s both;
+        }
+        
+        .timer-item {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 160px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timer-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.7s;
+        }
+        
+        .timer-item:hover::before {
+            left: 100%;
+        }
+        
+        .timer-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+        
+        .timer-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.4s, box-shadow 0.4s;
+            animation: cardAppear 0.8s ease-out;
+            animation-fill-mode: both;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.4s; }
+        
+        @keyframes cardAppear {
+            0% { transform: translateY(30px) rotateX(10deg); opacity: 0; }
+            100% { transform: translateY(0) rotateX(0); opacity: 1; }
+        }
+        
+        .card:hover {
+            transform: translateY(-10px) rotateX(2deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .card h2 i {
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .card h2::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), transparent);
+        }
+        
+        .ingredients-list, .steps-list {
+            list-style-type: none;
+        }
+        
+        .ingredients-list li, .steps-list li {
+            padding: 14px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .ingredients-list li:hover, .steps-list li:hover {
+            background-color: rgba(78, 205, 196, 0.05);
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+            transform: translateX(5px);
+        }
+        
+        .ingredients-list li:last-child, .steps-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .ingredient-checkbox {
+            margin-right: 15px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: var(--secondary-color);
+            transition: transform 0.2s;
+        }
+        
+        .ingredient-checkbox:hover {
+            transform: scale(1.2);
+        }
+        
+        .ingredient-amount {
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 100px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .ingredient-name {
+            flex-grow: 1;
+        }
+        
+        .ingredient-price {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            opacity: 0.8;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .steps-list li:hover .step-number {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .ingredient-in-step {
+            background-color: rgba(255, 107, 107, 0.1);
+            border-left: 3px solid var(--primary-color);
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        .ingredient-in-step strong {
+            color: var(--primary-color);
+        }
+        
+        .step-timer {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            color: var(--secondary-color);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            gap: 5px;
+            background-color: rgba(78, 205, 196, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+        
+        .step-timer:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+        
+        .timer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        
+        .timer-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .timer-modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            transition: transform 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timer-modal.active .timer-modal-content {
+            transform: scale(1);
+        }
+        
+        .timer-modal-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .timer-display {
+            font-size: 4.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-progress {
+            width: 100%;
+            height: 12px;
+            background-color: #eee;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 25px 0;
+        }
+        
+        .timer-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            width: 100%;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 1s linear;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .timer-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        
+        .timer-btn.start {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .timer-btn.pause {
+            background-color: var(--accent-color);
+            color: #333;
+        }
+        
+        .timer-btn.reset {
+            background-color: #ddd;
+            color: #333;
+        }
+        
+        .timer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .close-timer {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-timer:hover {
+            color: var(--primary-color);
+            background-color: #f5f5f5;
+        }
+        
+        .note {
+            background-color: rgba(255, 230, 109, 0.15);
+            border-left: 5px solid var(--accent-color);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 10px 10px 0;
+            animation: pulseGlow 4s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 230, 109, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 230, 109, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 230, 109, 0); }
+        }
+        
+        .aerogrill-img {
+            width: 100%;
+            height: 240px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px 0;
+            background-image: url('https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .aerogrill-img::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.4), rgba(78, 205, 196, 0.4));
+            border-radius: 15px;
+        }
+        
+        .aerogrill-img span {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 1;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .ingredient-category {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            position: relative;
+        }
+        
+        .ingredient-category h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ingredient-category h3 i {
+            margin-right: 10px;
+        }
+        
+        .progress-summary {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: rgba(78, 205, 196, 0.1);
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px dashed rgba(78, 205, 196, 0.3);
+        }
+        
+        .progress-text {
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .progress-count {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        .progress-bar-container {
+            width: 60%;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            width: 0%;
+            transition: width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .reset-btn {
+            display: block;
+            margin: 25px auto 0;
+            padding: 14px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .reset-btn:hover {
+            background-color: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .roll-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .roll-type {
+            background-color: var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .roll-type::before {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s;
+        }
+        
+        .roll-type:hover::before {
+            top: 100%;
+            left: 100%;
+        }
+        
+        .roll-type:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(255, 230, 109, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .print-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 16px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px auto;
+        }
+        
+        .print-btn:hover {
+            background-color: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+            transform: scale(0.98);
+        }
+        
+        .completed .ingredient-amount, .completed .ingredient-price {
+            color: #999;
+        }
+        
+        .pulse {
+            animation: pulseEffect 0.5s;
+        }
+        
+        @keyframes pulseEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: floatParticle 15s infinite linear;
+        }
+        
+        @keyframes floatParticle {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(100px, 100vh) rotate(360deg); }
+        }
+        
+        .ingredient-highlight {
+            background-color: rgba(255, 107, 107, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border-left: 2px solid var(--primary-color);
+            margin: 0 3px;
+            font-weight: 600;
+        }
+        
+        .ingredient-dynamic {
+            background-color: rgba(78, 205, 196, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border-left: 2px solid var(--secondary-color);
+            margin: 0 3px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Плавающие частицы на фоне -->
+    <div class="floating-particles" id="particles-container"></div>
+    
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-fish"></i> Запечённые роллы в аэрогриле</h1>
+            <p class="subtitle">Настройте рецепт под свои предпочтения и рассчитайте стоимость</p>
+            
+            <div class="controls-panel">
+                <div class="control-group">
+                    <h3><i class="fas fa-sliders-h"></i> Количество</h3>
+                    <div class="slider-container">
+                        <div class="slider-labels">
+                            <span>4 кусочка</span>
+                            <span>48 кусочков</span>
+                        </div>
+                        <input type="range" id="portion-slider" min="4" max="48" value="16" step="4">
+                        <div class="slider-value-display" id="portion-value">16</div>
+                        <div id="rolls-count">(4 ролла по 4 кусочка)</div>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <h3><i class="fas fa-cogs"></i> Настройки рецепта</h3>
+                    <div class="options-container">
+                        <div class="option-row">
+                            <input type="radio" id="filling-fish" name="filling" value="fish" checked>
+                            <div class="option-label">
+                                <span class="option-name">С рыбой (лосось/тунец)</span>
+                                <span class="option-price">~300 руб/200г</span>
+                            </div>
+                        </div>
+                        
+                        <div class="option-row">
+                            <input type="radio" id="filling-crab" name="filling" value="crab">
+                            <div class="option-label">
+                                <span class="option-name">С крабовыми палочками</span>
+                                <span class="option-price">~150 руб/200г</span>
+                            </div>
+                        </div>
+                        
+                        <div class="option-row">
+                            <input type="checkbox" id="tempura-option">
+                            <div class="option-label">
+                                <span class="option-name">С панировкой темпура</span>
+                                <span class="option-price">+80 руб</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cost-summary">
+                    <h3><i class="fas fa-calculator"></i> Стоимость продуктов</h3>
+                    <div class="cost-breakdown">
+                        <div class="cost-row">
+                            <span>Основные ингредиенты:</span>
+                            <span class="cost-amount" id="cost-main">0 руб</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Начинка:</span>
+                            <span class="cost-amount" id="cost-filling">0 руб</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Дополнительно:</span>
+                            <span class="cost-amount" id="cost-extra">0 руб</span>
+                        </div>
+                        <div class="cost-row total">
+                            <span>Итого:</span>
+                            <span class="cost-amount" id="cost-total">0 руб</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.85rem; opacity: 0.8; margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> Цены примерные, могут меняться
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timer-container">
+                <div class="timer-item">
+                    <div class="timer-value">200°C</div>
+                    <div class="timer-label">Температура аэрогриля</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-value" id="total-time">45-55 мин</div>
+                    <div class="timer-label">Общее время</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-value" id="cost-per-piece">~0 руб</div>
+                    <div class="timer-label">Цена за кусочек</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-shopping-cart"></i> Список покупок</h2>
+            
+            <div class="progress-summary">
+                <div class="progress-text">
+                    <span>Куплено:</span>
+                    <span class="progress-count" id="bought-count">0</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div style="font-size: 0.85rem; text-align: center;">
+                        <span id="progress-percent">0%</span> готово
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ingredient-category">
+                <h3><i class="fas fa-drumstick-bite"></i> Основные ингредиенты</h3>
+                <ul class="ingredients-list" id="main-ingredients">
+                    <!-- Будет заполнено JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="ingredient-category">
+                <h3><i class="fas fa-mortar-pestle"></i> Для соуса и заправки</h3>
+                <ul class="ingredients-list" id="sauce-ingredients">
+                    <!-- Будет заполнено JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="ingredient-category" id="tempura-category" style="display: none;">
+                <h3><i class="fas fa-bread-slice"></i> Для темпуры</h3>
+                <ul class="ingredients-list" id="tempura-ingredients">
+                    <!-- Будет заполнено JavaScript -->
+                </ul>
+            </div>
+            
+            <button class="reset-btn" id="reset-list"><i class="fas fa-redo"></i> Сбросить список покупок</button>
+            
+            <div class="note">
+                <p><i class="fas fa-lightbulb"></i> <strong>Совет:</strong> Для идеальных роллов используйте специальный рис для суши. Если нет рисового уксуса, смешайте 3 ст.л. обычного уксуса с 1 ст.л. сахара и ½ ч.л. соли.</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2><i class="fas fa-utensils"></i> Пошаговая инструкция</h2>
+            
+            <div class="roll-types">
+                <div class="roll-type"><i class="fas fa-fire"></i> Запечённые роллы</div>
+                <div class="roll-type" id="filling-type"><i class="fas fa-fish"></i> С рыбой</div>
+                <div class="roll-type" id="tempura-badge" style="display: none;"><i class="fas fa-bread-slice"></i> В темпуре</div>
+            </div>
+            
+            <ul class="steps-list" id="steps-list">
+                <!-- Будет заполнено JavaScript -->
+            </ul>
+            
+            <div class="aerogrill-img">
+                <span>Аэрогриль 200°C | 8-12 минут</span>
+            </div>
+            
+            <div class="note">
+                <p><i class="fas fa-clock"></i> <strong>Таймеры:</strong> Нажмите на значок таймера <i class="fas fa-hourglass-half"></i> рядом с шагом, чтобы запустить таймер для этого этапа приготовления.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно таймера -->
+    <div class="timer-modal" id="timer-modal">
+        <div class="timer-modal-content">
+            <button class="close-timer" id="close-timer">&times;</button>
+            <h2 id="timer-title">Таймер приготовления</h2>
+            <div class="timer-display" id="timer-display">00:00</div>
+            <div class="timer-progress">
+                <div class="timer-progress-bar" id="timer-progress-bar"></div>
+            </div>
+            <div class="timer-controls">
+                <button class="timer-btn start" id="start-timer"><i class="fas fa-play"></i> Старт</button>
+                <button class="timer-btn pause" id="pause-timer"><i class="fas fa-pause"></i> Пауза</button>
+                <button class="timer-btn reset" id="reset-timer"><i class="fas fa-stop"></i> Сброс</button>
+            </div>
+            <div style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+                Таймер будет пищать по окончании времени
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Рецепт специально для приготовления в аэрогриле при температуре 200°C</p>
+        <p>Приятного аппетита! <i class="fas fa-utensil-spoon"></i></p>
+        <button class="print-btn" onclick="window.print();"><i class="fas fa-print"></i> Распечатать рецепт</button>
+    </footer>
+
+    <script>
+        // БАЗОВЫЕ ПРОПОРЦИИ (на 4 ролла = 16 кусочков)
+        const baseProportions = {
+            // На 16 кусочков (4 ролла)
+            rice: 200, // г риса
+            water: 250, // мл воды для риса
+            nori: 4, // листа нори
+            fish: 200, // г рыбы
+            crab: 200, // г крабовых палочек
+            cheese: 150, // г сыра
+            cucumber: 1, // шт огурца
+            avocado: 1, // шт авокадо
+            // Для соуса
+            mayo: 100, // г майонеза
+            soySauce: 40, // мл соевого соуса (2 ст.л.)
+            sesameOil: 5, // мл кунжутного масла (1 ч.л.)
+            garlic: 1, // зубчик чеснока
+            caviar: 50, // г икры (опционально)
+            // Для заправки риса
+            riceVinegar: 50, // мл рисового уксуса
+            sugar: 25, // г сахара (2 ст.л.)
+            salt: 5, // г соли (1 ч.л.)
+            // Для темпуры (на 16 кусочков)
+            flour: 100, // г муки
+            egg: 1, // шт яйца
+            tempuraWater: 100, // мл ледяной воды
+            bakingPowder: 5 // г разрыхлителя (1 ч.л.)
+        };
+
+        // Цены на ингредиенты (руб)
+        const ingredientPrices = {
+            rice: 50, // за 200г
+            nori: 40, // за 4 листа
+            fish: 300, // за 200г
+            crab: 150, // за 200г
+            cheese: 150, // за 150г
+            cucumber: 30, // за 1 шт
+            avocado: 100, // за 1 шт
+            mayo: 20, // за 100г
+            soySauce: 10, // за 40мл
+            sesameOil: 5, // за 5мл
+            garlic: 5, // за 1 зубчик
+            caviar: 150, // за 50г
+            riceVinegar: 30, // за 50мл
+            sugar: 5, // за 25г
+            salt: 1, // за 5г
+            flour: 20, // за 100г
+            egg: 10, // за 1 шт
+            bakingPowder: 5 // за 5г
+        };
+
+        // Переменные состояния
+        let currentPieces = 16; // Базовое количество - 16 кусочков
+        let currentFilling = "fish"; // По умолчанию рыба
+        let useTempura = false;
+        let boughtIngredients = JSON.parse(localStorage.getItem('boughtIngredients')) || {};
+        
+        // Таймер
+        let timerInterval = null;
+        let timerSeconds = 0;
+        let totalTimerSeconds = 0;
+        let isTimerRunning = false;
+        let currentStepIndex = 0;
+
+        // DOM элементы
+        const portionSlider = document.getElementById('portion-slider');
+        const portionValue = document.getElementById('portion-value');
+        const rollsCount = document.getElementById('rolls-count');
+        const totalTime = document.getElementById('total-time');
+        const costPerPiece = document.getElementById('cost-per-piece');
+        
+        const fillingFish = document.getElementById('filling-fish');
+        const fillingCrab = document.getElementById('filling-crab');
+        const tempuraOption = document.getElementById('tempura-option');
+        
+        const costMain = document.getElementById('cost-main');
+        const costFilling = document.getElementById('cost-filling');
+        const costExtra = document.getElementById('cost-extra');
+        const costTotal = document.getElementById('cost-total');
+        
+        const mainIngredientsList = document.getElementById('main-ingredients');
+        const sauceIngredientsList = document.getElementById('sauce-ingredients');
+        const tempuraCategory = document.getElementById('tempura-category');
+        const tempuraIngredientsList = document.getElementById('tempura-ingredients');
+        const stepsList = document.getElementById('steps-list');
+        const boughtCount = document.getElementById('bought-count');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercent = document.getElementById('progress-percent');
+        const resetListBtn = document.getElementById('reset-list');
+        
+        const fillingType = document.getElementById('filling-type');
+        const tempuraBadge = document.getElementById('tempura-badge');
+        
+        // Элементы таймера
+        const timerModal = document.getElementById('timer-modal');
+        const closeTimerBtn = document.getElementById('close-timer');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerTitle = document.getElementById('timer-title');
+        const timerProgressBar = document.getElementById('timer-progress-bar');
+        const startTimerBtn = document.getElementById('start-timer');
+        const pauseTimerBtn = document.getElementById('pause-timer');
+        const resetTimerBtn = document.getElementById('reset-timer');
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            initControls();
+            updateIngredients(); // Обновляем ингредиенты при загрузке
+            renderSteps();
+            updateProgress();
+            updateCost();
+            initTimerModal();
+            createParticles();
+            
+            animateOnLoad();
+        });
+
+        // Инициализация элементов управления
+        function initControls() {
+            // Ползунок количества
+            portionSlider.addEventListener('input', function() {
+                currentPieces = parseInt(this.value);
+                portionValue.textContent = currentPieces;
+                
+                // Обновляем текст с количеством роллов
+                const rolls = Math.ceil(currentPieces / 4);
+                const piecesPerRoll = Math.ceil(currentPieces / rolls);
+                rollsCount.textContent = `(${rolls} ${pluralize(rolls, 'ролл', 'ролла', 'роллов')} по ${piecesPerRoll} ${pluralize(piecesPerRoll, 'кусочек', 'кусочка', 'кусочков')})`;
+                
+                // Обновляем время приготовления
+                const baseTime = 45;
+                const additionalTime = Math.max(0, currentPieces - 16) * 0.7;
+                const minTime = Math.round(baseTime + additionalTime);
+                const maxTime = Math.round(baseTime + additionalTime + 10);
+                totalTime.textContent = `${minTime}-${maxTime} мин`;
+                
+                // Обновляем интерфейс
+                updateIngredients(); // Обновляем список покупок
+                renderSteps();
+                updateCost();
+                
+                // Анимация
+                portionValue.classList.add('pulse');
+                setTimeout(() => portionValue.classList.remove('pulse'), 500);
+            });
+            
+            // Переключатель начинки
+            fillingFish.addEventListener('change', function() {
+                currentFilling = "fish";
+                updateIngredients(); // Обновляем список покупок
+                renderSteps();
+                updateCost();
+                updateFillingDisplay();
+            });
+            
+            fillingCrab.addEventListener('change', function() {
+                currentFilling = "crab";
+                updateIngredients(); // Обновляем список покупок
+                renderSteps();
+                updateCost();
+                updateFillingDisplay();
+            });
+            
+            // Чекбокс темпуры
+            tempuraOption.addEventListener('change', function() {
+                useTempura = this.checked;
+                tempuraCategory.style.display = useTempura ? 'block' : 'none';
+                tempuraBadge.style.display = useTempura ? 'inline-flex' : 'none';
+                
+                updateIngredients(); // Обновляем список покупок
+                renderSteps();
+                updateCost();
+                updateProgress();
+                
+                // Анимация
+                if (useTempura) {
+                    tempuraBadge.classList.add('pulse');
+                    setTimeout(() => tempuraBadge.classList.remove('pulse'), 500);
+                }
+            });
+        }
+
+        // Обновление отображения типа начинки
+        function updateFillingDisplay() {
+            const icon = currentFilling === 'fish' ? '<i class="fas fa-fish"></i>' : '<i class="fas fa-crab"></i>';
+            const text = currentFilling === 'fish' ? 'С рыбой' : 'С крабовыми палочками';
+            fillingType.innerHTML = `${icon} ${text}`;
+            
+            // Анимация
+            fillingType.classList.add('pulse');
+            setTimeout(() => fillingType.classList.remove('pulse'), 500);
+        }
+
+        // Расчет количества ингредиента
+        function calculateAmount(baseAmount, pieces) {
+            // Простая пропорция от базового количества (16 кусочков)
+            return (baseAmount / 16) * pieces;
+        }
+
+        // Форматирование количества
+        function formatAmount(amount, unit) {
+            if (unit === 'шт.' || unit === 'зубчик') {
+                // Для штучных ингредиентов округляем до десятых
+                if (amount < 0.25) return `${(amount * 4).toFixed(1)}/${unit}`; // Дробь
+                return amount % 1 === 0 ? `${amount} ${unit}` : `${amount.toFixed(1)} ${unit}`;
+            } else if (unit === 'ст.л.' || unit === 'ч.л.') {
+                // Для ложек
+                if (amount < 0.5) return `${(amount * 5).toFixed(1)} мл`; // Переводим в мл для малых количеств
+                return `${amount.toFixed(1)} ${unit}`;
+            } else {
+                // Для весовых ингредиентов округляем
+                if (amount < 10) return `${amount.toFixed(1)} ${unit}`;
+                return `${Math.round(amount)} ${unit}`;
+            }
+        }
+
+        // Обновление списка ингредиентов
+        function updateIngredients() {
+            // Очищаем списки
+            mainIngredientsList.innerHTML = '';
+            sauceIngredientsList.innerHTML = '';
+            tempuraIngredientsList.innerHTML = '';
+            
+            // Основные ингредиенты
+            const mainIngredients = [
+                { id: "rice", name: "Рис для суши (круглозерный)", unit: "г", baseAmount: baseProportions.rice, priceKey: "rice" },
+                { id: "nori", name: "Нори (листы для суши)", unit: "шт.", baseAmount: baseProportions.nori, priceKey: "nori" },
+                { 
+                    id: "filling", 
+                    name: currentFilling === 'fish' ? "Лосось/тунец (филе)" : "Крабовые палочки", 
+                    unit: "г", 
+                    baseAmount: currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab, 
+                    priceKey: currentFilling 
+                },
+                { id: "cheese", name: "Сыр креметте/филадельфия", unit: "г", baseAmount: baseProportions.cheese, priceKey: "cheese" },
+                { id: "cucumber", name: "Огурец свежий", unit: "шт.", baseAmount: baseProportions.cucumber, priceKey: "cucumber" },
+                { id: "avocado", name: "Авокадо", unit: "шт.", baseAmount: baseProportions.avocado, priceKey: "avocado" }
+            ];
+            
+            // Ингедиенты для соуса
+            const sauceIngredients = [
+                { id: "mayo", name: "Майонез", unit: "г", baseAmount: baseProportions.mayo, priceKey: "mayo" },
+                { id: "soySauce", name: "Соевый соус", unit: "мл", baseAmount: baseProportions.soySauce, priceKey: "soySauce" },
+                { id: "sesameOil", name: "Кунжутное масло", unit: "мл", baseAmount: baseProportions.sesameOil, priceKey: "sesameOil" },
+                { id: "garlic", name: "Чеснок", unit: "зубчик", baseAmount: baseProportions.garlic, priceKey: "garlic" },
+                { id: "caviar", name: "Икра тобико/масаго (по желанию)", unit: "г", baseAmount: baseProportions.caviar, priceKey: "caviar" },
+                { id: "riceVinegar", name: "Рисовый уксус", unit: "мл", baseAmount: baseProportions.riceVinegar, priceKey: "riceVinegar" },
+                { id: "sugar", name: "Сахар", unit: "г", baseAmount: baseProportions.sugar, priceKey: "sugar" },
+                { id: "salt", name: "Соль", unit: "г", baseAmount: baseProportions.salt, priceKey: "salt" }
+            ];
+            
+            // Ингредиенты для темпуры
+            const tempuraIngredients = [
+                { id: "flour", name: "Мука пшеничная", unit: "г", baseAmount: baseProportions.flour, priceKey: "flour" },
+                { id: "egg", name: "Яйцо", unit: "шт.", baseAmount: baseProportions.egg, priceKey: "egg" },
+                { id: "tempuraWater", name: "Ледяная вода", unit: "мл", baseAmount: baseProportions.tempuraWater, priceKey: null },
+                { id: "bakingPowder", name: "Разрыхлитель", unit: "г", baseAmount: baseProportions.bakingPowder, priceKey: "bakingPowder" }
+            ];
+            
+            // Рендерим основные ингредиенты
+            renderIngredientList(mainIngredientsList, mainIngredients);
+            
+            // Рендерим ингредиенты для соуса
+            renderIngredientList(sauceIngredientsList, sauceIngredients);
+            
+            // Рендерим ингредиенты для темпуры, если выбрано
+            if (useTempura) {
+                renderIngredientList(tempuraIngredientsList, tempuraIngredients);
+            }
+            
+            // Обновляем общее количество ингредиентов
+            updateTotalIngredientsCount(mainIngredients.length + sauceIngredients.length + (useTempura ? tempuraIngredients.length : 0));
+        }
+
+        // Рендеринг списка ингредиентов
+        function renderIngredientList(container, ingredientList) {
+            ingredientList.forEach(ingredient => {
+                const calculatedAmount = calculateAmount(ingredient.baseAmount, currentPieces);
+                const displayAmount = formatAmount(calculatedAmount, ingredient.unit);
+                
+                let price = 0;
+                if (ingredient.priceKey) {
+                    // Расчет цены на основе базовой цены и пропорции
+                    price = (ingredientPrices[ingredient.priceKey] / ingredient.baseAmount) * calculatedAmount;
+                }
+                
+                const isChecked = boughtIngredients[ingredient.id] || false;
+                
+                const li = document.createElement('li');
+                li.className = isChecked ? 'completed' : '';
+                li.dataset.id = ingredient.id;
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="ingredient-checkbox" id="${ingredient.id}" ${isChecked ? 'checked' : ''}>
+                    <span class="ingredient-amount">${displayAmount}</span>
+                    <span class="ingredient-name">${ingredient.name}</span>
+                    ${price > 0 ? `<span class="ingredient-price">~${Math.round(price)} руб</span>` : '<span class="ingredient-price"></span>'}
+                `;
+                
+                // Обработчик изменения состояния
+                const checkbox = li.querySelector('.ingredient-checkbox');
+                checkbox.addEventListener('change', function() {
+                    boughtIngredients[ingredient.id] = this.checked;
+                    localStorage.setItem('boughtIngredients', JSON.stringify(boughtIngredients));
+                    li.classList.toggle('completed', this.checked);
+                    updateProgress();
+                    
+                    // Анимация
+                    li.classList.add('pulse');
+                    setTimeout(() => li.classList.remove('pulse'), 300);
+                });
+                
+                container.appendChild(li);
+            });
+        }
+
+        // Обновление общего количества ингредиентов
+        function updateTotalIngredientsCount(total) {
+            const bought = Object.keys(boughtIngredients).filter(key => boughtIngredients[key]).length;
+            const percentage = total > 0 ? (bought / total) * 100 : 0;
+            
+            boughtCount.textContent = bought;
+            progressFill.style.width = `${percentage}%`;
+            progressPercent.textContent = `${Math.round(percentage)}%`;
+        }
+
+        // Рендеринг шагов приготовления с указанием количеств
+        function renderSteps() {
+            stepsList.innerHTML = '';
+            
+            // Расчет текущих количеств
+            const riceAmount = calculateAmount(baseProportions.rice, currentPieces);
+            const waterAmount = calculateAmount(baseProportions.water, currentPieces);
+            const vinegarAmount = calculateAmount(baseProportions.riceVinegar, currentPieces);
+            const sugarAmount = calculateAmount(baseProportions.sugar, currentPieces);
+            const saltAmount = calculateAmount(baseProportions.salt, currentPieces);
+            
+            const fillingAmount = calculateAmount(currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab, currentPieces);
+            const cheeseAmount = calculateAmount(baseProportions.cheese, currentPieces);
+            const cucumberAmount = calculateAmount(baseProportions.cucumber, currentPieces);
+            const avocadoAmount = calculateAmount(baseProportions.avocado, currentPieces);
+            const noriAmount = calculateAmount(baseProportions.nori, currentPieces);
+            
+            const mayoAmount = calculateAmount(baseProportions.mayo, currentPieces);
+            const soySauceAmount = calculateAmount(baseProportions.soySauce, currentPieces);
+            const sesameOilAmount = calculateAmount(baseProportions.sesameOil, currentPieces);
+            const garlicAmount = calculateAmount(baseProportions.garlic, currentPieces);
+            
+            const rolls = Math.ceil(currentPieces / 4);
+            
+            // Определяем название начинки для шагов
+            const fillingName = currentFilling === 'fish' ? 'рыбы (лосось/тунец)' : 'крабовых палочек';
+            const fillingDisplayName = currentFilling === 'fish' ? 'Лосось/тунец' : 'Крабовые палочки';
+            
+            // Шаг 1: Приготовление риса
+            addStep(1, `
+                <strong>Приготовьте рис:</strong> Промойте <span class="ingredient-highlight">${formatAmount(riceAmount, 'г')} риса</span> до прозрачной воды. 
+                Залейте <span class="ingredient-highlight">${formatAmount(waterAmount, 'мл')} холодной воды</span> и варите согласно инструкции.
+                <div class="ingredient-in-step">
+                    <strong>Для заправки риса смешайте:</strong><br>
+                    • <span class="ingredient-highlight">${formatAmount(vinegarAmount, 'мл')} рисового уксуса</span><br>
+                    • <span class="ingredient-highlight">${formatAmount(sugarAmount, 'г')} сахара</span><br>
+                    • <span class="ingredient-highlight">${formatAmount(saltAmount, 'г')} соли</span>
+                </div>
+                В теплый рис добавьте заправку, аккуратно перемешайте и остудите.
+            `, true, 15, "Приготовление риса");
+            
+            // Шаг 2: Подготовка начинки
+            addStep(2, `
+                <strong>Подготовьте начинку:</strong>
+                <div class="ingredient-in-step">
+                    <strong>Нарежьте соломкой:</strong><br>
+                    • <span class="ingredient-dynamic">${formatAmount(fillingAmount, 'г')} ${fillingDisplayName}</span><br>
+                    • <span class="ingredient-highlight">${formatAmount(cucumberAmount, 'шт')} огурца</span> (очистить от семян)<br>
+                    • <span class="ingredient-highlight">${formatAmount(avocadoAmount, 'шт')} авокадо</span> (удалить косточку)
+                </div>
+                Длина нарезки должна соответствовать ширине листа нори.
+            `, true, 10, "Подготовка начинки");
+            
+            // Шаг 3: Приготовление соуса
+            addStep(3, `
+                <strong>Приготовьте соус для запекания:</strong>
+                <div class="ingredient-in-step">
+                    <strong>Смешайте в миске:</strong><br>
+                    • <span class="ingredient-highlight">${formatAmount(mayoAmount, 'г')} майонеза</span><br>
+                    • <span class="ingredient-highlight">${formatAmount(soySauceAmount, 'мл')} соевого соуса</span><br>
+                    • <span class="ingredient-highlight">${formatAmount(sesameOilAmount, 'мл')} кунжутного масла</span><br>
+                    • <span class="ingredient-highlight">${formatAmount(garlicAmount, 'зубчик')} чеснока</span> (мелко порубить)
+                </div>
+                ${baseProportions.caviar > 0 ? `При желании добавьте <span class="ingredient-highlight">${formatAmount(calculateAmount(baseProportions.caviar, currentPieces), 'г')} икры тобико</span>.` : ''}
+            `, false);
+            
+            // Шаг 4: Сборка роллов
+            addStep(4, `
+                <strong>Соберите роллы:</strong> Положите на бамбуковый коврик 
+                <span class="ingredient-highlight">${formatAmount(noriAmount, 'шт')} листа нори</span> блестящей стороной вниз.
+                <div class="ingredient-in-step">
+                    <strong>Распределите равномерно по нори:</strong><br>
+                    • Приготовленный рис слоем 0,5-1 см<br>
+                    • Оставьте 1 см свободного края сверху
+                </div>
+                Смочите руки в воде, чтобы рис не лип к рукам.
+            `, false);
+            
+            // Шаг 5: Добавление начинки
+            addStep(5, `
+                <strong>Добавьте начинку:</strong>
+                <div class="ingredient-in-step">
+                    <strong>Посередине риса выложите полосками:</strong><br>
+                    • <span class="ingredient-highlight">${formatAmount(cheeseAmount, 'г')} сыра</span><br>
+                    • <span class="ingredient-dynamic">${formatAmount(fillingAmount, 'г')} ${fillingName}</span><br>
+                    • Огурец и авокадо
+                </div>
+                Можно добавить немного соуса поверх начинки.
+            `, false);
+            
+            // Шаг 6: Свертывание роллов
+            addStep(6, `
+                <strong>Сверните роллы:</strong> С помощью коврика плотно сверните ролл, начиная с края с начинкой.
+                <div class="ingredient-in-step">
+                    <strong>Важно:</strong><br>
+                    • Свертывайте плотно, но без излишнего давления<br>
+                    • Смочите свободный край нори водой для склеивания<br>
+                    • Должно получиться ${rolls} плотных ролла
+                </div>
+            `, false);
+            
+            // Шаг 7: Нарезка роллов
+            const piecesPerRoll = Math.ceil(currentPieces / rolls);
+            addStep(7, `
+                <strong>Нарежьте роллы:</strong> Острым влажным ножом нарежьте каждый ролл на 
+                <span class="ingredient-highlight">${piecesPerRoll} ${pluralize(piecesPerRoll, 'кусочек', 'кусочка', 'кусочков')}</span>.
+                <div class="ingredient-in-step">
+                    <strong>Советы по нарезке:</strong><br>
+                    • Смачивайте нож водой перед каждым разрезом<br>
+                    • Используйте пилящие движения<br>
+                    • Всего должно получиться ${currentPieces} кусочков
+                </div>
+                Положите кусочки на решётку аэрогриля.
+            `, false);
+            
+            // Дополнительные шаги для темпуры
+            if (useTempura) {
+                const flourAmount = calculateAmount(baseProportions.flour, currentPieces);
+                const eggAmount = calculateAmount(baseProportions.egg, currentPieces);
+                const tempuraWaterAmount = calculateAmount(baseProportions.tempuraWater, currentPieces);
+                const bakingPowderAmount = calculateAmount(baseProportions.bakingPowder, currentPieces);
+                
+                // Шаг 8: Приготовление кляра темпура
+                addStep(8, `
+                    <strong>Приготовьте кляр темпура:</strong>
+                    <div class="ingredient-in-step">
+                        <strong>Смешайте в миске:</strong><br>
+                        • <span class="ingredient-highlight">${formatAmount(flourAmount, 'г')} муки</span><br>
+                        • <span class="ingredient-highlight">${formatAmount(eggAmount, 'шт')} яйца</span><br>
+                        • <span class="ingredient-highlight">${formatAmount(bakingPowderAmount, 'г')} разрыхлителя</span><br>
+                        • Постепенно вливайте <span class="ingredient-highlight">${formatAmount(tempuraWaterAmount, 'мл')} ледяной воды</span>
+                    </div>
+                    Не перемешивайте слишком тщательно - в кляре должны оставаться небольшие комочки муки.
+                `, false);
+                
+                // Шаг 9: Обмакивание в кляр
+                addStep(9, `
+                    <strong>Обмакните роллы в кляр:</strong> Каждый кусочек ролла обмакните в кляр темпура, 
+                    убедившись, что он полностью покрыт со всех сторон.
+                    <div class="ingredient-in-step">
+                        <strong>Совет:</strong> Кляр должен быть по консистенции как жидкая сметана. 
+                        Если слишком густой - добавьте немного воды, если жидкий - немного муки.
+                    </div>
+                `, false);
+            }
+            
+            // Финальный шаг: Запекание
+            const stepNumber = useTempura ? 10 : 8;
+            const bakingTime = useTempura ? "10-12 минут" : "8-10 минут";
+            addStep(stepNumber, `
+                <strong>Запекайте:</strong> Щедро покройте роллы приготовленным соусом.
+                <div class="ingredient-in-step">
+                    <strong>Режим аэрогриля:</strong><br>
+                    • Температура: <span class="ingredient-highlight">200°C</span><br>
+                    • Время: <span class="ingredient-highlight">${bakingTime}</span><br>
+                    • До золотистой корочки
+                </div>
+                ${useTempura ? 'Роллы в темпуре получатся особенно хрустящими!' : ''}
+                Подавайте горячими, украсив кунжутом и зеленью.
+            `, true, useTempura ? 12 : 10, "Запекание роллов");
+        }
+
+        // Добавление шага в список
+        function addStep(number, text, hasTimer, timerMinutes, timerName) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div class="step-number">${number}</div>
+                <div class="step-content">
+                    ${text}
+                    ${hasTimer ? `<span class="step-timer" data-index="${number-1}"><i class="fas fa-hourglass-half"></i> Таймер: ${timerMinutes} мин</span>` : ''}
+                `;
+            
+            // Обработчик для таймера
+            if (hasTimer) {
+                const timerBtn = li.querySelector('.step-timer');
+                timerBtn.addEventListener('click', function() {
+                    currentStepIndex = parseInt(this.getAttribute('data-index'));
+                    openTimerModal(timerName, timerMinutes * 60);
+                });
+            }
+            
+            stepsList.appendChild(li);
+        }
+
+        // Обновление стоимости
+        function updateCost() {
+            // Расчет стоимости основных ингредиентов
+            const riceAmount = calculateAmount(baseProportions.rice, currentPieces);
+            const noriAmount = calculateAmount(baseProportions.nori, currentPieces);
+            const cheeseAmount = calculateAmount(baseProportions.cheese, currentPieces);
+            const cucumberAmount = calculateAmount(baseProportions.cucumber, currentPieces);
+            const avocadoAmount = calculateAmount(baseProportions.avocado, currentPieces);
+            
+            const mainCost = 
+                (ingredientPrices.rice / baseProportions.rice) * riceAmount +
+                (ingredientPrices.nori / baseProportions.nori) * noriAmount +
+                (ingredientPrices.cheese / baseProportions.cheese) * cheeseAmount +
+                (ingredientPrices.cucumber / baseProportions.cucumber) * cucumberAmount +
+                (ingredientPrices.avocado / baseProportions.avocado) * avocadoAmount;
+            
+            // Расчет стоимости начинки
+            const fillingAmount = calculateAmount(currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab, currentPieces);
+            const fillingPrice = currentFilling === 'fish' ? ingredientPrices.fish : ingredientPrices.crab;
+            const fillingBaseAmount = currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab;
+            const fillingCost = (fillingPrice / fillingBaseAmount) * fillingAmount;
+            
+            // Расчет стоимости соусов и заправки
+            const mayoAmount = calculateAmount(baseProportions.mayo, currentPieces);
+            const soySauceAmount = calculateAmount(baseProportions.soySauce, currentPieces);
+            const sesameOilAmount = calculateAmount(baseProportions.sesameOil, currentPieces);
+            const garlicAmount = calculateAmount(baseProportions.garlic, currentPieces);
+            const riceVinegarAmount = calculateAmount(baseProportions.riceVinegar, currentPieces);
+            const sugarAmount = calculateAmount(baseProportions.sugar, currentPieces);
+            const saltAmount = calculateAmount(baseProportions.salt, currentPieces);
+            
+            const sauceCost = 
+                (ingredientPrices.mayo / baseProportions.mayo) * mayoAmount +
+                (ingredientPrices.soySauce / baseProportions.soySauce) * soySauceAmount +
+                (ingredientPrices.sesameOil / baseProportions.sesameOil) * sesameOilAmount +
+                (ingredientPrices.garlic / baseProportions.garlic) * garlicAmount +
+                (ingredientPrices.riceVinegar / baseProportions.riceVinegar) * riceVinegarAmount +
+                (ingredientPrices.sugar / baseProportions.sugar) * sugarAmount +
+                (ingredientPrices.salt / baseProportions.salt) * saltAmount;
+            
+            // Расчет стоимости темпуры
+            let tempuraCost = 0;
+            if (useTempura) {
+                const flourAmount = calculateAmount(baseProportions.flour, currentPieces);
+                const eggAmount = calculateAmount(baseProportions.egg, currentPieces);
+                const bakingPowderAmount = calculateAmount(baseProportions.bakingPowder, currentPieces);
+                
+                tempuraCost = 
+                    (ingredientPrices.flour / baseProportions.flour) * flourAmount +
+                    (ingredientPrices.egg / baseProportions.egg) * eggAmount +
+                    (ingredientPrices.bakingPowder / baseProportions.bakingPowder) * bakingPowderAmount;
+            }
+            
+            // Итоговые стоимости
+            const totalMainCost = mainCost + sauceCost;
+            const totalCost = totalMainCost + fillingCost + tempuraCost;
+            const costPerPieceValue = totalCost / currentPieces;
+            
+            // Обновляем отображение
+            costMain.textContent = `${Math.round(totalMainCost)} руб`;
+            costFilling.textContent = `${Math.round(fillingCost)} руб`;
+            costExtra.textContent = `${Math.round(tempuraCost)} руб`;
+            costTotal.textContent = `${Math.round(totalCost)} руб`;
+            costPerPiece.textContent = `~${Math.round(costPerPieceValue)} руб`;
+        }
+
+        // Обновление прогресса покупок
+        function updateProgress() {
+            const totalIngredients = document.querySelectorAll('.ingredients-list li').length;
+            const bought = document.querySelectorAll('.ingredient-checkbox:checked').length;
+            const percentage = totalIngredients > 0 ? (bought / totalIngredients) * 100 : 0;
+            
+            boughtCount.textContent = bought;
+            progressFill.style.width = `${percentage}%`;
+            progressPercent.textContent = `${Math.round(percentage)}%`;
+            
+            // Анимация
+            progressFill.style.transition = 'width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        }
+
+        // Сброс списка покупок
+        resetListBtn.addEventListener('click', function() {
+            if (confirm('Вы уверены, что хотите сбросить список покупок?')) {
+                boughtIngredients = {};
+                localStorage.removeItem('boughtIngredients');
+                
+                // Снимаем все галочки
+                document.querySelectorAll('.ingredient-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // Обновляем классы
+                document.querySelectorAll('.ingredients-list li').forEach(li => {
+                    li.classList.remove('completed');
+                });
+                
+                updateProgress();
+                
+                // Анимация
+                this.innerHTML = '<i class="fas fa-check"></i> Сброшено!';
+                this.style.backgroundColor = '#4CAF50';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-redo"></i> Сбросить список покупок';
+                    this.style.backgroundColor = '';
+                }, 1500);
+            }
+        });
+
+        // Таймер
+        function initTimerModal() {
+            closeTimerBtn.addEventListener('click', closeTimerModal);
+            timerModal.addEventListener('click', function(e) {
+                if (e.target === timerModal) {
+                    closeTimerModal();
+                }
+            });
+            
+            startTimerBtn.addEventListener('click', startTimer);
+            pauseTimerBtn.addEventListener('click', pauseTimer);
+            resetTimerBtn.addEventListener('click', resetTimer);
+        }
+
+        function openTimerModal(title, seconds) {
+            timerTitle.textContent = title;
+            totalTimerSeconds = seconds;
+            resetTimer();
+            
+            timerModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTimerModal() {
+            timerModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            pauseTimer();
+        }
+
+        function startTimer() {
+            if (isTimerRunning) return;
+            
+            isTimerRunning = true;
+            const startTime = Date.now() - (totalTimerSeconds - timerSeconds) * 1000;
+            
+            timerInterval = setInterval(() => {
+                const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                timerSeconds = Math.max(totalTimerSeconds - elapsedSeconds, 0);
+                
+                updateTimerDisplay();
+                
+                if (timerSeconds <= 0) {
+                    pauseTimer();
+                    playTimerCompleteSound();
+                    
+                    // Уведомление
+                    if (Notification.permission === "granted") {
+                        new Notification("Таймер завершен!", {
+                            body: `Время для "${timerTitle.textContent}" истекло!`,
+                            icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzRGQ0U1MCI+PHBhdGggZD0iTTEyLDJBMTAuMDksMTAuMDksMCwwLDAsMiwxMi4xMiwxMC4xNiwxMC4xNiwwLDAsMCwxMS44NCwyMmwxLjI5LTEuMjZBLjU2LjU2LDAsMCwxLDEzLjgsMjBhOC4wOCw4LjA4LDAsMCwxLDguMjEtOC4yNCw4LjEzLDguMTMsMCwwLDEtOC4xMy04LjA2QTcuODgsNy44OCwwLDAsMSwxMy43LDZMMTMsNi44OGE2LjA5LDYuMDksMCwwLDAtNi4wNiw2LjIyLDYuMTIsNi4xMiwwLDAsMCw2LjI1LDYuMDgsNi4wOSw2LjA5LDAsMCwwLDUuNzktMy43N2guMTVhNC41LDQuNSwwLDAsMSw0LjA3LDUsNC41Nyw0LjU3LDAsMCwxLS4zNCwxLjc0TDIwLDE5Ljg4QTEwLDExLDAsMCwwLDIyLDEyLjIsMTAuNDYsMTAuNDYsMCwwLDAsMTIsMlptMCwxM2E0LDQsMCwwLDEtNC00LDQsNCwwLDAsMSw0LTQsNCw0LDAsMCwxLDQsNCw0LDQsMCwwLDEtNCw0WiIvPjwvc3ZnPg=="
+                        });
+                    }
+                }
+            }, 100);
+        }
+
+        function pauseTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = totalTimerSeconds;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const progress = ((totalTimerSeconds - timerSeconds) / totalTimerSeconds) * 100;
+            timerProgressBar.style.transform = `scaleX(${progress / 100})`;
+            
+            // Изменение цвета при завершении
+            if (timerSeconds < 10 && timerSeconds > 0) {
+                timerDisplay.style.color = '#ff4444';
+            } else {
+                timerDisplay.style.color = '';
+            }
+        }
+
+        function playTimerCompleteSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Создаем приятный звук
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
+                
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.8);
+                
+                // Визуальный эффект
+                timerDisplay.style.color = '#ff4444';
+                timerDisplay.classList.add('pulse');
+                setTimeout(() => {
+                    timerDisplay.style.color = '';
+                    timerDisplay.classList.remove('pulse');
+                }, 2000);
+            } catch (e) {
+                console.log("Аудио контекст не поддерживается");
+            }
+        }
+
+        // Создание плавающих частиц
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 25;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                
+                // Случайные параметры
+                const size = Math.random() * 80 + 20;
+                const color = i % 3 === 0 ? 'var(--primary-color)' : i % 3 === 1 ? 'var(--secondary-color)' : 'var(--accent-color)';
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+                particle.style.left = `${left}%`;
+                particle.style.top = `${top}%`;
+                particle.style.opacity = `${Math.random() * 0.08 + 0.02}`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Анимация при загрузке
+        function animateOnLoad() {
+            // Анимация появления карточек
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${0.2 + index * 0.2}s`;
+            });
+            
+            // Анимация появления таймеров
+            const timerItems = document.querySelectorAll('.timer-item');
+            timerItems.forEach((item, index) => {
+                item.style.animation = `fadeInUp 0.8s ${0.5 + index * 0.1}s both`;
+            });
+            
+            // Запрашиваем разрешение на уведомления
+            if ("Notification" in window && Notification.permission === "default") {
+                setTimeout(() => {
+                    if (confirm("Разрешить уведомления о завершении таймеров?")) {
+                        Notification.requestPermission();
+                    }
+                }, 2000);
+            }
+        }
+
+        // Вспомогательная функция для склонения существительных
+        function pluralize(number, one, two, five) {
+            let n = Math.abs(number);
+            n %= 100;
+            if (n >= 5 && n <= 20) {
+                return five;
+            }
+            n %= 10;
+            if (n === 1) {
+                return one;
+            }
+            if (n >= 2 && n <= 4) {
+                return two;
+            }
+            return five;
+        }
+    </script>
+</body>
+</html>
