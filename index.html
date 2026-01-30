@@ -231,13 +231,14 @@
             animation: fadeIn 0.5s ease-out;
         }
         
-        /* Кастомные иконки для рецептов */
+        /* Кастомные цвета для рецептов */
         .icon-sushi { color: #ff6b6b; }
-        .icon-pizza { color: #4ecdc4; }
-        .icon-cake { color: #ffe66d; }
-        .icon-salad { color: #95e1d3; }
-        .icon-soup { color: #f38181; }
-        .icon-drink { color: #a8e6cf; }
+        .icon-pasta { color: #f9c74f; }
+        .icon-pizza { color: #f8961e; }
+        .icon-kasha { color: #90be6d; }
+        .icon-turkey { color: #43aa8b; }
+        .icon-burger { color: #577590; }
+        .icon-buns { color: #277da1; }
     </style>
 </head>
 <body>
@@ -263,18 +264,18 @@
                 <button class="filter-btn" onclick="filterByCategory('main')">
                     <i class="fas fa-drumstick-bite"></i> Основные блюда
                 </button>
-                <button class="filter-btn" onclick="filterByCategory('dessert')">
-                    <i class="fas fa-ice-cream"></i> Десерты
+                <button class="filter-btn" onclick="filterByCategory('airfryer')">
+                    <i class="fas fa-wind"></i> Аэрогриль
                 </button>
-                <button class="filter-btn" onclick="filterByCategory('drink')">
-                    <i class="fas fa-glass-whiskey"></i> Напитки
+                <button class="filter-btn" onclick="filterByCategory('garnish')">
+                    <i class="fas fa-wheat-alt"></i> Гарниры
                 </button>
             </div>
         </section>
         
         <!-- Сетка рецептов -->
         <div class="recipes-grid" id="recipesGrid">
-            <!-- Рецепт 1: Суши -->
+            <!-- Рецепт 1: Суши (оставляем по условию) -->
             <div class="recipe-card" data-category="main" data-tags="азиатская кухня,интерактивный,таймер">
                 <div class="recipe-image">
                     <i class="fas fa-fish icon-sushi"></i>
@@ -297,169 +298,24 @@
                         <span class="tag">Интерактивный</span>
                         <span class="tag">С таймером</span>
                     </div>
-                    <a href="/book-of-recipes/sushi/" class="open-btn">
+                    <a href="https://stasdubodil.github.io/book-of-recipes/sushi/" class="open-btn">
                         <i class="fas fa-external-link-alt"></i> Открыть рецепт
                     </a>
                 </div>
             </div>
             
-            <!-- Рецепт 2: Пицца -->
-            <div class="recipe-card" data-category="main" data-tags="итальянская,семейный,быстро">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #4ecdc4, #95e1d3);">
-                    <i class="fas fa-pizza-slice icon-pizza"></i>
+            <!-- Рецепт 2: Паста со сливками и грибами -->
+            <div class="recipe-card" data-category="main" data-tags="итальянская,быстро,сытный">
+                <div class="recipe-image" style="background: linear-gradient(45deg, #f9c74f, #ffd166);">
+                    <i class="fas fa-utensils icon-pasta"></i>
                 </div>
                 <div class="recipe-content">
                     <h3 class="recipe-title">
-                        <i class="fas fa-pizza-slice icon-pizza"></i>
-                        Домашняя пицца
+                        <i class="fas fa-utensils icon-pasta"></i>
+                        Паста со сливками и грибами
                     </h3>
                     <p class="recipe-desc">
-                        Рецепт идеальной пиццы с разными вариантами начинки и расчётом ингредиентов.
-                    </p>
-                    <div class="recipe-meta">
-                        <span><i class="fas fa-clock"></i> 60 мин</span>
-                        <span><i class="fas fa-user-friends"></i> 4 порции</span>
-                        <span><i class="fas fa-star"></i> ★★★★☆</span>
-                    </div>
-                    <div class="recipe-tags">
-                        <span class="tag">Итальянская</span>
-                        <span class="tag">Семейный</span>
-                        <span class="tag">С начинкой</span>
-                    </div>
-                    <a href="/book-of-recipes/pizza/" class="open-btn">
-                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Рецепт 3: Торт -->
-            <div class="recipe-card" data-category="dessert" data-tags="десерт,сладкий,торжество">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #ffe66d, #ffd166);">
-                    <i class="fas fa-birthday-cake icon-cake"></i>
-                </div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">
-                        <i class="fas fa-birthday-cake icon-cake"></i>
-                        Шоколадный торт
-                    </h3>
-                    <p class="recipe-desc">
-                        Нежный шоколадный торт с кремом. Подробная инструкция с фотографиями.
-                    </p>
-                    <div class="recipe-meta">
-                        <span><i class="fas fa-clock"></i> 90 мин</span>
-                        <span><i class="fas fa-user-friends"></i> 8 порций</span>
-                        <span><i class="fas fa-star"></i> ★★★★★</span>
-                    </div>
-                    <div class="recipe-tags">
-                        <span class="tag">Десерт</span>
-                        <span class="tag">Шоколадный</span>
-                        <span class="tag">Торт</span>
-                    </div>
-                    <a href="/book-of-recipes/cake/" class="open-btn">
-                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Рецепт 4: Салат -->
-            <div class="recipe-card" data-category="main" data-tags="здоровый,легкий,летний">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #95e1d3, #a8e6cf);">
-                    <i class="fas fa-leaf icon-salad"></i>
-                </div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">
-                        <i class="fas fa-leaf icon-salad"></i>
-                        Греческий салат
-                    </h3>
-                    <p class="recipe-desc">
-                        Классический греческий салат с правильными пропорциями и соусом.
-                    </p>
-                    <div class="recipe-meta">
-                        <span><i class="fas fa-clock"></i> 20 мин</span>
-                        <span><i class="fas fa-user-friends"></i> 2 порции</span>
-                        <span><i class="fas fa-star"></i> ★★★★☆</span>
-                    </div>
-                    <div class="recipe-tags">
-                        <span class="tag">Здоровый</span>
-                        <span class="tag">Лёгкий</span>
-                        <span class="tag">Летний</span>
-                    </div>
-                    <a href="/book-of-recipes/salad/" class="open-btn">
-                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Рецепт 5: Суп -->
-            <div class="recipe-card" data-category="main" data-tags="суп,зимний,сытный">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #f38181, #ff6b6b);">
-                    <i class="fas fa-utensil-spoon icon-soup"></i>
-                </div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">
-                        <i class="fas fa-utensil-spoon icon-soup"></i>
-                        Куриный суп
-                    </h3>
-                    <p class="recipe-desc">
-                        Наваристый куриный суп с домашней лапшой. Идеально для холодных дней.
-                    </p>
-                    <div class="recipe-meta">
-                        <span><i class="fas fa-clock"></i> 75 мин</span>
-                        <span><i class="fas fa-user-friends"></i> 6 порций</span>
-                        <span><i class="fas fa-star"></i> ★★★★☆</span>
-                    </div>
-                    <div class="recipe-tags">
-                        <span class="tag">Суп</span>
-                        <span class="tag">Зимний</span>
-                        <span class="tag">Сытный</span>
-                    </div>
-                    <a href="/book-of-recipes/soup/" class="open-btn">
-                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Рецепт 6: Коктейль -->
-            <div class="recipe-card" data-category="drink" data-tags="напиток,летний,коктейль">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #a8e6cf, #95e1d3);">
-                    <i class="fas fa-cocktail icon-drink"></i>
-                </div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">
-                        <i class="fas fa-cocktail icon-drink"></i>
-                        Мохито
-                    </h3>
-                    <p class="recipe-desc">
-                        Освежающий коктейль мохито. Безалкогольный вариант тоже возможен.
-                    </p>
-                    <div class="recipe-meta">
-                        <span><i class="fas fa-clock"></i> 10 мин</span>
-                        <span><i class="fas fa-user-friends"></i> 1 порция</span>
-                        <span><i class="fas fa-star"></i> ★★★★★</span>
-                    </div>
-                    <div class="recipe-tags">
-                        <span class="tag">Напиток</span>
-                        <span class="tag">Летний</span>
-                        <span class="tag">Освежающий</span>
-                    </div>
-                    <a href="/book-of-recipes/mojito/" class="open-btn">
-                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Рецепт 7: Паста -->
-            <div class="recipe-card" data-category="main" data-tags="итальянская,паста,сытный">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #4ecdc4, #95e1d3);">
-                    <i class="fas fa-utensils"></i>
-                </div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">
-                        <i class="fas fa-utensils"></i>
-                        Паста Карбонара
-                    </h3>
-                    <p class="recipe-desc">
-                        Классическая итальянская паста с беконом, яйцами и пармезаном.
+                        Нежная сливочная паста с ароматными грибами. Быстрый и изысканный ужин за 20 минут.
                     </p>
                     <div class="recipe-meta">
                         <span><i class="fas fa-clock"></i> 25 мин</span>
@@ -468,103 +324,209 @@
                     </div>
                     <div class="recipe-tags">
                         <span class="tag">Итальянская</span>
-                        <span class="tag">Паста</span>
                         <span class="tag">Быстро</span>
+                        <span class="tag">Сливочный соус</span>
                     </div>
-                    <a href="/book-of-recipes/pasta/" class="open-btn">
+                    <a href="https://stasdubodil.github.io/book-of-recipes/pasta-cream-mushrooms/" class="open-btn">
                         <i class="fas fa-external-link-alt"></i> Открыть рецепт
                     </a>
                 </div>
             </div>
             
-            <!-- Рецепт 8: Бургеры -->
-            <div class="recipe-card" data-category="main" data-tags="бургер,американская,быстро">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #ff6b6b, #f38181);">
-                    <i class="fas fa-hamburger"></i>
+            <!-- Рецепт 3: Мини пицца в аэрогриле -->
+            <div class="recipe-card" data-category="airfryer" data-tags="быстро,закуска,аэрогриль">
+                <div class="recipe-image" style="background: linear-gradient(45deg, #f8961e, #f9844a);">
+                    <i class="fas fa-pizza-slice icon-pizza"></i>
                 </div>
                 <div class="recipe-content">
                     <h3 class="recipe-title">
-                        <i class="fas fa-hamburger"></i>
-                        Домашние бургеры
+                        <i class="fas fa-pizza-slice icon-pizza"></i>
+                        Мини пицца в аэрогриле
                     </h3>
                     <p class="recipe-desc">
-                        Сочные бургеры с домашней булочкой и соусом. На выбор курица или говядина.
+                        Хрустящие мини-пиццы с любой начинкой. Готовятся за 10 минут, идеальны для перекуса.
                     </p>
                     <div class="recipe-meta">
-                        <span><i class="fas fa-clock"></i> 40 мин</span>
+                        <span><i class="fas fa-clock"></i> 15 мин</span>
+                        <span><i class="fas fa-user-friends"></i> 4 порции</span>
+                        <span><i class="fas fa-star"></i> ★★★★☆</span>
+                    </div>
+                    <div class="recipe-tags">
+                        <span class="tag">Быстро</span>
+                        <span class="tag">Закуска</span>
+                        <span class="tag">Аэрогриль</span>
+                    </div>
+                    <a href="https://stasdubodil.github.io/book-of-recipes/mini-pizza-airfryer/" class="open-btn">
+                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Рецепт 4: Гречка/перловка по купечески -->
+            <div class="recipe-card" data-category="garnish" data-tags="гарнир,сытный,традиционный">
+                <div class="recipe-image" style="background: linear-gradient(45deg, #90be6d, #43aa8b);">
+                    <i class="fas fa-seedling icon-kasha"></i>
+                </div>
+                <div class="recipe-content">
+                    <h3 class="recipe-title">
+                        <i class="fas fa-seedling icon-kasha"></i>
+                        Гречка/перловка по-купечески
+                    </h3>
+                    <p class="recipe-desc">
+                        Сытная каша с мясом, овощами и ароматными специями. Классическое блюдо в одной кастрюле.
+                    </p>
+                    <div class="recipe-meta">
+                        <span><i class="fas fa-clock"></i> 60 мин</span>
                         <span><i class="fas fa-user-friends"></i> 4 порции</span>
                         <span><i class="fas fa-star"></i> ★★★★★</span>
                     </div>
                     <div class="recipe-tags">
-                        <span class="tag">Бургер</span>
-                        <span class="tag">Американская</span>
-                        <span class="tag">Сочный</span>
+                        <span class="tag">Гарнир</span>
+                        <span class="tag">Сытный</span>
+                        <span class="tag">Традиционный</span>
                     </div>
-                    <a href="/book-of-recipes/burger/" class="open-btn">
+                    <a href="https://stasdubodil.github.io/book-of-recipes/buckwheat-barley/" class="open-btn">
                         <i class="fas fa-external-link-alt"></i> Открыть рецепт
                     </a>
                 </div>
             </div>
             
-            <!-- Рецепт 9: Смузи -->
-            <div class="recipe-card" data-category="drink" data-tags="здоровый,завтрак,смузи">
-                <div class="recipe-image" style="background: linear-gradient(45deg, #95e1d3, #a8e6cf);">
-                    <i class="fas fa-blender"></i>
+            <!-- Рецепт 5: Стейки из индейки в аэрогриле -->
+            <div class="recipe-card" data-category="airfryer" data-tags="диетический,аэрогриль,основное">
+                <div class="recipe-image" style="background: linear-gradient(45deg, #43aa8b, #4d908e);">
+                    <i class="fas fa-drumstick-bite icon-turkey"></i>
                 </div>
                 <div class="recipe-content">
                     <h3 class="recipe-title">
-                        <i class="fas fa-blender"></i>
-                        Ягодный смузи
+                        <i class="fas fa-drumstick-bite icon-turkey"></i>
+                        Стейки из индейки в аэрогриле
                     </h3>
                     <p class="recipe-desc">
-                        Полезный и вкусный смузи с ягодами, бананом и йогуртом.
+                        Сочные и диетические стейки из индейки с хрустящей корочкой. Готовятся без масла.
                     </p>
                     <div class="recipe-meta">
-                        <span><i class="fas fa-clock"></i> 5 мин</span>
-                        <span><i class="fas fa-user-friends"></i> 1 порция</span>
+                        <span><i class="fas fa-clock"></i> 30 мин</span>
+                        <span><i class="fas fa-user-friends"></i> 2 порции</span>
                         <span><i class="fas fa-star"></i> ★★★★★</span>
                     </div>
                     <div class="recipe-tags">
-                        <span class="tag">Здоровый</span>
-                        <span class="tag">Завтрак</span>
-                        <span class="tag">Быстро</span>
+                        <span class="tag">Диетический</span>
+                        <span class="tag">Аэрогриль</span>
+                        <span class="tag">Основное блюдо</span>
                     </div>
-                    <a href="/book-of-recipes/smoothie/" class="open-btn">
+                    <a href="https://stasdubodil.github.io/book-of-recipes/turkey-steak-airfryer/" class="open-btn">
+                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Рецепт 6: Бургеры в аэрогриле -->
+            <div class="recipe-card" data-category="airfryer" data-tags="быстро,аэрогриль,семейный">
+                <div class="recipe-image" style="background: linear-gradient(45deg, #577590, #4d908e);">
+                    <i class="fas fa-hamburger icon-burger"></i>
+                </div>
+                <div class="recipe-content">
+                    <h3 class="recipe-title">
+                        <i class="fas fa-hamburger icon-burger"></i>
+                        Бургеры в аэрогриле
+                    </h3>
+                    <p class="recipe-desc">
+                        Идеальные домашние бургеры с сочной котлетой. Готовятся без лишнего масла и дыма.
+                    </p>
+                    <div class="recipe-meta">
+                        <span><i class="fas fa-clock"></i> 25 мин</span>
+                        <span><i class="fas fa-user-friends"></i> 2 порции</span>
+                        <span><i class="fas fa-star"></i> ★★★★☆</span>
+                    </div>
+                    <div class="recipe-tags">
+                        <span class="tag">Быстро</span>
+                        <span class="tag">Аэрогриль</span>
+                        <span class="tag">Семейный</span>
+                    </div>
+                    <a href="https://stasdubodil.github.io/book-of-recipes/burgers-airfryer/" class="open-btn">
+                        <i class="fas fa-external-link-alt"></i> Открыть рецепт
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Рецепт 7: Булочки для бургеров в аэрогриле -->
+            <div class="recipe-card" data-category="airfryer" data-tags="выпечка,аэрогриль,булочки">
+                <div class="recipe-image" style="background: linear-gradient(45deg, #277da1, #577590);">
+                    <i class="fas fa-bread-slice icon-buns"></i>
+                </div>
+                <div class="recipe-content">
+                    <h3 class="recipe-title">
+                        <i class="fas fa-bread-slice icon-buns"></i>
+                        Булочки для бургеров в аэрогриле
+                    </h3>
+                    <p class="recipe-desc">
+                        Мягкие, воздушные домашние булочки с хрустящей корочкой. Основа для идеального бургера.
+                    </p>
+                    <div class="recipe-meta">
+                        <span><i class="fas fa-clock"></i> 40 мин</span>
+                        <span><i class="fas fa-user-friends"></i> 8 булочек</span>
+                        <span><i class="fas fa-star"></i> ★★★★★</span>
+                    </div>
+                    <div class="recipe-tags">
+                        <span class="tag">Выпечка</span>
+                        <span class="tag">Аэрогриль</span>
+                        <span class="tag">Булочки</span>
+                    </div>
+                    <a href="https://stasdubodil.github.io/book-of-recipes/burger-buns-airfryer/" class="open-btn">
                         <i class="fas fa-external-link-alt"></i> Открыть рецепт
                     </a>
                 </div>
             </div>
         </div>
         
-        <!-- Пустые папки для будущих рецептов -->
+        <!-- Папки для рецептов -->
         <div style="background: #f0f8ff; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-            <h3><i class="fas fa-folder-plus"></i> Папки для будущих рецептов</h3>
-            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-                <div style="background: white; padding: 10px 15px; border-radius: 10px; border: 2px dashed #ddd;">
-                    /book-of-recipes/breakfast/ - Завтраки
+            <h3><i class="fas fa-folder-open"></i> Папки с рецептами в репозитории</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin-top: 15px;">
+                <div style="background: white; padding: 12px; border-radius: 10px; border-left: 4px solid #ff6b6b;">
+                    <strong>/sushi/</strong><br>
+                    <small>Запечённые роллы в аэрогриле</small>
                 </div>
-                <div style="background: white; padding: 10px 15px; border-radius: 10px; border: 2px dashed #ddd;">
-                    /book-of-recipes/desserts/ - Десерты
+                <div style="background: white; padding: 12px; border-radius: 10px; border-left: 4px solid #f9c74f;">
+                    <strong>/pasta-cream-mushrooms/</strong><br>
+                    <small>Паста со сливками и грибами</small>
                 </div>
-                <div style="background: white; padding: 10px 15px; border-radius: 10px; border: 2px dashed #ddd;">
-                    /book-of-recipes/snacks/ - Закуски
+                <div style="background: white; padding: 12px; border-radius: 10px; border-left: 4px solid #f8961e;">
+                    <strong>/mini-pizza-airfryer/</strong><br>
+                    <small>Мини пицца в аэрогриле</small>
                 </div>
-                <div style="background: white; padding: 10px 15px; border-radius: 10px; border: 2px dashed #ddd;">
-                    /book-of-recipes/sauces/ - Соусы
+                <div style="background: white; padding: 12px; border-radius: 10px; border-left: 4px solid #90be6d;">
+                    <strong>/buckwheat-barley/</strong><br>
+                    <small>Гречка/перловка по-купечески</small>
+                </div>
+                <div style="background: white; padding: 12px; border-radius: 10px; border-left: 4px solid #43aa8b;">
+                    <strong>/turkey-steak-airfryer/</strong><br>
+                    <small>Стейки из индейки в аэрогриле</small>
+                </div>
+                <div style="background: white; padding: 12px; border-radius: 10px; border-left: 4px solid #577590;">
+                    <strong>/burgers-airfryer/</strong><br>
+                    <small>Бургеры в аэрогриле</small>
+                </div>
+                <div style="background: white; padding: 12px; border-radius: 10px; border-left: 4px solid #277da1;">
+                    <strong>/burger-buns-airfryer/</strong><br>
+                    <small>Булочки для бургеров в аэрогриле</small>
                 </div>
             </div>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                <i class="fas fa-info-circle"></i> Каждая папка должна содержать файл <code>index.html</code> с детальным рецептом
+            </p>
         </div>
         
         <!-- Футер -->
         <footer class="footer">
             <p>
-                <i class="fas fa-code"></i> Сделано с ❤️ | 
-                <i class="fas fa-folder"></i> Все рецепты по папкам | 
-                <i class="fas fa-mobile-alt"></i> Работает на всех устройствах
+                <i class="fas fa-code"></i> Все ссылки ведут на папки GitHub репозитория | 
+                <i class="fas fa-folder"></i> 7 рецептов в 7 папках | 
+                <i class="fas fa-wind"></i> 5 рецептов для аэрогриля
             </p>
             <p style="margin-top: 10px; font-size: 0.9rem;">
-                Репозиторий: <strong>book-of-recipes</strong> | 
-                Ссылки: <strong>/book-of-recipes/название-папки/</strong>
+                Репозиторий: <strong><a href="https://github.com/stasdubodil/book-of-recipes" style="color: #4ecdc4;">stasdubodil/book-of-recipes</a></strong> | 
+                Формат ссылок: <strong>/book-of-recipes/название-папки/</strong>
             </p>
         </footer>
     </div>
@@ -615,7 +577,20 @@
             filterBtns.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Здесь можно добавить дополнительную фильтрацию
+            // Фильтрация по сложности/типу
+            const recipeCards = document.querySelectorAll('.recipe-card');
+            recipeCards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else if (filter === 'quick') {
+                    const timeText = card.querySelector('.recipe-meta span:nth-child(1)').textContent;
+                    const time = parseInt(timeText);
+                    card.style.display = time <= 30 ? 'block' : 'none';
+                } else if (filter === 'healthy') {
+                    const tags = card.getAttribute('data-tags');
+                    card.style.display = tags.includes('диетический') || tags.includes('гарнир') ? 'block' : 'none';
+                }
+            });
         }
         
         // Анимация при загрузке
@@ -625,86 +600,64 @@
                 card.style.animationDelay = `${index * 0.1}s`;
             });
             
-            // Показываем текущий URL
-            console.log('Текущий URL:', window.location.href);
-            console.log('Все ссылки начинаются с /book-of-recipes/');
+            // Логирование для отладки
+            console.log('Рецепты обновлены! Всего: ' + cards.length);
         });
         
-        // Подсказка для новых папок
+        // Проверка существования папок
         document.querySelectorAll('.recipe-card .open-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
-                const folderName = href.replace('/book-of-recipes/', '').replace('/', '');
-                const folders = ['sushi', 'pizza', 'cake', 'salad', 'soup', 'mojito', 'pasta', 'burger', 'smoothie'];
+                const folderName = href.replace('https://stasdubodil.github.io/book-of-recipes/', '').replace('/', '');
+                const existingFolders = ['sushi']; // здесь можно добавить проверку реальных папок
                 
-                if (!folders.includes(folderName)) {
-                    if (!confirm('Эта папка пока не создана. Создать папку ' + folderName + '?')) {
+                if (!existingFolders.includes(folderName)) {
+                    if (!confirm('Папка "' + folderName + '" может еще не существовать в репозитории.\n\nХотите продолжить?')) {
                         e.preventDefault();
+                    } else {
+                        console.log('Переход к созданию папки: ' + folderName);
+                        // Можно добавить автоматическое создание папки через GitHub API
                     }
                 }
             });
         });
         
-        // Автоматическое добавление нового рецепта (Ctrl + N)
+        // Автоматическое создание структуры папок (подсказка)
         document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'n') {
+            if (e.ctrlKey && e.key === 'g') {
                 e.preventDefault();
                 
-                const name = prompt('Название нового рецепта:');
-                if (!name) return;
+                const folders = [
+                    'pasta-cream-mushrooms',
+                    'mini-pizza-airfryer', 
+                    'buckwheat-barley',
+                    'turkey-steak-airfryer',
+                    'burgers-airfryer',
+                    'burger-buns-airfryer'
+                ];
                 
-                const folder = prompt('Имя папки (английскими буквами):', 
-                    name.toLowerCase()
-                        .replace(/\s+/g, '-')
-                        .replace(/[^a-z0-9-]/g, '')
-                );
-                if (!folder) return;
+                let message = "СОЗДАЙТЕ ЭТИ ПАПКИ В РЕПОЗИТОРИИ:\n\n";
+                folders.forEach(folder => {
+                    message += `• ${folder}/\n    └── index.html\n`;
+                });
                 
-                const desc = prompt('Краткое описание:');
-                const time = prompt('Время приготовления (мин):', '30');
-                const servings = prompt('Количество порций:', '4');
-                const category = prompt('Категория (main/dessert/drink):', 'main');
-                
-                // Создаем новую карточку
-                const newRecipe = `
-                <div class="recipe-card" data-category="${category}" data-tags="новый,рецепт">
-                    <div class="recipe-image" style="background: linear-gradient(45deg, #4ecdc4, #95e1d3);">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <div class="recipe-content">
-                        <h3 class="recipe-title">
-                            <i class="fas fa-utensils"></i>
-                            ${name}
-                        </h3>
-                        <p class="recipe-desc">${desc || 'Новый рецепт'}</p>
-                        <div class="recipe-meta">
-                            <span><i class="fas fa-clock"></i> ${time} мин</span>
-                            <span><i class="fas fa-user-friends"></i> ${servings} порции</span>
-                            <span><i class="fas fa-star"></i> ★★★★☆</span>
-                        </div>
-                        <div class="recipe-tags">
-                            <span class="tag">Новый</span>
-                            <span class="tag">Рецепт</span>
-                        </div>
-                        <a href="/book-of-recipes/${folder}/" class="open-btn">
-                            <i class="fas fa-external-link-alt"></i> Открыть рецепт
-                        </a>
-                    </div>
-                </div>
-                `;
-                
-                // Добавляем в сетку
-                document.getElementById('recipesGrid').innerHTML += newRecipe;
-                
-                alert(`✅ Карточка добавлена!\n\nТеперь создай папку:\n${folder}/\n\nИ добавь в нее файл:\n${folder}/index.html`);
+                message += "\nПосле этого все ссылки на главной странице будут работать.";
+                alert(message);
             }
         });
         
-        // Показываем все ссылки в консоли
-        console.log("=== ВСЕ ССЫЛКИ НА РЕЦЕПТЫ ===");
-        document.querySelectorAll('.open-btn').forEach(btn => {
-            console.log(btn.textContent.trim() + ': ' + btn.getAttribute('href'));
-        });
+        // Показать все ссылки в консоли
+        console.log("=== ССЫЛКИ НА РЕЦЕПТЫ ===");
+        const links = [
+            'Суши: https://stasdubodil.github.io/book-of-recipes/sushi/',
+            'Паста: https://stasdubodil.github.io/book-of-recipes/pasta-cream-mushrooms/',
+            'Мини-пицца: https://stasdubodil.github.io/book-of-recipes/mini-pizza-airfryer/',
+            'Гречка: https://stasdubodil.github.io/book-of-recipes/buckwheat-barley/',
+            'Стейки индейки: https://stasdubodil.github.io/book-of-recipes/turkey-steak-airfryer/',
+            'Бургеры: https://stasdubodil.github.io/book-of-recipes/burgers-airfryer/',
+            'Булочки: https://stasdubodil.github.io/book-of-recipes/burger-buns-airfryer/'
+        ];
+        links.forEach(link => console.log(link));
     </script>
 </body>
 </html>
