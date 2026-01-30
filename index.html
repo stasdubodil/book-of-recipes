@@ -560,5 +560,20 @@
             }
         });
     </script>
+    <script>
+// Автоматически исправляем все ссылки
+document.addEventListener('DOMContentLoaded', function() {
+    const allLinks = document.querySelectorAll('a[href^="/"]');
+    allLinks.forEach(link => {
+        const currentHref = link.getAttribute('href');
+        // Если не главная страница
+        if (currentHref !== '/' && !currentHref.startsWith('http')) {
+            link.setAttribute('href', '/book-of-recipes' + currentHref);
+        }
+    });
+    
+    console.log("Ссылки исправлены для репозитория book-of-recipes");
+});
+</script>
 </body>
 </html>
