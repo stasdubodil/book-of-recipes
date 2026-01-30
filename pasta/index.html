@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍝 Паста по-итальянски | Интерактивный рецепт</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --green: #008C45;      /* Итальянский зеленый */
+            --white: #F4F9FF;      /* Итальянский белый */
+            --red: #CD212A;        /* Итальянский красный */
+            --gold: #FFCC00;       /* Золотой акцент */
+            --dark: #2D2A26;       /* Темный для текста */
+            --light-bg: #FFF9F0;   /* Светлый фон */
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 140, 69, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(205, 33, 42, 0.05) 0%, transparent 25%);
+        }
+        
+        /* Итальянский триколор в шапке */
+        .header-flag {
+            height: 15px;
+            background: linear-gradient(90deg, var(--green) 33%, var(--white) 33%, var(--white) 66%, var(--red) 66%);
+            border-radius: 10px 10px 0 0;
+            margin-bottom: -5px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: var(--white);
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--white);
+            background-image: 
+                linear-gradient(45deg, var(--green) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--green) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--red) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--red) 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+        }
+        
+        .header-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::before {
+            content: "🍝";
+            margin-right: 15px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+        }
+        
+        /* Выбор типа пасты */
+        .pasta-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .pasta-type-btn {
+            padding: 15px 25px;
+            background: var(--white);
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+        
+        .pasta-type-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pasta-type-btn.active {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+        
+        /* Панель управления */
+        .controls-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 250px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            border: 2px solid #eee;
+        }
+        
+        .control-group:hover {
+            transform: translateY(-5px);
+            border-color: var(--green);
+        }
+        
+        .control-group h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--green);
+        }
+        
+        /* Слайдеры */
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 12px;
+            -webkit-appearance: none;
+            background: #eee;
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--red);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider-value-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--green);
+        }
+        
+        /* Опции */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f9f9f9;
+            transition: background 0.3s;
+        }
+        
+        .option-row:hover {
+            background: #f0f0f0;
+        }
+        
+        .option-row input[type="radio"], 
+        .option-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--green);
+        }
+        
+        /* Стоимость */
+        .cost-summary {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 250px;
+            box-shadow: var(--shadow);
+            border: 2px solid #eee;
+        }
+        
+        .cost-summary h3 {
+            color: var(--green);
+            margin-bottom: 15px;
+        }
+        
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .cost-row.total {
+            border-top: 2px solid var(--green);
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+        
+        .cost-amount {
+            color: var(--red);
+            font-weight: bold;
+        }
+        
+        /* Таймеры */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .timer-item {
+            background-color: var(--white);
+            color: var(--dark);
+            padding: 18px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 160px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid #eee;
+        }
+        
+        .timer-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--green);
+        }
+        
+        .timer-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--green);
+        }
+        
+        /* Основной контент */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.4s, box-shadow 0.4s;
+            border: 2px solid #eee;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: var(--green);
+        }
+        
+        .card h2 {
+            color: var(--green);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--red);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h2 i {
+            margin-right: 12px;
+        }
+        
+        /* Списки */
+        .ingredients-list, .steps-list {
+            list-style-type: none;
+        }
+        
+        .ingredients-list li, .steps-list li {
+            padding: 14px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .ingredients-list li:hover, .steps-list li:hover {
+            background-color: rgba(0, 140, 69, 0.05);
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        .ingredient-checkbox {
+            margin-right: 15px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: var(--green);
+        }
+        
+        .ingredient-amount {
+            font-weight: bold;
+            color: var(--red);
+            min-width: 100px;
+        }
+        
+        .step-number {
+            background-color: var(--green);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-timer {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            color: var(--red);
+            font-weight: bold;
+            cursor: pointer;
+            background-color: rgba(205, 33, 42, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+        
+        /* Прогресс */
+        .progress-summary {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: rgba(0, 140, 69, 0.1);
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px dashed rgba(0, 140, 69, 0.3);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), var(--red));
+            width: 0%;
+            transition: width 0.7s;
+        }
+        
+        /* Кнопки */
+        .reset-btn, .print-btn {
+            display: block;
+            margin: 25px auto 0;
+            padding: 14px 30px;
+            background-color: var(--green);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .reset-btn:hover, .print-btn:hover {
+            background-color: var(--red);
+            transform: translateY(-3px);
+        }
+        
+        /* Футер */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 2px solid #eee;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        /* Анимации */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s;
+        }
+        
+        /* Итальянские элементы */
+        .italian-flag {
+            display: inline-flex;
+            width: 30px;
+            height: 20px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+        
+        .flag-stripe {
+            width: 33.33%;
+            height: 100%;
+        }
+        
+        .flag-green { background-color: var(--green); }
+        .flag-white { background-color: var(--white); }
+        .flag-red { background-color: var(--red); }
+        
+        /* Подсказки по рецептам */
+        .pasta-tip {
+            background-color: rgba(255, 204, 0, 0.15);
+            border-left: 5px solid var(--gold);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .pasta-types {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .pasta-type-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .controls-panel {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-group, .cost-summary {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Итальянский флаг сверху -->
+    <div class="header-flag"></div>
+    
+    <header>
+        <div class="header-content">
+            <h1>Интерактивный рецепт пасты</h1>
+            <p class="subtitle">Выберите тип пасты, настройте ингредиенты под свой вкус и рассчитайте стоимость</p>
+            
+            <!-- Выбор типа пасты -->
+            <div class="pasta-types" id="pastaTypes">
+                <button class="pasta-type-btn active" data-type="carbonara">
+                    <i class="fas fa-bacon"></i> Карбонара
+                </button>
+                <button class="pasta-type-btn" data-type="cream-mushroom">
+                    <i class="fas fa-cheese"></i> Сливочная с грибами
+                </button>
+                <button class="pasta-type-btn" data-type="bolognese">
+                    <i class="fas fa-drumstick-bite"></i> Болоньезе
+                </button>
+                <button class="pasta-type-btn" data-type="lasagna">
+                    <i class="fas fa-layer-group"></i> Лазанья
+                </button>
+                <button class="pasta-type-btn" data-type="pesto">
+                    <i class="fas fa-leaf"></i> Песто
+                </button>
+                <button class="pasta-type-btn" data-type="seafood">
+                    <i class="fas fa-fish"></i> С морепродуктами
+                </button>
+            </div>
+            
+            <!-- Панель управления -->
+            <div class="controls-panel">
+                <!-- Количество порций -->
+                <div class="control-group">
+                    <h3><i class="fas fa-users"></i> Количество порций</h3>
+                    <div class="slider-container">
+                        <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.9rem;">
+                            <span>1 порция</span>
+                            <span>8 порций</span>
+                        </div>
+                        <input type="range" id="portion-slider" min="1" max="8" value="4" step="1">
+                        <div class="slider-value-display" id="portion-value">4</div>
+                        <div id="pasta-amount">(400г пасты)</div>
+                    </div>
+                </div>
+                
+                <!-- Настройки рецепта -->
+                <div class="control-group" id="recipe-options">
+                    <!-- Опции будут заполняться JavaScript в зависимости от типа пасты -->
+                </div>
+                
+                <!-- Стоимость -->
+                <div class="cost-summary">
+                    <h3><i class="fas fa-calculator"></i> Стоимость продуктов</h3>
+                    <div class="cost-breakdown">
+                        <div class="cost-row">
+                            <span>Паста и основы:</span>
+                            <span class="cost-amount" id="cost-pasta">0 руб</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Соус и начинка:</span>
+                            <span class="cost-amount" id="cost-sauce">0 руб</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Сыр и дополнения:</span>
+                            <span class="cost-amount" id="cost-cheese">0 руб</span>
+                        </div>
+                        <div class="cost-row total">
+                            <span>Итого:</span>
+                            <span class="cost-amount" id="cost-total">0 руб</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.85rem; margin-top: 10px; color: #666;">
+                        <i class="fas fa-info-circle"></i> Цены рассчитаны для российских магазинов
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Таймеры и информация -->
+            <div class="timer-container">
+                <div class="timer-item">
+                    <div class="timer-value" id="cook-time">12-15 мин</div>
+                    <div class="timer-label">Время приготовления</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-value" id="cost-per-serving">~0 руб</div>
+                    <div class="timer-label">Цена за порцию</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-value">⭐ 4.8</div>
+                    <div class="timer-label">Сложность: средняя</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Основной контент -->
+    <div class="container">
+        <!-- Левая карточка: Ингредиенты -->
+        <div class="card">
+            <h2><i class="fas fa-shopping-cart"></i> Список покупок</h2>
+            
+            <div class="progress-summary">
+                <div style="font-weight: bold;">
+                    <span>Куплено:</span>
+                    <span style="color: var(--green); font-size: 1.2rem;" id="bought-count">0</span>
+                    <span>из</span>
+                    <span id="total-ingredients">0</span>
+                </div>
+                <div style="width: 60%;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div style="font-size: 0.85rem; text-align: center;">
+                        <span id="progress-percent">0%</span> готово
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <h3 style="color: var(--green); margin-bottom: 15px;">
+                    <i class="fas fa-utensils"></i> Основные ингредиенты
+                </h3>
+                <ul class="ingredients-list" id="main-ingredients">
+                    <!-- Заполнится JavaScript -->
+                </ul>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <h3 style="color: var(--green); margin-bottom: 15px;">
+                    <i class="fas fa-mortar-pestle"></i> Для соуса
+                </h3>
+                <ul class="ingredients-list" id="sauce-ingredients">
+                    <!-- Заполнится JavaScript -->
+                </ul>
+            </div>
+            
+            <div style="margin-top: 25px; display: none;" id="additional-category">
+                <h3 style="color: var(--green); margin-bottom: 15px;">
+                    <i class="fas fa-plus-circle"></i> Дополнительно
+                </h3>
+                <ul class="ingredients-list" id="additional-ingredients">
+                    <!-- Заполнится JavaScript -->
+                </ul>
+            </div>
+            
+            <button class="reset-btn" id="reset-list">
+                <i class="fas fa-redo"></i> Сбросить список покупок
+            </button>
+            
+            <div class="pasta-tip">
+                <p><i class="fas fa-lightbulb"></i> <strong>Совет:</strong> Для идеальной пасты используйте 1 литр воды и 10г соли на каждые 100г пасты. Пасту лучше готовить al dente ("на зубок").</p>
+            </div>
+        </div>
+        
+        <!-- Правая карточка: Приготовление -->
+        <div class="card">
+            <h2><i class="fas fa-utensil-spoon"></i> Пошаговая инструкция</h2>
+            
+            <div style="display: flex; align-items: center; margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 10px;">
+                <div class="italian-flag">
+                    <div class="flag-stripe flag-green"></div>
+                    <div class="flag-stripe flag-white"></div>
+                    <div class="flag-stripe flag-red"></div>
+                </div>
+                <span style="font-weight: bold; margin-left: 10px;" id="selected-pasta-name">Паста Карбонара</span>
+                <span style="margin-left: auto; color: var(--red); font-weight: bold;" id="pasta-time">15 мин</span>
+            </div>
+            
+            <ul class="steps-list" id="steps-list">
+                <!-- Заполнится JavaScript -->
+            </ul>
+            
+            <div style="margin-top: 25px; padding: 20px; background: linear-gradient(45deg, rgba(0,140,69,0.1), rgba(205,33,42,0.1)); border-radius: 15px;">
+                <h3 style="color: var(--green); margin-bottom: 10px;">
+                    <i class="fas fa-graduation-cap"></i> Итальянский секрет
+                </h3>
+                <p id="italian-tip">Настоящую карбонару готовят без сливок! Сливочность соусу придают желтки и сыр.</p>
+            </div>
+            
+            <div class="pasta-tip">
+                <p><i class="fas fa-clock"></i> <strong>Таймеры:</strong> Нажмите на значок таймера <i class="fas fa-hourglass-half"></i> рядом с шагом, чтобы запустить таймер для этого этапа.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Футер -->
+    <footer>
+        <p>
+            <span class="italian-flag" style="width: 20px; height: 15px; margin: 0 5px;"></span>
+            Итальянская кухня доступна каждому 
+            <span class="italian-flag" style="width: 20px; height: 15px; margin: 0 5px;"></span>
+        </p>
+        <p style="margin-top: 10px;">Все ингредиенты доступны в российских супермаркетах</p>
+        <a href="#" class="print-btn" onclick="window.print(); return false;">
+            <i class="fas fa-print"></i> Распечатать рецепт
+        </a>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // БАЗА ДАННЫХ РЕЦЕПТОВ ПАСТЫ
+        const pastaRecipes = {
+            "carbonara": {
+                name: "Паста Карбонара",
+                cookTime: "12-15 минут",
+                difficulty: "Средняя",
+                baseIngredients: [
+                    { id: "pasta", name: "Спагетти", baseAmount: 100, unit: "г", price: 40 },
+                    { id: "guanciale", name: "Гуанчале (можно заменить панчеттой или беконом)", baseAmount: 80, unit: "г", price: 150 },
+                    { id: "egg", name: "Яичные желтки", baseAmount: 1, unit: "шт.", price: 15 },
+                    { id: "pecorino", name: "Сыр Пекорино Романо (можно заменить пармезаном)", baseAmount: 40, unit: "г", price: 80 }
+                ],
+                sauceIngredients: [
+                    { id: "blackPepper", name: "Черный перец свежемолотый", baseAmount: 2, unit: "ч.л.", price: 5 },
+                    { id: "salt", name: "Соль для воды", baseAmount: 10, unit: "г", price: 1 }
+                ],
+                additionalIngredients: [],
+                options: [
+                    { id: "guancialeType", name: "Тип мяса:", type: "radio", options: [
+                        { value: "guanciale", label: "Гуанчале (традиционно)", price: 200 },
+                        { value: "pancetta", label: "Панчетта", price: 180 },
+                        { value: "bacon", label: "Бекон", price: 120 }
+                    ]},
+                    { id: "cheeseType", name: "Сыр:", type: "radio", options: [
+                        { value: "pecorino", label: "Пекорино Романо", price: 200 },
+                        { value: "parmesan", label: "Пармезан", price: 180 }
+                    ]},
+                    { id: "addCream", name: "Добавить сливки (не традиционно)", type: "checkbox", price: 50 }
+                ],
+                steps: [
+                    { text: "Поставьте большую кастрюлю с водой на сильный огонь. Добавьте соль из расчета 10г на литр воды.", timer: 0 },
+                    { text: "Нарежьте мясо небольшими кубиками или полосками. Обжарьте на среднем огне до хрустящей корочки.", timer: 8 },
+                    { text: "Взбейте яичные желтки с большей частью тертого сыра и свежемолотым черным перцем.", timer: 0 },
+                    { text: "Когда вода закипит, добавьте пасту и готовьте согласно времени на упаковке, обычно 8-10 минут.", timer: 10 },
+                    { text: "Отложите немного воды от пасты, затем слейте пасту и быстро смешайте с обжаренным мясом.", timer: 1 },
+                    { text: "Снимите с огня и добавьте яично-сырную смесь, интенсивно перемешивая. При необходимости добавьте немного воды от пасты для кремообразной консистенции.", timer: 0 },
+                    { text: "Подавайте сразу, посыпав оставшимся сыром и черным перцем.", timer: 0 }
+                ],
+                tip: "Настоящую карбонару готовят без сливок! Сливочность соусу придают желтки и сыр."
+            },
+            
+            "cream-mushroom": {
+                name: "Паста со сливками и грибами",
+                cookTime: "20-25 минут",
+                difficulty: "Легкая",
+                baseIngredients: [
+                    { id: "pasta", name: "Феттучине или тальятелле", baseAmount: 100, unit: "г", price: 45 },
+                    { id: "mushrooms", name: "Шампиньоны свежие", baseAmount: 200, unit: "г", price: 100 },
+                    { id: "cream", name: "Сливки 20%", baseAmount: 200, unit: "мл", price: 80 },
+                    { id: "onion", name: "Лук репчатый", baseAmount: 1, unit: "шт.", price: 15 }
+                ],
+                sauceIngredients: [
+                    { id: "garlic", name: "Чеснок", baseAmount: 2, unit: "зубчика", price: 5 },
+                    { id: "butter", name: "Сливочное масло", baseAmount: 30, unit: "г", price: 20 },
+                    { id: "parsley", name: "Петрушка свежая", baseAmount: 10, unit: "г", price: 15 },
+                    { id: "salt", name: "Соль и перец", baseAmount: 5, unit: "г", price: 2 }
+                ],
+                additionalIngredients: [
+                    { id: "parmesan", name: "Пармезан для подачи", baseAmount: 30, unit: "г", price: 60 }
+                ],
+                options: [
+                    { id: "mushroomType", name: "Тип грибов:", type: "radio", options: [
+                        { value: "champignon", label: "Шампиньоны", price: 100 },
+                        { value: "shiitake", label: "Шиитаке", price: 200 },
+                        { value: "oyster", label: "Вешенки", price: 120 }
+                    ]},
+                    { id: "addChicken", name: "Добавить куриное филе", type: "checkbox", price: 120 },
+                    { id: "addSpinach", name: "Добавить шпинат", type: "checkbox", price: 50 }
+                ],
+                steps: [
+                    { text: "Нарежьте грибы пластинками, лук мелкими кубиками, чеснок измельчите.", timer: 5 },
+                    { text: "Поставьте воду для пасты, добавьте соль и доведите до кипения.", timer: 0 },
+                    { text: "В сковороде растопите сливочное масло, обжарьте лук до прозрачности 3-4 минуты.", timer: 4 },
+                    { text: "Добавьте грибы и обжаривайте до золотистого цвета и испарения жидкости, 7-8 минут.", timer: 8 },
+                    { text: "Влейте сливки, добавьте чеснок, соль и перец по вкусу. Тушите 5 минут на медленном огне.", timer: 5 },
+                    { text: "Отварите пасту согласно инструкции на упаковке, обычно 10-12 минут.", timer: 12 },
+                    { text: "Слейте воду, смешайте пасту с соусом, посыпьте петрушкой и пармезаном.", timer: 0 }
+                ],
+                tip: "Не пережаривайте грибы - они должны остаться сочными. Для более насыщенного вкуса можно добавить немного белого вина."
+            },
+            
+            "bolognese": {
+                name: "Паста Болоньезе",
+                cookTime: "45-60 минут",
+                difficulty: "Средняя",
+                baseIngredients: [
+                    { id: "pasta", name: "Тальятелле или феттучине", baseAmount: 100, unit: "г", price: 45 },
+                    { id: "beef", name: "Говяжий фарш", baseAmount: 150, unit: "г", price: 180 },
+                    { id: "tomato", name: "Помидоры в собственном соку", baseAmount: 200, unit: "г", price: 70 },
+                    { id: "carrot", name: "Морковь", baseAmount: 1, unit: "шт.", price: 10 }
+                ],
+                sauceIngredients: [
+                    { id: "onion", name: "Лук репчатый", baseAmount: 1, unit: "шт.", price: 15 },
+                    { id: "celery", name: "Сельдерей стебель", baseAmount: 1, unit: "шт.", price: 20 },
+                    { id: "garlic", name: "Чеснок", baseAmount: 2, unit: "зубчика", price: 5 },
+                    { id: "wine", name: "Красное вино (сухое)", baseAmount: 100, unit: "мл", price: 80 }
+                ],
+                additionalIngredients: [
+                    { id: "parmesan", name: "Пармезан для подачи", baseAmount: 30, unit: "г", price: 60 },
+                    { id: "basil", name: "Базилик свежий", baseAmount: 10, unit: "г", price: 30 }
+                ],
+                options: [
+                    { id: "meatType", name: "Тип фарша:", type: "radio", options: [
+                        { value: "beef", label: "Говяжий", price: 180 },
+                        { value: "pork", label: "Свино-говяжий", price: 150 },
+                        { value: "turkey", label: "Индейка (диетический)", price: 160 }
+                    ]},
+                    { id: "addMilk", name: "Добавить молоко (традиционно)", type: "checkbox", price: 30 },
+                    { id: "addMushrooms", name: "Добавить грибы", type: "checkbox", price: 80 }
+                ],
+                steps: [
+                    { text: "Мелко нарежьте лук, морковь и сельдерей (софрито). Обжарьте на оливковом масле до мягкости, 8-10 минут.", timer: 10 },
+                    { text: "Добавьте фарш, разбивая комки, и обжаривайте до изменения цвета, 8-10 минут.", timer: 10 },
+                    { text: "Влейте вино и выпарите алкоголь на сильном огне, 3-4 минуты.", timer: 4 },
+                    { text: "Добавьте измельченные помидоры, соль, перец и травы. Уменьшите огонь.", timer: 0 },
+                    { text: "Тушите соус под крышкой на медленном огне минимум 30 минут (лучше 1-2 часа).", timer: 30 },
+                    { text: "За 15 минут до подачи отварите пасту в подсоленной воде.", timer: 15 },
+                    { text: "Смешайте пасту с соусом, подавайте с пармезаном и базиликом.", timer: 0 }
+                ],
+                tip: "Настоящий болоньезе тушится минимум 2 часа на медленном огне - это делает мясо нежным, а соус насыщенным."
+            },
+            
+            "lasagna": {
+                name: "Лазанья",
+                cookTime: "60-75 минут",
+                difficulty: "Сложная",
+                baseIngredients: [
+                    { id: "lasagnaSheets", name: "Листы для лазаньи", baseAmount: 6, unit: "шт.", price: 120 },
+                    { id: "beef", name: "Говяжий фарш", baseAmount: 300, unit: "г", price: 180 },
+                    { id: "tomato", name: "Помидоры в собственном соку", baseAmount: 400, unit: "г", price: 70 },
+                    { id: "mozzarella", name: "Моцарелла", baseAmount: 200, unit: "г", price: 150 }
+                ],
+                sauceIngredients: [
+                    { id: "onion", name: "Лук репчатый", baseAmount: 1, unit: "шт.", price: 15 },
+                    { id: "carrot", name: "Морковь", baseAmount: 1, unit: "шт.", price: 10 },
+                    { id: "garlic", name: "Чеснок", baseAmount: 3, unit: "зубчика", price: 5 },
+                    { id: "milk", name: "Молоко", baseAmount: 500, unit: "мл", price: 40 }
+                ],
+                additionalIngredients: [
+                    { id: "butter", name: "Сливочное масло", baseAmount: 50, unit: "г", price: 35 },
+                    { id: "flour", name: "Мука", baseAmount: 50, unit: "г", price: 10 },
+                    { id: "parmesan", name: "Пармезан", baseAmount: 100, unit: "г", price: 200 },
+                    { id: "nutmeg", name: "Мускатный орех", baseAmount: 1, unit: "щепотка", price: 5 }
+                ],
+                options: [
+                    { id: "meatType", name: "Начинка:", type: "radio", options: [
+                        { value: "beef", label: "Мясная (говядина)", price: 180 },
+                        { value: "vegetable", label: "Овощная", price: 120 },
+                        { value: "chicken", label: "Куриная", price: 160 }
+                    ]},
+                    { id: "addSpinach", name: "Добавить шпинат в начинку", type: "checkbox", price: 50 },
+                    { id: "addMushrooms", name: "Добавить грибы", type: "checkbox", price: 80 }
+                ],
+                steps: [
+                    { text: "Приготовьте болоньезе: обжарьте лук, морковь и чеснок, добавьте фарш, затем помидоры. Тушите 30 минут.", timer: 30 },
+                    { text: "Приготовьте бешамель: растопите масло, добавьте муку, постепенно влейте молоко, добавьте мускатный орех.", timer: 10 },
+                    { text: "Соберите лазанью: форма -> соус болоньезе -> листы лазаньи -> бешамель -> сыр. Повторите слои 3-4 раза.", timer: 10 },
+                    { text: "Последний слой: бешамель + много сыра. Накройте фольгой.", timer: 0 },
+                    { text: "Выпекайте под фольгой 25 минут при 180°C.", timer: 25 },
+                    { text: "Снимите фольгу и выпекайте еще 15-20 минут до золотистой корочки.", timer: 20 },
+                    { text: "Дайте лазанье отдохнуть 10-15 минут перед нарезкой и подачей.", timer: 15 }
+                ],
+                tip: "Дайте лазанье отдохнуть после духовки 10-15 минут - так она лучше нарезается и слои не распадаются."
+            },
+            
+            "pesto": {
+                name: "Паста с соусом Песто",
+                cookTime: "15-20 минут",
+                difficulty: "Легкая",
+                baseIngredients: [
+                    { id: "pasta", name: "Трёхцветная паста или фузилли", baseAmount: 100, unit: "г", price: 50 },
+                    { id: "basil", name: "Базилик свежий", baseAmount: 50, unit: "г", price: 100 },
+                    { id: "pineNuts", name: "Кедровые орешки", baseAmount: 30, unit: "г", price: 120 },
+                    { id: "parmesan", name: "Пармезан", baseAmount: 50, unit: "г", price: 100 }
+                ],
+                sauceIngredients: [
+                    { id: "garlic", name: "Чеснок", baseAmount: 1, unit: "зубчик", price: 5 },
+                    { id: "oliveOil", name: "Оливковое масло extra virgin", baseAmount: 100, unit: "мл", price: 80 },
+                    { id: "salt", name: "Морская соль", baseAmount: 5, unit: "г", price: 2 }
+                ],
+                additionalIngredients: [
+                    { id: "lemon", name: "Лимон (сок и цедра)", baseAmount: 0.5, unit: "шт.", price: 30 },
+                    { id: "cherryTomato", name: "Помидоры черри для подачи", baseAmount: 100, unit: "г", price: 80 }
+                ],
+                options: [
+                    { id: "nutType", name: "Орехи для песто:", type: "radio", options: [
+                        { value: "pine", label: "Кедровые (традиционно)", price: 120 },
+                        { value: "walnut", label: "Грецкие", price: 70 },
+                        { value: "almond", label: "Миндаль", price: 90 }
+                    ]},
+                    { id: "addSpinach", name: "Добавить шпинат в песто", type: "checkbox", price: 40 },
+                    { id: "addAvocado", name: "Добавить авокадо для кремообразности", type: "checkbox", price: 80 }
+                ],
+                steps: [
+                    { text: "В ступке или блендере измельчите чеснок с солью.", timer: 2 },
+                    { text: "Добавьте кедровые орешки и измельчите до пастообразного состояния.", timer: 2 },
+                    { text: "Добавляйте листья базилика постепенно, продолжая измельчать.", timer: 3 },
+                    { text: "Влейте оливковое масло, продолжая перемешивать.", timer: 1 },
+                    { text: "Добавьте тертый пармезан и перемешайте до однородности.", timer: 1 },
+                    { text: "Отварите пасту в подсоленной воде согласно инструкции на упаковке.", timer: 12 },
+                    { text: "Слейте воду, оставив немного воды от пасты. Смешайте пасту с песто, добавив немного воды от пасты для нужной консистенции.", timer: 0 }
+                ],
+                tip: "Настоящий песто готовят в ступке, а не в блендере - это сохраняет текстуру и аромат ингредиентов."
+            },
+            
+            "seafood": {
+                name: "Паста с морепродуктами",
+                cookTime: "20-25 минут",
+                difficulty: "Средняя",
+                baseIngredients: [
+                    { id: "pasta", name: "Лингвини или спагетти", baseAmount: 100, unit: "г", price: 45 },
+                    { id: "shrimp", name: "Креветки очищенные", baseAmount: 150, unit: "г", price: 250 },
+                    { id: "mussels", name: "Мидии", baseAmount: 150, unit: "г", price: 200 },
+                    { id: "squid", name: "Кальмары (кольца)", baseAmount: 100, unit: "г", price: 150 }
+                ],
+                sauceIngredients: [
+                    { id: "garlic", name: "Чеснок", baseAmount: 3, unit: "зубчика", price: 5 },
+                    { id: "tomato", name: "Помидоры черри", baseAmount: 150, unit: "г", price: 80 },
+                    { id: "whiteWine", name: "Белое вино (сухое)", baseAmount: 100, unit: "мл", price: 80 },
+                    { id: "oliveOil", name: "Оливковое масло", baseAmount: 30, unit: "мл", price: 25 }
+                ],
+                additionalIngredients: [
+                    { id: "parsley", name: "Петрушка свежая", baseAmount: 20, unit: "г", price: 20 },
+                    { id: "lemon", name: "Лимон", baseAmount: 0.5, unit: "шт.", price: 30 },
+                    { id: "chili", name: "Перец чили (по желанию)", baseAmount: 1, unit: "шт.", price: 10 }
+                ],
+                options: [
+                    { id: "seafoodMix", name: "Морепродукты:", type: "radio", options: [
+                        { value: "premium", label: "Премиум (креветки, мидии, кальмары)", price: 600 },
+                        { value: "standard", label: "Стандарт (креветки и мидии)", price: 450 },
+                        { value: "budget", label: "Бюджет (креветки)", price: 250 }
+                    ]},
+                    { id: "sauceType", name: "Соус:", type: "radio", options: [
+                        { value: "tomato", label: "Томатный", price: 50 },
+                        { value: "whiteWine", label: "На белом вине", price: 80 },
+                        { value: "cream", label: "Сливочный", price: 70 }
+                    ]},
+                    { id: "addScallops", name: "Добавить гребешки", type: "checkbox", price: 200 }
+                ],
+                steps: [
+                    { text: "Очистите морепродукты (если нужно). Креветки очистить, оставив хвостики. Мидии промыть.", timer: 10 },
+                    { text: "В большой сковороде разогрейте оливковое масло, обжарьте чеснок и чили 1-2 минуты.", timer: 2 },
+                    { text: "Добавьте креветки и кальмары, обжаривайте 2-3 минуты до изменения цвета.", timer: 3 },
+                    { text: "Добавьте мидии и помидоры черри, влейте белое вино. Тушите 5 минут.", timer: 5 },
+                    { text: "Тем временем отварите пасту в подсоленной воде до состояния al dente.", timer: 10 },
+                    { text: "Добавьте пасту в сковороду с морепродуктами, перемешайте.", timer: 1 },
+                    { text: "Подавайте сразу, сбрызнув лимонным соком и посыпав петрушкой.", timer: 0 }
+                ],
+                tip: "Не пережаривайте морепродукты! Креветки готовы, когда станут розовыми и свернутся в букву 'C'."
+            }
+        };
+
+        // ТЕКУЩЕЕ СОСТОЯНИЕ
+        let currentPastaType = "carbonara";
+        let currentPortions = 4;
+        let selectedOptions = {
+            carbonara: { guancialeType: "guanciale", cheeseType: "pecorino", addCream: false },
+            "cream-mushroom": { mushroomType: "champignon", addChicken: false, addSpinach: false },
+            bolognese: { meatType: "beef", addMilk: true, addMushrooms: false },
+            lasagna: { meatType: "beef", addSpinach: false, addMushrooms: false },
+            pesto: { nutType: "pine", addSpinach: false, addAvocado: false },
+            seafood: { seafoodMix: "premium", sauceType: "whiteWine", addScallops: false }
+        };
+        let boughtIngredients = JSON.parse(localStorage.getItem('pastaBoughtIngredients')) || {};
+
+        // DOM ЭЛЕМЕНТЫ
+        const portionSlider = document.getElementById('portion-slider');
+        const portionValue = document.getElementById('portion-value');
+        const pastaAmount = document.getElementById('pasta-amount');
+        const cookTime = document.getElementById('cook-time');
+        const costPerServing = document.getElementById('cost-per-serving');
+        const selectedPastaName = document.getElementById('selected-pasta-name');
+        const pastaTime = document.getElementById('pasta-time');
+        const italianTip = document.getElementById('italian-tip');
+        
+        const costPasta = document.getElementById('cost-pasta');
+        const costSauce = document.getElementById('cost-sauce');
+        const costCheese = document.getElementById('cost-cheese');
+        const costTotal = document.getElementById('cost-total');
+        
+        const mainIngredientsList = document.getElementById('main-ingredients');
+        const sauceIngredientsList = document.getElementById('sauce-ingredients');
+        const additionalCategory = document.getElementById('additional-category');
+        const additionalIngredientsList = document.getElementById('additional-ingredients');
+        const stepsList = document.getElementById('steps-list');
+        const recipeOptions = document.getElementById('recipe-options');
+        
+        const boughtCount = document.getElementById('bought-count');
+        const totalIngredients = document.getElementById('total-ingredients');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercent = document.getElementById('progress-percent');
+        const resetListBtn = document.getElementById('reset-list');
+        
+        // ИНИЦИАЛИЗАЦИЯ
+        document.addEventListener('DOMContentLoaded', function() {
+            initPastaTypeButtons();
+            initPortionSlider();
+            updateRecipe();
+            updateProgress();
+            
+            // Запрашиваем разрешение на уведомления
+            if ("Notification" in window && Notification.permission === "default") {
+                setTimeout(() => {
+                    Notification.requestPermission();
+                }, 1000);
+            }
+        });
+
+        // ИНИЦИАЛИЗАЦИЯ КНОПОК ТИПА ПАСТЫ
+        function initPastaTypeButtons() {
+            document.querySelectorAll('.pasta-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Убираем активный класс у всех кнопок
+                    document.querySelectorAll('.pasta-type-btn').forEach(b => b.classList.remove('active'));
+                    
+                    // Добавляем активный класс текущей кнопке
+                    this.classList.add('active');
+                    
+                    // Обновляем текущий тип пасты
+                    currentPastaType = this.getAttribute('data-type');
+                    
+                    // Обновляем рецепт
+                    updateRecipe();
+                    updateProgress();
+                    
+                    // Анимация
+                    this.style.animation = "pulse 0.5s";
+                    setTimeout(() => this.style.animation = "", 500);
+                });
+            });
+        }
+
+        // ИНИЦИАЛИЗАЦИЯ СЛАЙДЕРА ПОРЦИЙ
+        function initPortionSlider() {
+            portionSlider.addEventListener('input', function() {
+                currentPortions = parseInt(this.value);
+                portionValue.textContent = currentPortions;
+                
+                // Обновляем количество пасты
+                const pastaGrams = currentPortions * 100;
+                pastaAmount.textContent = `(${pastaGrams}г пасты)`;
+                
+                // Обновляем рецепт
+                updateRecipe();
+                updateProgress();
+                
+                // Анимация
+                portionValue.classList.add('pulse');
+                setTimeout(() => portionValue.classList.remove('pulse'), 500);
+            });
+        }
+
+        // ОБНОВЛЕНИЕ ВСЕГО РЕЦЕПТА
+        function updateRecipe() {
+            const recipe = pastaRecipes[currentPastaType];
+            
+            // Обновляем информацию
+            selectedPastaName.textContent = recipe.name;
+            pastaTime.textContent = recipe.cookTime;
+            cookTime.textContent = recipe.cookTime;
+            italianTip.textContent = recipe.tip;
+            
+            // Обновляем опции рецепта
+            updateRecipeOptions(recipe);
+            
+            // Обновляем списки ингредиентов
+            updateIngredients(recipe);
+            
+            // Обновляем шаги приготовления
+            updateSteps(recipe);
+            
+            // Обновляем стоимость
+            updateCost(recipe);
+        }
+
+        // ОБНОВЛЕНИЕ ОПЦИЙ РЕЦЕПТА
+        function updateRecipeOptions(recipe) {
+            recipeOptions.innerHTML = '';
+            
+            // Заголовок
+            const title = document.createElement('h3');
+            title.innerHTML = '<i class="fas fa-cogs"></i> Настройки рецепта';
+            recipeOptions.appendChild(title);
+            
+            // Создаем опции
+            recipe.options.forEach(option => {
+                const container = document.createElement('div');
+                container.className = 'options-container';
+                
+                // Название опции
+                const optionTitle = document.createElement('div');
+                optionTitle.style.fontWeight = 'bold';
+                optionTitle.style.marginBottom = '10px';
+                optionTitle.textContent = option.name;
+                container.appendChild(optionTitle);
+                
+                // Радиокнопки или чекбоксы
+                if (option.type === 'radio') {
+                    option.options.forEach(opt => {
+                        const row = document.createElement('div');
+                        row.className = 'option-row';
+                        
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.id = `${currentPastaType}-${option.id}-${opt.value}`;
+                        input.name = `${currentPastaType}-${option.id}`;
+                        input.value = opt.value;
+                        
+                        // Проверяем, выбрана ли эта опция
+                        if (selectedOptions[currentPastaType][option.id] === opt.value) {
+                            input.checked = true;
+                        }
+                        
+                        input.addEventListener('change', function() {
+                            selectedOptions[currentPastaType][option.id] = this.value;
+                            updateRecipe();
+                        });
+                        
+                        const label = document.createElement('div');
+                        label.className = 'option-label';
+                        
+                        const nameSpan = document.createElement('span');
+                        nameSpan.className = 'option-name';
+                        nameSpan.textContent = opt.label;
+                        
+                        const priceSpan = document.createElement('span');
+                        priceSpan.className = 'option-price';
+                        priceSpan.textContent = `~${opt.price} руб`;
+                        
+                        label.appendChild(nameSpan);
+                        label.appendChild(priceSpan);
+                        
+                        row.appendChild(input);
+                        row.appendChild(label);
+                        container.appendChild(row);
+                    });
+                } else if (option.type === 'checkbox') {
+                    const row = document.createElement('div');
+                    row.className = 'option-row';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.id = `${currentPastaType}-${option.id}`;
+                    input.name = `${currentPastaType}-${option.id}`;
+                    
+                    // Проверяем, выбран ли этот чекбокс
+                    if (selectedOptions[currentPastaType][option.id]) {
+                        input.checked = true;
+                    }
+                    
+                    input.addEventListener('change', function() {
+                        selectedOptions[currentPastaType][option.id] = this.checked;
+                        updateRecipe();
+                    });
+                    
+                    const label = document.createElement('div');
+                    label.className = 'option-label';
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'option-name';
+                    nameSpan.textContent = option.name.replace("Добавить ", "");
+                    
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = 'option-price';
+                    priceSpan.textContent = `+${option.price} руб`;
+                    
+                    label.appendChild(nameSpan);
+                    label.appendChild(priceSpan);
+                    
+                    row.appendChild(input);
+                    row.appendChild(label);
+                    container.appendChild(row);
+                }
+                
+                recipeOptions.appendChild(container);
+            });
+        }
+
+        // ОБНОВЛЕНИЕ ИНГРЕДИЕНТОВ
+        function updateIngredients(recipe) {
+            // Очищаем списки
+            mainIngredientsList.innerHTML = '';
+            sauceIngredientsList.innerHTML = '';
+            additionalIngredientsList.innerHTML = '';
+            
+            // Рендерим основные ингредиенты
+            renderIngredientList(mainIngredientsList, recipe.baseIngredients);
+            
+            // Рендерим ингредиенты для соуса
+            renderIngredientList(sauceIngredientsList, recipe.sauceIngredients);
+            
+            // Рендерим дополнительные ингредиенты, если они есть
+            if (recipe.additionalIngredients.length > 0) {
+                additionalCategory.style.display = 'block';
+                renderIngredientList(additionalIngredientsList, recipe.additionalIngredients);
+            } else {
+                additionalCategory.style.display = 'none';
+            }
+            
+            // Обновляем общее количество ингредиентов
+            const total = recipe.baseIngredients.length + recipe.sauceIngredients.length + recipe.additionalIngredients.length;
+            totalIngredients.textContent = total;
+        }
+
+        // РЕНДЕРИНГ СПИСКА ИНГРЕДИЕНТОВ
+        function renderIngredientList(container, ingredientList) {
+            ingredientList.forEach(ingredient => {
+                // Рассчитываем количество на текущее число порций
+                const calculatedAmount = ingredient.baseAmount * currentPortions;
+                const displayAmount = formatAmount(calculatedAmount, ingredient.unit);
+                
+                // Рассчитываем цену
+                const price = (ingredient.price / ingredient.baseAmount) * calculatedAmount;
+                
+                // Проверяем, куплен ли уже ингредиент
+                const ingredientId = `${currentPastaType}-${ingredient.id}`;
+                const isChecked = boughtIngredients[ingredientId] || false;
+                
+                // Создаем элемент списка
+                const li = document.createElement('li');
+                li.className = isChecked ? 'completed' : '';
+                li.dataset.id = ingredientId;
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="ingredient-checkbox" id="${ingredientId}" ${isChecked ? 'checked' : ''}>
+                    <span class="ingredient-amount">${displayAmount}</span>
+                    <span class="ingredient-name">${ingredient.name}</span>
+                    <span class="ingredient-price">~${Math.round(price)} руб</span>
+                `;
+                
+                // Обработчик изменения состояния
+                const checkbox = li.querySelector('.ingredient-checkbox');
+                checkbox.addEventListener('change', function() {
+                    boughtIngredients[ingredientId] = this.checked;
+                    localStorage.setItem('pastaBoughtIngredients', JSON.stringify(boughtIngredients));
+                    li.classList.toggle('completed', this.checked);
+                    updateProgress();
+                    
+                    // Анимация
+                    li.classList.add('pulse');
+                    setTimeout(() => li.classList.remove('pulse'), 300);
+                });
+                
+                container.appendChild(li);
+            });
+        }
+
+        // ФОРМАТИРОВАНИЕ КОЛИЧЕСТВА
+        function formatAmount(amount, unit) {
+            if (unit === 'шт.' || unit === 'зубчик' || unit === 'шт') {
+                return amount % 1 === 0 ? `${amount} ${unit}` : `${amount.toFixed(1)} ${unit}`;
+            } else if (unit === 'ч.л.' || unit === 'ст.л.') {
+                return `${amount} ${unit}`;
+            } else {
+                return `${Math.round(amount)} ${unit}`;
+            }
+        }
+
+        // ОБНОВЛЕНИЕ ШАГОВ ПРИГОТОВЛЕНИЯ
+        function updateSteps(recipe) {
+            stepsList.innerHTML = '';
+            
+            recipe.steps.forEach((step, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="step-number">${index + 1}</div>
+                    <div class="step-content">
+                        ${step.text}
+                        ${step.timer > 0 ? `<span class="step-timer" data-time="${step.timer}"><i class="fas fa-hourglass-half"></i> Таймер: ${step.timer} мин</span>` : ''}
+                    </div>
+                `;
+                
+                // Добавляем обработчик для таймера
+                if (step.timer > 0) {
+                    const timerBtn = li.querySelector('.step-timer');
+                    timerBtn.addEventListener('click', function() {
+                        const minutes = parseInt(this.getAttribute('data-time'));
+                        openTimerModal(`Шаг ${index + 1}: ${recipe.name}`, minutes);
+                    });
+                }
+                
+                stepsList.appendChild(li);
+            });
+        }
+
+        // ОБНОВЛЕНИЕ СТОИМОСТИ
+        function updateCost(recipe) {
+            let pastaCost = 0;
+            let sauceCost = 0;
+            let cheeseCost = 0;
+            
+            // Стоимость основных ингредиентов
+            recipe.baseIngredients.forEach(ing => {
+                const amount = ing.baseAmount * currentPortions;
+                const price = (ing.price / ing.baseAmount) * amount;
+                
+                // Проверяем категорию ингредиента
+                if (ing.name.toLowerCase().includes('сыр') || ing.name.toLowerCase().includes('пармезан') || 
+                    ing.name.toLowerCase().includes('моцарелла') || ing.name.toLowerCase().includes('пекорино')) {
+                    cheeseCost += price;
+                } else if (ing.name.toLowerCase().includes('паста') || ing.name.toLowerCase().includes('спагетти') || 
+                           ing.name.toLowerCase().includes('лазань')) {
+                    pastaCost += price;
+                } else {
+                    sauceCost += price;
+                }
+            });
+            
+            // Стоимость ингредиентов для соуса
+            recipe.sauceIngredients.forEach(ing => {
+                const amount = ing.baseAmount * currentPortions;
+                const price = (ing.price / ing.baseAmount) * amount;
+                sauceCost += price;
+            });
+            
+            // Стоимость дополнительных ингредиентов
+            recipe.additionalIngredients.forEach(ing => {
+                const amount = ing.baseAmount * currentPortions;
+                const price = (ing.price / ing.baseAmount) * amount;
+                
+                if (ing.name.toLowerCase().includes('сыр') || ing.name.toLowerCase().includes('пармезан')) {
+                    cheeseCost += price;
+                } else {
+                    sauceCost += price;
+                }
+            });
+            
+            // Учитываем выбранные опции
+            recipe.options.forEach(option => {
+                if (option.type === 'radio') {
+                    const selectedValue = selectedOptions[currentPastaType][option.id];
+                    const selectedOption = option.options.find(opt => opt.value === selectedValue);
+                    if (selectedOption) {
+                        sauceCost += selectedOption.price * currentPortions;
+                    }
+                } else if (option.type === 'checkbox') {
+                    if (selectedOptions[currentPastaType][option.id]) {
+                        sauceCost += option.price * currentPortions;
+                    }
+                }
+            });
+            
+            // Итоговая стоимость
+            const totalCost = pastaCost + sauceCost + cheeseCost;
+            const costPerServingValue = totalCost / currentPortions;
+            
+            // Обновляем отображение
+            costPasta.textContent = `${Math.round(pastaCost)} руб`;
+            costSauce.textContent = `${Math.round(sauceCost)} руб`;
+            costCheese.textContent = `${Math.round(cheeseCost)} руб`;
+            costTotal.textContent = `${Math.round(totalCost)} руб`;
+            costPerServing.textContent = `~${Math.round(costPerServingValue)} руб`;
+        }
+
+        // ОБНОВЛЕНИЕ ПРОГРЕССА ПОКУПОК
+        function updateProgress() {
+            const recipe = pastaRecipes[currentPastaType];
+            const total = recipe.baseIngredients.length + recipe.sauceIngredients.length + recipe.additionalIngredients.length;
+            
+            // Считаем купленные ингредиенты для текущего рецепта
+            let bought = 0;
+            recipe.baseIngredients.forEach(ing => {
+                const id = `${currentPastaType}-${ing.id}`;
+                if (boughtIngredients[id]) bought++;
+            });
+            recipe.sauceIngredients.forEach(ing => {
+                const id = `${currentPastaType}-${ing.id}`;
+                if (boughtIngredients[id]) bought++;
+            });
+            recipe.additionalIngredients.forEach(ing => {
+                const id = `${currentPastaType}-${ing.id}`;
+                if (boughtIngredients[id]) bought++;
+            });
+            
+            const percentage = total > 0 ? (bought / total) * 100 : 0;
+            
+            boughtCount.textContent = bought;
+            progressFill.style.width = `${percentage}%`;
+            progressPercent.textContent = `${Math.round(percentage)}%`;
+        }
+
+        // СБРОС СПИСКА ПОКУПОК
+        resetListBtn.addEventListener('click', function() {
+            if (confirm('Вы уверены, что хотите сбросить список покупок для всех рецептов?')) {
+                boughtIngredients = {};
+                localStorage.removeItem('pastaBoughtIngredients');
+                
+                // Снимаем все галочки
+                document.querySelectorAll('.ingredient-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // Обновляем классы
+                document.querySelectorAll('.ingredients-list li').forEach(li => {
+                    li.classList.remove('completed');
+                });
+                
+                updateProgress();
+                
+                // Анимация
+                this.innerHTML = '<i class="fas fa-check"></i> Список сброшен!';
+                this.style.backgroundColor = 'var(--red)';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-redo"></i> Сбросить список покупок';
+                    this.style.backgroundColor = '';
+                }, 1500);
+            }
+        });
+
+        // ТАЙМЕР
+        function openTimerModal(title, minutes) {
+            const seconds = minutes * 60;
+            
+            // Создаем модальное окно
+            const modal = document.createElement('div');
+            modal.id = 'timer-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; position: relative;">
+                    <button id="close-timer" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #999;">&times;</button>
+                    <h2 style="color: var(--green); margin-bottom: 20px;">${title}</h2>
+                    <div id="timer-display" style="font-size: 4.5rem; font-weight: bold; color: var(--red); margin: 20px 0; font-family: 'Courier New', monospace;">${minutes.toString().padStart(2, '0')}:00</div>
+                    <div style="width: 100%; height: 12px; background: #eee; border-radius: 6px; margin: 25px 0; overflow: hidden;">
+                        <div id="timer-progress-bar" style="height: 100%; background: linear-gradient(90deg, var(--green), var(--red)); width: 100%; transform: scaleX(0); transform-origin: left;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px;">
+                        <button id="start-timer" style="padding: 12px 25px; background: var(--green); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-play"></i> Старт
+                        </button>
+                        <button id="pause-timer" style="padding: 12px 25px; background: var(--gold); color: #333; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-pause"></i> Пауза
+                        </button>
+                        <button id="reset-timer" style="padding: 12px 25px; background: #ddd; color: #333; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-stop"></i> Сброс
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Переменные таймера
+            let timerInterval = null;
+            let timerSeconds = seconds;
+            let isTimerRunning = false;
+            let totalTimerSeconds = seconds;
+            
+            // Элементы таймера
+            const timerDisplay = document.getElementById('timer-display');
+            const timerProgressBar = document.getElementById('timer-progress-bar');
+            const startTimerBtn = document.getElementById('start-timer');
+            const pauseTimerBtn = document.getElementById('pause-timer');
+            const resetTimerBtn = document.getElementById('reset-timer');
+            const closeTimerBtn = document.getElementById('close-timer');
+            
+            // Обновление отображения таймера
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timerSeconds / 60);
+                const seconds = timerSeconds % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                const progress = ((totalTimerSeconds - timerSeconds) / totalTimerSeconds) * 100;
+                timerProgressBar.style.transform = `scaleX(${progress / 100})`;
+                
+                // Изменение цвета при завершении
+                if (timerSeconds < 10 && timerSeconds > 0) {
+                    timerDisplay.style.color = 'var(--red)';
+                }
+            }
+            
+            // Запуск таймера
+            function startTimer() {
+                if (isTimerRunning) return;
+                
+                isTimerRunning = true;
+                const startTime = Date.now() - (totalTimerSeconds - timerSeconds) * 1000;
+                
+                timerInterval = setInterval(() => {
+                    const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                    timerSeconds = Math.max(totalTimerSeconds - elapsedSeconds, 0);
+                    
+                    updateTimerDisplay();
+                    
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        
+                        // Воспроизводим звук
+                        playTimerCompleteSound();
+                        
+                        // Уведомление
+                        if (Notification.permission === "granted") {
+                            new Notification("Таймер завершен!", {
+                                body: `Время для "${title}" истекло!`,
+                                icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwOEM0NSI+PHBhdGggZD0iTTEyLDIgQTEwLDEwIDAgMCwwIDIsMTIgQTEwLDEwIDAgMCwwIDEyLDIyIEExMCwxMCAwIDAsMCAyMiwxMiBBMTAsMTAgMCAwLDAgMTIsMiBNMTIsNCABOCw4IDAgMCwxIDIwLDEyIEE4LDggMCAwLDEgMTIsMjAgQTgsOCAwIDAsMSA0LDEyIEE4LDggMCAwLDEgMTIsNCBNMTEuNyw2IEE1LjksNS45IDAgMCwwIDYuMSwxMS43IEExLjYsMS42IDAgMCwwIDYuMSwxNC45IEE1LjksNS45IDAgMCwwIDExLjcsMjAuNSBBMS42LDEuNiAwIDAsMCAxMy4zLDIwLjUgQTUuOSw1LjkgMCAwLDAgMTguOSwxNC45IEExLjYsMS42IDAgMCwwIDE4LjksMTEuNyBBNS45LDUuOSAwIDAsMCAxMy4zLDYgQTEuNiwxLjYgMCAwLDAgMTEuNyw2Ii8+PC9zdmc+"
+                            });
+                        }
+                    }
+                }, 100);
+            }
+            
+            // Пауза таймера
+            function pauseTimer() {
+                isTimerRunning = false;
+                clearInterval(timerInterval);
+            }
+            
+            // Сброс таймера
+            function resetTimer() {
+                pauseTimer();
+                timerSeconds = totalTimerSeconds;
+                updateTimerDisplay();
+                timerDisplay.style.color = 'var(--red)';
+            }
+            
+            // Закрытие модального окна
+            function closeTimerModal() {
+                pauseTimer();
+                document.body.removeChild(modal);
+            }
+            
+            // Обработчики событий
+            startTimerBtn.addEventListener('click', startTimer);
+            pauseTimerBtn.addEventListener('click', pauseTimer);
+            resetTimerBtn.addEventListener('click', resetTimer);
+            closeTimerBtn.addEventListener('click', closeTimerModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeTimerModal();
+                }
+            });
+            
+            // Инициализация отображения
+            updateTimerDisplay();
+        }
+
+        // ЗВУК ЗАВЕРШЕНИЯ ТАЙМЕРА
+        function playTimerCompleteSound() {
+            try {
+                // Создаем звуковой контекст
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Создаем осциллятор
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Настраиваем звук
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.8);
+            } catch (e) {
+                console.log("Аудио не поддерживается");
+            }
+        }
+
+        // ГЕНЕРАЦИЯ ЧЕКА ДЛЯ ПОКУПОК
+        window.generateShoppingList = function() {
+            const recipe = pastaRecipes[currentPastaType];
+            let list = "=== СПИСОК ПОКУПОК: " + recipe.name + " ===\n";
+            list += "Количество порций: " + currentPortions + "\n\n";
+            
+            // Основные ингредиенты
+            list += "ОСНОВНЫЕ ИНГРЕДИЕНТЫ:\n";
+            recipe.baseIngredients.forEach(ing => {
+                const amount = ing.baseAmount * currentPortions;
+                const displayAmount = formatAmount(amount, ing.unit);
+                list += `- ${displayAmount} ${ing.name}\n`;
+            });
+            
+            // Ингредиенты для соуса
+            list += "\nДЛЯ СОУСА:\n";
+            recipe.sauceIngredients.forEach(ing => {
+                const amount = ing.baseAmount * currentPortions;
+                const displayAmount = formatAmount(amount, ing.unit);
+                list += `- ${displayAmount} ${ing.name}\n`;
+            });
+            
+            // Дополнительные ингредиенты
+            if (recipe.additionalIngredients.length > 0) {
+                list += "\nДОПОЛНИТЕЛЬНО:\n";
+                recipe.additionalIngredients.forEach(ing => {
+                    const amount = ing.baseAmount * currentPortions;
+                    const displayAmount = formatAmount(amount, ing.unit);
+                    list += `- ${displayAmount} ${ing.name}\n`;
+                });
+            }
+            
+            // Примерная стоимость
+            const totalCost = document.getElementById('cost-total').textContent;
+            list += "\n=== ПРИМЕРНАЯ СТОИМОСТЬ: " + totalCost + " ===\n";
+            
+            // Создаем и скачиваем файл
+            const blob = new Blob([list], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'список_покупок_' + recipe.name + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert("Список покупок сохранен как файл!");
+        };
+    </script>
+</body>
+</html>
