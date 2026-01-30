@@ -10,6 +10,8 @@
             --primary-color: #ff6b6b;
             --secondary-color: #4ecdc4;
             --accent-color: #ffe66d;
+            --cheese-color: #ffb347;
+            --sauce-color: #ff8e53;
             --background-color: #f7fff7;
             --card-color: #ffffff;
             --text-color: #333333;
@@ -59,24 +61,6 @@
         @keyframes headerSlide {
             0% { transform: translateY(-30px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
-        }
-        
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 40px 40px;
-            animation: floatBackground 30s linear infinite;
-            z-index: 0;
-        }
-        
-        @keyframes floatBackground {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-40px, -40px) rotate(360deg); }
         }
         
         .header-content {
@@ -231,6 +215,23 @@
         .option-price {
             font-size: 0.85rem;
             opacity: 0.8;
+        }
+        
+        .hat-settings {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hat-component {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hat-component input[type="checkbox"] {
+            accent-color: var(--cheese-color);
         }
         
         .cost-summary {
@@ -820,6 +821,21 @@
             overflow: hidden;
         }
         
+        .roll-type.cheese {
+            background-color: var(--cheese-color);
+            color: white;
+        }
+        
+        .roll-type.sauce {
+            background-color: var(--sauce-color);
+            color: white;
+        }
+        
+        .roll-type.combined {
+            background: linear-gradient(45deg, var(--cheese-color), var(--sauce-color));
+            color: white;
+        }
+        
         .roll-type::before {
             content: "";
             position: absolute;
@@ -839,6 +855,14 @@
         .roll-type:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(255, 230, 109, 0.4);
+        }
+        
+        .roll-type.cheese:hover {
+            box-shadow: 0 8px 15px rgba(255, 179, 71, 0.4);
+        }
+        
+        .roll-type.sauce:hover {
+            box-shadow: 0 8px 15px rgba(255, 142, 83, 0.4);
         }
         
         footer {
@@ -934,6 +958,79 @@
             margin: 0 3px;
             font-weight: 600;
         }
+        
+        .cheese-highlight {
+            background-color: rgba(255, 179, 71, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border-left: 2px solid var(--cheese-color);
+            margin: 0 3px;
+            font-weight: 600;
+            color: #d35400;
+        }
+        
+        .sauce-highlight {
+            background-color: rgba(255, 142, 83, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border-left: 2px solid var(--sauce-color);
+            margin: 0 3px;
+            font-weight: 600;
+            color: #b33900;
+        }
+        
+        .combined-highlight {
+            background: linear-gradient(45deg, rgba(255, 179, 71, 0.2), rgba(255, 142, 83, 0.2));
+            padding: 2px 6px;
+            border-radius: 4px;
+            border-left: 2px solid var(--cheese-color);
+            margin: 0 3px;
+            font-weight: 600;
+        }
+        
+        .ingredient-tooltip {
+            position: relative;
+            cursor: help;
+        }
+        
+        .ingredient-tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+        
+        .ingredient-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .hat-customization {
+            margin-top: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .hat-info {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -985,6 +1082,36 @@
                                 <span class="option-price">+80 руб</span>
                             </div>
                         </div>
+                        
+                        <div class="hat-customization">
+                            <h4 style="color: var(--accent-color); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-hat-chef"></i> Настройка шапочки
+                            </h4>
+                            <div class="hat-component">
+                                <input type="checkbox" id="hat-mayo" checked>
+                                <label for="hat-mayo">Майонез (основа шапочки)</label>
+                            </div>
+                            <div class="hat-component">
+                                <input type="checkbox" id="hat-cheese" checked>
+                                <label for="hat-cheese">Твёрдый сыр (для запекания)</label>
+                            </div>
+                            <div class="hat-component">
+                                <input type="checkbox" id="hat-soy-sauce">
+                                <label for="hat-soy-sauce">Соевый соус (для вкуса)</label>
+                            </div>
+                            <div class="hat-component">
+                                <input type="checkbox" id="hat-garlic">
+                                <label for="hat-garlic">Чеснок (для аромата)</label>
+                            </div>
+                            <div class="hat-component">
+                                <input type="checkbox" id="hat-unagi">
+                                <label for="hat-unagi">Соус унаги (по желанию)</label>
+                            </div>
+                            
+                            <div class="hat-info">
+                                <i class="fas fa-info-circle"></i> <strong>Классическая шапочка:</strong> майонез + твёрдый сыр. Дополнительные ингредиенты усиливают вкус.
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -998,6 +1125,10 @@
                         <div class="cost-row">
                             <span>Начинка:</span>
                             <span class="cost-amount" id="cost-filling">0 руб</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Шапочка:</span>
+                            <span class="cost-amount" id="cost-hat">0 руб</span>
                         </div>
                         <div class="cost-row">
                             <span>Дополнительно:</span>
@@ -1058,8 +1189,18 @@
             </div>
             
             <div class="ingredient-category">
-                <h3><i class="fas fa-mortar-pestle"></i> Для соуса и заправки</h3>
-                <ul class="ingredients-list" id="sauce-ingredients">
+                <h3><i class="fas fa-mortar-pestle"></i> Для заправки риса</h3>
+                <ul class="ingredients-list" id="rice-ingredients">
+                    <!-- Будет заполнено JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="ingredient-category" id="hat-category">
+                <h3><i class="fas fa-hat-chef"></i> Для шапочки</h3>
+                <div id="hat-description" style="margin-bottom: 15px; font-size: 0.9rem; color: #666;">
+                    Состав шапочки: майонез + твёрдый сыр
+                </div>
+                <ul class="ingredients-list" id="hat-ingredients">
                     <!-- Будет заполнено JavaScript -->
                 </ul>
             </div>
@@ -1084,6 +1225,7 @@
             <div class="roll-types">
                 <div class="roll-type"><i class="fas fa-fire"></i> Запечённые роллы</div>
                 <div class="roll-type" id="filling-type"><i class="fas fa-fish"></i> С рыбой</div>
+                <div class="roll-type" id="hat-type" class="combined"><i class="fas fa-hat-chef"></i> Шапочка: майонез+сыр</div>
                 <div class="roll-type" id="tempura-badge" style="display: none;"><i class="fas fa-bread-slice"></i> В темпуре</div>
             </div>
             
@@ -1092,7 +1234,7 @@
             </ul>
             
             <div class="aerogrill-img">
-                <span>Аэрогриль 200°C | 8-12 минут</span>
+                <span id="aerogrill-text">Аэрогриль 200°C | 8-12 минут</span>
             </div>
             
             <div class="note">
@@ -1129,60 +1271,79 @@
 
     <script>
         // БАЗОВЫЕ ПРОПОРЦИИ (на 4 ролла = 16 кусочков)
+        // Основано на проверенных рецептах запечённых роллов
         const baseProportions = {
             // На 16 кусочков (4 ролла)
-            rice: 200, // г риса
+            rice: 200, // г риса для суши
             water: 250, // мл воды для риса
             nori: 4, // листа нори
             fish: 200, // г рыбы
             crab: 200, // г крабовых палочек
-            cheese: 150, // г сыра
-            cucumber: 1, // шт огурца
-            avocado: 1, // шт авокадо
-            // Для соуса
-            mayo: 100, // г майонеза
-            soySauce: 40, // мл соевого соуса (2 ст.л.)
-            sesameOil: 5, // мл кунжутного масла (1 ч.л.)
-            garlic: 1, // зубчик чеснока
-            caviar: 50, // г икры (опционально)
-            // Для заправки риса
-            riceVinegar: 50, // мл рисового уксуса
-            sugar: 25, // г сахара (2 ст.л.)
-            salt: 5, // г соли (1 ч.л.)
+            creamCheese: 150, // г сливочного сыра для начинки
+            cucumber: 1, // шт огурца среднего
+            avocado: 0.5, // шт авокадо (половинка на 4 ролла)
+            
+            // Для заправки риса (правильные пропорции)
+            riceVinegar: 60, // мл рисового уксуса
+            sugar: 40, // г сахара
+            salt: 8, // г соли
+            
+            // Компоненты для шапочки (базовые)
+            mayo: 120, // г майонеза (основа шапочки)
+            hardCheese: 150, // г твёрдого сыра (пармезан, чеддер, российский)
+            soySauce: 20, // мл соевого соуса (опционально)
+            garlic: 2, // зубчика чеснока (опционально)
+            unagiSauce: 30, // мл соуса унаги (опционально)
+            
             // Для темпуры (на 16 кусочков)
             flour: 100, // г муки
             egg: 1, // шт яйца
-            tempuraWater: 100, // мл ледяной воды
-            bakingPowder: 5 // г разрыхлителя (1 ч.л.)
+            tempuraWater: 120, // мл ледяной воды
+            bakingPowder: 5 // г разрыхлителя
         };
 
-        // Цены на ингредиенты (руб)
+        // Цены на ингредиенты (руб, актуальные на 2024)
         const ingredientPrices = {
-            rice: 50, // за 200г
-            nori: 40, // за 4 листа
-            fish: 300, // за 200г
-            crab: 150, // за 200г
-            cheese: 150, // за 150г
-            cucumber: 30, // за 1 шт
-            avocado: 100, // за 1 шт
-            mayo: 20, // за 100г
-            soySauce: 10, // за 40мл
-            sesameOil: 5, // за 5мл
-            garlic: 5, // за 1 зубчик
-            caviar: 150, // за 50г
-            riceVinegar: 30, // за 50мл
-            sugar: 5, // за 25г
-            salt: 1, // за 5г
-            flour: 20, // за 100г
-            egg: 10, // за 1 шт
-            bakingPowder: 5 // за 5г
+            rice: 120, // за 500г, ~24 руб/100г
+            nori: 60, // за 10 листов, ~6 руб/лист
+            fish: 400, // за 300г филе лосося, ~133 руб/100г
+            crab: 180, // за 200г крабовых палочек, ~90 руб/100г
+            creamCheese: 200, // за 200г, ~100 руб/100г
+            cucumber: 40, // за 1 шт средний
+            avocado: 120, // за 1 шт, ~60 руб/половинка
+            
+            // Для заправки риса
+            riceVinegar: 150, // за 250мл, ~60 руб/100мл
+            sugar: 60, // за 1кг, ~6 руб/100г
+            salt: 30, // за 1кг, ~3 руб/100г
+            
+            // Для шапочки
+            mayo: 80, // за 250г, ~32 руб/100г
+            hardCheese: 300, // за 300г, ~100 руб/100г
+            soySauce: 120, // за 250мл, ~48 руб/100мл
+            garlic: 30, // за 100г, ~3 руб/зубчик
+            unagiSauce: 200, // за 250мл, ~80 руб/100мл
+            
+            // Для темпуры
+            flour: 50, // за 1кг, ~5 руб/100г
+            egg: 120, // за 10 шт, ~12 руб/шт
+            bakingPowder: 40 // за 100г, ~4 руб/10г
         };
 
         // Переменные состояния
-        let currentPieces = 16; // Базовое количество - 16 кусочков
-        let currentFilling = "fish"; // По умолчанию рыба
+        let currentPieces = 16;
+        let currentFilling = "fish";
         let useTempura = false;
         let boughtIngredients = JSON.parse(localStorage.getItem('boughtIngredients')) || {};
+        
+        // Настройки шапочки
+        let hatSettings = {
+            mayo: true,
+            cheese: true,
+            soySauce: false,
+            garlic: false,
+            unagi: false
+        };
         
         // Таймер
         let timerInterval = null;
@@ -1202,13 +1363,23 @@
         const fillingCrab = document.getElementById('filling-crab');
         const tempuraOption = document.getElementById('tempura-option');
         
+        // Элементы шапочки
+        const hatMayo = document.getElementById('hat-mayo');
+        const hatCheese = document.getElementById('hat-cheese');
+        const hatSoySauce = document.getElementById('hat-soy-sauce');
+        const hatGarlic = document.getElementById('hat-garlic');
+        const hatUnagi = document.getElementById('hat-unagi');
+        const hatDescription = document.getElementById('hat-description');
+        
         const costMain = document.getElementById('cost-main');
         const costFilling = document.getElementById('cost-filling');
+        const costHat = document.getElementById('cost-hat');
         const costExtra = document.getElementById('cost-extra');
         const costTotal = document.getElementById('cost-total');
         
         const mainIngredientsList = document.getElementById('main-ingredients');
-        const sauceIngredientsList = document.getElementById('sauce-ingredients');
+        const riceIngredientsList = document.getElementById('rice-ingredients');
+        const hatIngredientsList = document.getElementById('hat-ingredients');
         const tempuraCategory = document.getElementById('tempura-category');
         const tempuraIngredientsList = document.getElementById('tempura-ingredients');
         const stepsList = document.getElementById('steps-list');
@@ -1218,27 +1389,20 @@
         const resetListBtn = document.getElementById('reset-list');
         
         const fillingType = document.getElementById('filling-type');
+        const hatType = document.getElementById('hat-type');
         const tempuraBadge = document.getElementById('tempura-badge');
-        
-        // Элементы таймера
-        const timerModal = document.getElementById('timer-modal');
-        const closeTimerBtn = document.getElementById('close-timer');
-        const timerDisplay = document.getElementById('timer-display');
-        const timerTitle = document.getElementById('timer-title');
-        const timerProgressBar = document.getElementById('timer-progress-bar');
-        const startTimerBtn = document.getElementById('start-timer');
-        const pauseTimerBtn = document.getElementById('pause-timer');
-        const resetTimerBtn = document.getElementById('reset-timer');
+        const aerogrillText = document.getElementById('aerogrill-text');
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
             initControls();
-            updateIngredients(); // Обновляем ингредиенты при загрузке
+            updateIngredients();
             renderSteps();
             updateProgress();
             updateCost();
             initTimerModal();
             createParticles();
+            updateHatDescription();
             
             animateOnLoad();
         });
@@ -1250,24 +1414,20 @@
                 currentPieces = parseInt(this.value);
                 portionValue.textContent = currentPieces;
                 
-                // Обновляем текст с количеством роллов
                 const rolls = Math.ceil(currentPieces / 4);
                 const piecesPerRoll = Math.ceil(currentPieces / rolls);
                 rollsCount.textContent = `(${rolls} ${pluralize(rolls, 'ролл', 'ролла', 'роллов')} по ${piecesPerRoll} ${pluralize(piecesPerRoll, 'кусочек', 'кусочка', 'кусочков')})`;
                 
-                // Обновляем время приготовления
                 const baseTime = 45;
                 const additionalTime = Math.max(0, currentPieces - 16) * 0.7;
                 const minTime = Math.round(baseTime + additionalTime);
                 const maxTime = Math.round(baseTime + additionalTime + 10);
                 totalTime.textContent = `${minTime}-${maxTime} мин`;
                 
-                // Обновляем интерфейс
-                updateIngredients(); // Обновляем список покупок
+                updateIngredients();
                 renderSteps();
                 updateCost();
                 
-                // Анимация
                 portionValue.classList.add('pulse');
                 setTimeout(() => portionValue.classList.remove('pulse'), 500);
             });
@@ -1275,7 +1435,7 @@
             // Переключатель начинки
             fillingFish.addEventListener('change', function() {
                 currentFilling = "fish";
-                updateIngredients(); // Обновляем список покупок
+                updateIngredients();
                 renderSteps();
                 updateCost();
                 updateFillingDisplay();
@@ -1283,7 +1443,7 @@
             
             fillingCrab.addEventListener('change', function() {
                 currentFilling = "crab";
-                updateIngredients(); // Обновляем список покупок
+                updateIngredients();
                 renderSteps();
                 updateCost();
                 updateFillingDisplay();
@@ -1295,48 +1455,144 @@
                 tempuraCategory.style.display = useTempura ? 'block' : 'none';
                 tempuraBadge.style.display = useTempura ? 'inline-flex' : 'none';
                 
-                updateIngredients(); // Обновляем список покупок
+                updateIngredients();
                 renderSteps();
                 updateCost();
                 updateProgress();
                 
-                // Анимация
                 if (useTempura) {
                     tempuraBadge.classList.add('pulse');
                     setTimeout(() => tempuraBadge.classList.remove('pulse'), 500);
                 }
             });
+            
+            // Настройки шапочки
+            hatMayo.addEventListener('change', updateHatSettings);
+            hatCheese.addEventListener('change', updateHatSettings);
+            hatSoySauce.addEventListener('change', updateHatSettings);
+            hatGarlic.addEventListener('change', updateHatSettings);
+            hatUnagi.addEventListener('change', updateHatSettings);
+            
+            // Блокировка выбора: если майонез отключен, нельзя выбрать соевый соус или унаги
+            hatMayo.addEventListener('change', function() {
+                if (!this.checked) {
+                    hatSoySauce.checked = false;
+                    hatUnagi.checked = false;
+                    updateHatSettings();
+                }
+            });
+        }
+        
+        function updateHatSettings() {
+            hatSettings = {
+                mayo: hatMayo.checked,
+                cheese: hatCheese.checked,
+                soySauce: hatSoySauce.checked,
+                garlic: hatGarlic.checked,
+                unagi: hatUnagi.checked
+            };
+            
+            // Если майонез выключен, отключаем зависимые компоненты
+            if (!hatSettings.mayo) {
+                hatSettings.soySauce = false;
+                hatSettings.unagi = false;
+                hatSoySauce.checked = false;
+                hatUnagi.checked = false;
+            }
+            
+            updateIngredients();
+            renderSteps();
+            updateCost();
+            updateHatDescription();
+            updateHatDisplay();
+        }
+        
+        function updateHatDescription() {
+            const components = [];
+            if (hatSettings.mayo) components.push("майонез");
+            if (hatSettings.cheese) components.push("твёрдый сыр");
+            if (hatSettings.soySauce) components.push("соевый соус");
+            if (hatSettings.garlic) components.push("чеснок");
+            if (hatSettings.unagi) components.push("соус унаги");
+            
+            let description = "Состав шапочки: ";
+            if (components.length === 0) {
+                description = "<i class='fas fa-exclamation-triangle'></i> Шапочка не выбрана!";
+            } else if (components.length === 1) {
+                description += components[0];
+            } else {
+                description += components.slice(0, -1).join(", ") + " и " + components[components.length - 1];
+            }
+            
+            hatDescription.innerHTML = description;
+            
+            // Предупреждение если нет основы
+            if (!hatSettings.mayo && !hatSettings.cheese) {
+                hatDescription.innerHTML += "<br><small style='color: #ff6b6b;'>Рекомендуется добавить хотя бы один основной компонент</small>";
+            }
+        }
+        
+        function updateHatDisplay() {
+            let hatName = "Шапочка: ";
+            const components = [];
+            
+            if (hatSettings.mayo) components.push("майонез");
+            if (hatSettings.cheese) components.push("сыр");
+            if (hatSettings.soySauce) components.push("соус");
+            if (hatSettings.garlic) components.push("чеснок");
+            if (hatSettings.unagi) components.push("унаги");
+            
+            if (components.length === 0) {
+                hatName = "Без шапочки";
+                hatType.className = "roll-type";
+            } else if (components.length === 1) {
+                hatName += components[0];
+                hatType.className = components[0] === "сыр" ? "roll-type cheese" : "roll-type sauce";
+            } else if (hatSettings.mayo && hatSettings.cheese && components.length === 2) {
+                hatName = "Шапочка: майонез+сыр";
+                hatType.className = "roll-type combined";
+            } else {
+                hatName = "Комбинированная шапочка";
+                hatType.className = "roll-type combined";
+            }
+            
+            hatType.innerHTML = `<i class="fas fa-hat-chef"></i> ${hatName}`;
+            
+            // Обновляем время запекания
+            let bakingTime = "8-12 минут";
+            if (hatSettings.cheese) {
+                bakingTime = "10-15 минут"; // Сыр требует больше времени
+            }
+            aerogrillText.textContent = `Аэрогриль 200°C | ${bakingTime}`;
+            
+            // Анимация
+            hatType.classList.add('pulse');
+            setTimeout(() => hatType.classList.remove('pulse'), 500);
         }
 
-        // Обновление отображения типа начинки
         function updateFillingDisplay() {
             const icon = currentFilling === 'fish' ? '<i class="fas fa-fish"></i>' : '<i class="fas fa-crab"></i>';
             const text = currentFilling === 'fish' ? 'С рыбой' : 'С крабовыми палочками';
             fillingType.innerHTML = `${icon} ${text}`;
             
-            // Анимация
             fillingType.classList.add('pulse');
             setTimeout(() => fillingType.classList.remove('pulse'), 500);
         }
 
         // Расчет количества ингредиента
         function calculateAmount(baseAmount, pieces) {
-            // Простая пропорция от базового количества (16 кусочков)
             return (baseAmount / 16) * pieces;
         }
 
         // Форматирование количества
         function formatAmount(amount, unit) {
             if (unit === 'шт.' || unit === 'зубчик') {
-                // Для штучных ингредиентов округляем до десятых
-                if (amount < 0.25) return `${(amount * 4).toFixed(1)}/${unit}`; // Дробь
+                if (amount < 0.25) return `${(amount * 4).toFixed(1)}/${unit}`;
                 return amount % 1 === 0 ? `${amount} ${unit}` : `${amount.toFixed(1)} ${unit}`;
             } else if (unit === 'ст.л.' || unit === 'ч.л.') {
-                // Для ложек
-                if (amount < 0.5) return `${(amount * 5).toFixed(1)} мл`; // Переводим в мл для малых количеств
+                if (amount < 0.5) return `${(amount * 5).toFixed(1)} мл`;
                 return `${amount.toFixed(1)} ${unit}`;
             } else {
-                // Для весовых ингредиентов округляем
                 if (amount < 10) return `${amount.toFixed(1)} ${unit}`;
                 return `${Math.round(amount)} ${unit}`;
             }
@@ -1344,60 +1600,189 @@
 
         // Обновление списка ингредиентов
         function updateIngredients() {
-            // Очищаем списки
             mainIngredientsList.innerHTML = '';
-            sauceIngredientsList.innerHTML = '';
+            riceIngredientsList.innerHTML = '';
+            hatIngredientsList.innerHTML = '';
             tempuraIngredientsList.innerHTML = '';
             
             // Основные ингредиенты
             const mainIngredients = [
-                { id: "rice", name: "Рис для суши (круглозерный)", unit: "г", baseAmount: baseProportions.rice, priceKey: "rice" },
-                { id: "nori", name: "Нори (листы для суши)", unit: "шт.", baseAmount: baseProportions.nori, priceKey: "nori" },
+                { 
+                    id: "rice", 
+                    name: "Рис для суши (круглозерный)", 
+                    unit: "г", 
+                    baseAmount: baseProportions.rice, 
+                    priceKey: "rice",
+                    tooltip: "Специальный рис для суши, хорошо держит форму"
+                },
+                { 
+                    id: "nori", 
+                    name: "Нори (листы для суши)", 
+                    unit: "шт.", 
+                    baseAmount: baseProportions.nori, 
+                    priceKey: "nori",
+                    tooltip: "Тонкие листы из водорослей"
+                },
                 { 
                     id: "filling", 
-                    name: currentFilling === 'fish' ? "Лосось/тунец (филе)" : "Крабовые палочки", 
+                    name: currentFilling === 'fish' ? "Филе лосося/тунца" : "Крабовые палочки", 
                     unit: "г", 
                     baseAmount: currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab, 
-                    priceKey: currentFilling 
+                    priceKey: currentFilling,
+                    tooltip: currentFilling === 'fish' ? "Свежее филе, можно замороженное" : "Имитация крабового мяса"
                 },
-                { id: "cheese", name: "Сыр креметте/филадельфия", unit: "г", baseAmount: baseProportions.cheese, priceKey: "cheese" },
-                { id: "cucumber", name: "Огурец свежий", unit: "шт.", baseAmount: baseProportions.cucumber, priceKey: "cucumber" },
-                { id: "avocado", name: "Авокадо", unit: "шт.", baseAmount: baseProportions.avocado, priceKey: "avocado" }
+                { 
+                    id: "creamCheese", 
+                    name: "Сливочный сыр (Филадельфия)", 
+                    unit: "г", 
+                    baseAmount: baseProportions.creamCheese, 
+                    priceKey: "creamCheese",
+                    tooltip: "Для начинки роллов"
+                },
+                { 
+                    id: "cucumber", 
+                    name: "Огурец", 
+                    unit: "шт.", 
+                    baseAmount: baseProportions.cucumber, 
+                    priceKey: "cucumber",
+                    tooltip: "Среднего размера, очистить от семян"
+                },
+                { 
+                    id: "avocado", 
+                    name: "Авокадо", 
+                    unit: "шт.", 
+                    baseAmount: baseProportions.avocado, 
+                    priceKey: "avocado",
+                    tooltip: "Спелый, но не перезрелый"
+                }
             ];
             
-            // Ингедиенты для соуса
-            const sauceIngredients = [
-                { id: "mayo", name: "Майонез", unit: "г", baseAmount: baseProportions.mayo, priceKey: "mayo" },
-                { id: "soySauce", name: "Соевый соус", unit: "мл", baseAmount: baseProportions.soySauce, priceKey: "soySauce" },
-                { id: "sesameOil", name: "Кунжутное масло", unit: "мл", baseAmount: baseProportions.sesameOil, priceKey: "sesameOil" },
-                { id: "garlic", name: "Чеснок", unit: "зубчик", baseAmount: baseProportions.garlic, priceKey: "garlic" },
-                { id: "caviar", name: "Икра тобико/масаго (по желанию)", unit: "г", baseAmount: baseProportions.caviar, priceKey: "caviar" },
-                { id: "riceVinegar", name: "Рисовый уксус", unit: "мл", baseAmount: baseProportions.riceVinegar, priceKey: "riceVinegar" },
-                { id: "sugar", name: "Сахар", unit: "г", baseAmount: baseProportions.sugar, priceKey: "sugar" },
-                { id: "salt", name: "Соль", unit: "г", baseAmount: baseProportions.salt, priceKey: "salt" }
+            // Для заправки риса
+            const riceIngredients = [
+                { 
+                    id: "riceVinegar", 
+                    name: "Рисовый уксус", 
+                    unit: "мл", 
+                    baseAmount: baseProportions.riceVinegar, 
+                    priceKey: "riceVinegar",
+                    tooltip: "Можно заменить смесью из обычного уксуса, сахара и соли"
+                },
+                { 
+                    id: "sugar", 
+                    name: "Сахар", 
+                    unit: "г", 
+                    baseAmount: baseProportions.sugar, 
+                    priceKey: "sugar",
+                    tooltip: "Для заправки риса"
+                },
+                { 
+                    id: "salt", 
+                    name: "Соль", 
+                    unit: "г", 
+                    baseAmount: baseProportions.salt, 
+                    priceKey: "salt",
+                    tooltip: "Морская или обычная поваренная"
+                }
             ];
             
-            // Ингредиенты для темпуры
+            // Для шапочки
+            const hatIngredients = [];
+            if (hatSettings.mayo) {
+                hatIngredients.push({ 
+                    id: "mayo", 
+                    name: "Майонез", 
+                    unit: "г", 
+                    baseAmount: baseProportions.mayo, 
+                    priceKey: "mayo",
+                    tooltip: "Основа шапочки, лучше использовать с высоким % жирности"
+                });
+            }
+            if (hatSettings.cheese) {
+                hatIngredients.push({ 
+                    id: "hardCheese", 
+                    name: "Твёрдый сыр (для запекания)", 
+                    unit: "г", 
+                    baseAmount: baseProportions.hardCheese, 
+                    priceKey: "hardCheese",
+                    tooltip: "Пармезан, чеддер, российский или любой твёрдый сыр"
+                });
+            }
+            if (hatSettings.soySauce) {
+                hatIngredients.push({ 
+                    id: "soySauce", 
+                    name: "Соевый соус", 
+                    unit: "мл", 
+                    baseAmount: baseProportions.soySauce, 
+                    priceKey: "soySauce",
+                    tooltip: "Для вкуса, лучше светлый соевый соус"
+                });
+            }
+            if (hatSettings.garlic) {
+                hatIngredients.push({ 
+                    id: "garlic", 
+                    name: "Чеснок", 
+                    unit: "зубчик", 
+                    baseAmount: baseProportions.garlic, 
+                    priceKey: "garlic",
+                    tooltip: "Свежий, мелко порубить или пропустить через пресс"
+                });
+            }
+            if (hatSettings.unagi) {
+                hatIngredients.push({ 
+                    id: "unagiSauce", 
+                    name: "Соус унаги", 
+                    unit: "мл", 
+                    baseAmount: baseProportions.unagiSauce, 
+                    priceKey: "unagiSauce",
+                    tooltip: "Сладкий соус для суши, можно заменить терияки"
+                });
+            }
+            
+            // Для темпуры
             const tempuraIngredients = [
-                { id: "flour", name: "Мука пшеничная", unit: "г", baseAmount: baseProportions.flour, priceKey: "flour" },
-                { id: "egg", name: "Яйцо", unit: "шт.", baseAmount: baseProportions.egg, priceKey: "egg" },
-                { id: "tempuraWater", name: "Ледяная вода", unit: "мл", baseAmount: baseProportions.tempuraWater, priceKey: null },
-                { id: "bakingPowder", name: "Разрыхлитель", unit: "г", baseAmount: baseProportions.bakingPowder, priceKey: "bakingPowder" }
+                { 
+                    id: "flour", 
+                    name: "Мука пшеничная", 
+                    unit: "г", 
+                    baseAmount: baseProportions.flour, 
+                    priceKey: "flour",
+                    tooltip: "Лучше использовать муку для выпечки"
+                },
+                { 
+                    id: "egg", 
+                    name: "Яйцо", 
+                    unit: "шт.", 
+                    baseAmount: baseProportions.egg, 
+                    priceKey: "egg",
+                    tooltip: "Крупное, комнатной температуры"
+                },
+                { 
+                    id: "tempuraWater", 
+                    name: "Ледяная вода", 
+                    unit: "мл", 
+                    baseAmount: baseProportions.tempuraWater, 
+                    priceKey: null,
+                    tooltip: "Очень холодная вода для хрустящей корочки"
+                },
+                { 
+                    id: "bakingPowder", 
+                    name: "Разрыхлитель", 
+                    unit: "г", 
+                    baseAmount: baseProportions.bakingPowder, 
+                    priceKey: "bakingPowder",
+                    tooltip: "Для воздушности кляра"
+                }
             ];
             
-            // Рендерим основные ингредиенты
             renderIngredientList(mainIngredientsList, mainIngredients);
+            renderIngredientList(riceIngredientsList, riceIngredients);
+            renderIngredientList(hatIngredientsList, hatIngredients);
             
-            // Рендерим ингредиенты для соуса
-            renderIngredientList(sauceIngredientsList, sauceIngredients);
-            
-            // Рендерим ингредиенты для темпуры, если выбрано
             if (useTempura) {
                 renderIngredientList(tempuraIngredientsList, tempuraIngredients);
             }
             
-            // Обновляем общее количество ингредиентов
-            updateTotalIngredientsCount(mainIngredients.length + sauceIngredients.length + (useTempura ? tempuraIngredients.length : 0));
+            updateTotalIngredientsCount(mainIngredients.length + riceIngredients.length + hatIngredients.length + (useTempura ? tempuraIngredients.length : 0));
         }
 
         // Рендеринг списка ингредиентов
@@ -1408,7 +1793,6 @@
                 
                 let price = 0;
                 if (ingredient.priceKey) {
-                    // Расчет цены на основе базовой цены и пропорции
                     price = (ingredientPrices[ingredient.priceKey] / ingredient.baseAmount) * calculatedAmount;
                 }
                 
@@ -1421,11 +1805,10 @@
                 li.innerHTML = `
                     <input type="checkbox" class="ingredient-checkbox" id="${ingredient.id}" ${isChecked ? 'checked' : ''}>
                     <span class="ingredient-amount">${displayAmount}</span>
-                    <span class="ingredient-name">${ingredient.name}</span>
+                    <span class="ingredient-name ${ingredient.tooltip ? 'ingredient-tooltip' : ''}" ${ingredient.tooltip ? `data-tooltip="${ingredient.tooltip}"` : ''}>${ingredient.name}</span>
                     ${price > 0 ? `<span class="ingredient-price">~${Math.round(price)} руб</span>` : '<span class="ingredient-price"></span>'}
                 `;
                 
-                // Обработчик изменения состояния
                 const checkbox = li.querySelector('.ingredient-checkbox');
                 checkbox.addEventListener('change', function() {
                     boughtIngredients[ingredient.id] = this.checked;
@@ -1433,7 +1816,6 @@
                     li.classList.toggle('completed', this.checked);
                     updateProgress();
                     
-                    // Анимация
                     li.classList.add('pulse');
                     setTimeout(() => li.classList.remove('pulse'), 300);
                 });
@@ -1452,7 +1834,7 @@
             progressPercent.textContent = `${Math.round(percentage)}%`;
         }
 
-        // Рендеринг шагов приготовления с указанием количеств
+        // Рендеринг шагов приготовления
         function renderSteps() {
             stepsList.innerHTML = '';
             
@@ -1464,34 +1846,29 @@
             const saltAmount = calculateAmount(baseProportions.salt, currentPieces);
             
             const fillingAmount = calculateAmount(currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab, currentPieces);
-            const cheeseAmount = calculateAmount(baseProportions.cheese, currentPieces);
+            const cheeseAmount = calculateAmount(baseProportions.creamCheese, currentPieces);
             const cucumberAmount = calculateAmount(baseProportions.cucumber, currentPieces);
             const avocadoAmount = calculateAmount(baseProportions.avocado, currentPieces);
             const noriAmount = calculateAmount(baseProportions.nori, currentPieces);
             
-            const mayoAmount = calculateAmount(baseProportions.mayo, currentPieces);
-            const soySauceAmount = calculateAmount(baseProportions.soySauce, currentPieces);
-            const sesameOilAmount = calculateAmount(baseProportions.sesameOil, currentPieces);
-            const garlicAmount = calculateAmount(baseProportions.garlic, currentPieces);
-            
             const rolls = Math.ceil(currentPieces / 4);
             
-            // Определяем название начинки для шагов
-            const fillingName = currentFilling === 'fish' ? 'рыбы (лосось/тунец)' : 'крабовых палочек';
+            const fillingName = currentFilling === 'fish' ? 'лосось/тунец' : 'крабовые палочки';
             const fillingDisplayName = currentFilling === 'fish' ? 'Лосось/тунец' : 'Крабовые палочки';
             
             // Шаг 1: Приготовление риса
             addStep(1, `
-                <strong>Приготовьте рис:</strong> Промойте <span class="ingredient-highlight">${formatAmount(riceAmount, 'г')} риса</span> до прозрачной воды. 
-                Залейте <span class="ingredient-highlight">${formatAmount(waterAmount, 'мл')} холодной воды</span> и варите согласно инструкции.
+                <strong>Приготовьте рис для суши:</strong> Промойте <span class="ingredient-highlight">${formatAmount(riceAmount, 'г')} риса</span> 
+                5-7 раз до прозрачной воды. Залейте <span class="ingredient-highlight">${formatAmount(waterAmount, 'мл')} холодной воды</span>.
                 <div class="ingredient-in-step">
-                    <strong>Для заправки риса смешайте:</strong><br>
+                    <strong>Для заправки смешайте:</strong><br>
                     • <span class="ingredient-highlight">${formatAmount(vinegarAmount, 'мл')} рисового уксуса</span><br>
                     • <span class="ingredient-highlight">${formatAmount(sugarAmount, 'г')} сахара</span><br>
-                    • <span class="ingredient-highlight">${formatAmount(saltAmount, 'г')} соли</span>
+                    • <span class="ingredient-highlight">${formatAmount(saltAmount, 'г')} соли</span><br>
+                    • Нагрейте до растворения сахара и соли
                 </div>
-                В теплый рис добавьте заправку, аккуратно перемешайте и остудите.
-            `, true, 15, "Приготовление риса");
+                Сварите рис (обычно 15 минут после закипания). В тёплый рис добавьте заправку, аккуратно перемешайте и остудите.
+            `, true, 20, "Приготовление риса");
             
             // Шаг 2: Подготовка начинки
             addStep(2, `
@@ -1499,35 +1876,78 @@
                 <div class="ingredient-in-step">
                     <strong>Нарежьте соломкой:</strong><br>
                     • <span class="ingredient-dynamic">${formatAmount(fillingAmount, 'г')} ${fillingDisplayName}</span><br>
-                    • <span class="ingredient-highlight">${formatAmount(cucumberAmount, 'шт')} огурца</span> (очистить от семян)<br>
-                    • <span class="ingredient-highlight">${formatAmount(avocadoAmount, 'шт')} авокадо</span> (удалить косточку)
+                    • <span class="ingredient-highlight">${formatAmount(cucumberAmount, 'шт')} огурца</span> (очистить от кожуры и семян)<br>
+                    • <span class="ingredient-highlight">${formatAmount(avocadoAmount, 'шт')} авокадо</span><br>
+                    • <span class="ingredient-highlight">${formatAmount(cheeseAmount, 'г')} сливочного сыра</span> (нарезать полосками)
                 </div>
-                Длина нарезки должна соответствовать ширине листа нори.
+                Длина нарезки должна быть немного меньше ширины листа нори.
             `, true, 10, "Подготовка начинки");
             
-            // Шаг 3: Приготовление соуса
-            addStep(3, `
-                <strong>Приготовьте соус для запекания:</strong>
-                <div class="ingredient-in-step">
-                    <strong>Смешайте в миске:</strong><br>
-                    • <span class="ingredient-highlight">${formatAmount(mayoAmount, 'г')} майонеза</span><br>
-                    • <span class="ingredient-highlight">${formatAmount(soySauceAmount, 'мл')} соевого соуса</span><br>
-                    • <span class="ingredient-highlight">${formatAmount(sesameOilAmount, 'мл')} кунжутного масла</span><br>
-                    • <span class="ingredient-highlight">${formatAmount(garlicAmount, 'зубчик')} чеснока</span> (мелко порубить)
-                </div>
-                ${baseProportions.caviar > 0 ? `При желании добавьте <span class="ingredient-highlight">${formatAmount(calculateAmount(baseProportions.caviar, currentPieces), 'г')} икры тобико</span>.` : ''}
-            `, false);
+            // Шаг 3: Приготовление шапочки
+            const hasHatComponents = hatSettings.mayo || hatSettings.cheese || hatSettings.soySauce || hatSettings.garlic || hatSettings.unagi;
+            
+            if (hasHatComponents) {
+                let hatIngredientsHTML = '';
+                let hatInstructions = '';
+                
+                if (hatSettings.mayo && hatSettings.cheese) {
+                    const mayoAmount = calculateAmount(baseProportions.mayo, currentPieces);
+                    const cheeseAmount = calculateAmount(baseProportions.hardCheese, currentPieces);
+                    
+                    hatIngredientsHTML += `
+                        • <span class="combined-highlight">${formatAmount(mayoAmount, 'г')} майонеза</span><br>
+                        • <span class="combined-highlight">${formatAmount(cheeseAmount, 'г')} твёрдого сыра</span> (натереть на мелкой тёрке)<br>
+                    `;
+                    hatInstructions = "Натрите сыр на мелкой тёрке и смешайте с майонезом до однородной консистенции.";
+                } else if (hatSettings.mayo) {
+                    const mayoAmount = calculateAmount(baseProportions.mayo, currentPieces);
+                    hatIngredientsHTML += `<span class="sauce-highlight">${formatAmount(mayoAmount, 'г')} майонеза</span>`;
+                    hatInstructions = "Используйте майонез как основу для шапочки.";
+                } else if (hatSettings.cheese) {
+                    const cheeseAmount = calculateAmount(baseProportions.hardCheese, currentPieces);
+                    hatIngredientsHTML += `<span class="cheese-highlight">${formatAmount(cheeseAmount, 'г')} твёрдого сыра</span> (натереть на мелкой тёрке)`;
+                    hatInstructions = "Натрите сыр и смешайте с небольшим количеством майонеза для вязкости.";
+                }
+                
+                if (hatSettings.soySauce) {
+                    const soyAmount = calculateAmount(baseProportions.soySauce, currentPieces);
+                    hatIngredientsHTML += `<br>• <span class="sauce-highlight">${formatAmount(soyAmount, 'мл')} соевого соуса</span>`;
+                    hatInstructions += " Добавьте соевый соус для солёного вкуса.";
+                }
+                
+                if (hatSettings.garlic) {
+                    const garlicAmount = calculateAmount(baseProportions.garlic, currentPieces);
+                    hatIngredientsHTML += `<br>• <span class="sauce-highlight">${formatAmount(garlicAmount, 'зубчик')} чеснока</span> (мелко порубить)`;
+                    hatInstructions += " Добавьте чеснок для аромата.";
+                }
+                
+                if (hatSettings.unagi) {
+                    const unagiAmount = calculateAmount(baseProportions.unagiSauce, currentPieces);
+                    hatIngredientsHTML += `<br>• <span class="sauce-highlight">${formatAmount(unagiAmount, 'мл')} соуса унаги</span>`;
+                    hatInstructions += " Добавьте соус унаги для сладковатого вкуса.";
+                }
+                
+                addStep(3, `
+                    <strong>Приготовьте шапочку для запекания:</strong>
+                    <div class="ingredient-in-step">
+                        <strong>Смешайте:</strong><br>
+                        ${hatIngredientsHTML}
+                    </div>
+                    ${hatInstructions} Масса должна быть достаточно густой, чтобы не стекать с роллов.
+                `, false);
+            }
             
             // Шаг 4: Сборка роллов
             addStep(4, `
                 <strong>Соберите роллы:</strong> Положите на бамбуковый коврик 
                 <span class="ingredient-highlight">${formatAmount(noriAmount, 'шт')} листа нори</span> блестящей стороной вниз.
                 <div class="ingredient-in-step">
-                    <strong>Распределите равномерно по нори:</strong><br>
-                    • Приготовленный рис слоем 0,5-1 см<br>
-                    • Оставьте 1 см свободного края сверху
+                    <strong>Равномерно распределите рис:</strong><br>
+                    • Слой риса толщиной 0,7-1 см<br>
+                    • Оставьте 2 см свободного края сверху<br>
+                    • Смочите свободный край водой
                 </div>
-                Смочите руки в воде, чтобы рис не лип к рукам.
+                Рис должен быть комнатной температуры.
             `, false);
             
             // Шаг 5: Добавление начинки
@@ -1535,22 +1955,24 @@
                 <strong>Добавьте начинку:</strong>
                 <div class="ingredient-in-step">
                     <strong>Посередине риса выложите полосками:</strong><br>
-                    • <span class="ingredient-highlight">${formatAmount(cheeseAmount, 'г')} сыра</span><br>
-                    • <span class="ingredient-dynamic">${formatAmount(fillingAmount, 'г')} ${fillingName}</span><br>
+                    • Сливочный сыр<br>
+                    • ${fillingDisplayName}<br>
                     • Огурец и авокадо
                 </div>
-                Можно добавить немного соуса поверх начинки.
+                Не перегружайте роллы начинкой, иначе будет сложно свернуть.
             `, false);
             
             // Шаг 6: Свертывание роллов
             addStep(6, `
-                <strong>Сверните роллы:</strong> С помощью коврика плотно сверните ролл, начиная с края с начинкой.
+                <strong>Сверните роллы:</strong> Поднимите край коврика и аккуратно сверните ролл.
                 <div class="ingredient-in-step">
-                    <strong>Важно:</strong><br>
-                    • Свертывайте плотно, но без излишнего давления<br>
-                    • Смочите свободный край нори водой для склеивания<br>
+                    <strong>Техника:</strong><br>
+                    • Прижмите начинку пальцами<br>
+                    • Сверните плотно, но не слишком туго<br>
+                    • Прокрутите ролл для формы цилиндра<br>
                     • Должно получиться ${rolls} плотных ролла
                 </div>
+                Свободный край нори смажьте водой для склеивания.
             `, false);
             
             // Шаг 7: Нарезка роллов
@@ -1559,59 +1981,82 @@
                 <strong>Нарежьте роллы:</strong> Острым влажным ножом нарежьте каждый ролл на 
                 <span class="ingredient-highlight">${piecesPerRoll} ${pluralize(piecesPerRoll, 'кусочек', 'кусочка', 'кусочков')}</span>.
                 <div class="ingredient-in-step">
-                    <strong>Советы по нарезке:</strong><br>
-                    • Смачивайте нож водой перед каждым разрезом<br>
-                    • Используйте пилящие движения<br>
+                    <strong>Советы:</strong><br>
+                    • Смачивайте нож водой после каждого разреза<br>
+                    • Используйте пилящие движения без нажима<br>
+                    • Первый и последний кусочки могут быть неидеальными<br>
                     • Всего должно получиться ${currentPieces} кусочков
                 </div>
-                Положите кусочки на решётку аэрогриля.
             `, false);
             
+            // Шаг 8: Нанесение шапочки
+            if (hasHatComponents) {
+                addStep(8, `
+                    <strong>Нанесите шапочку:</strong> Выложите кусочки роллов на решётку аэрогриля.
+                    <div class="ingredient-in-step">
+                        <strong>Распределите шапочку:</strong><br>
+                        • Нанесите шапочку ложкой или кондитерским мешком<br>
+                        • Распределите равномерно по поверхности<br>
+                        • Можно сделать узоры или просто покрыть полностью
+                    </div>
+                    Если шапочка с сыром, можно сверху посыпать ещё немного сыра.
+                `, false);
+            }
+            
             // Дополнительные шаги для темпуры
+            let stepNumber = hasHatComponents ? 9 : 8;
+            
             if (useTempura) {
                 const flourAmount = calculateAmount(baseProportions.flour, currentPieces);
                 const eggAmount = calculateAmount(baseProportions.egg, currentPieces);
                 const tempuraWaterAmount = calculateAmount(baseProportions.tempuraWater, currentPieces);
                 const bakingPowderAmount = calculateAmount(baseProportions.bakingPowder, currentPieces);
                 
-                // Шаг 8: Приготовление кляра темпура
-                addStep(8, `
+                // Шаг для темпуры (перед нанесением шапочки или вместо)
+                const tempuraStep = hasHatComponents ? 8 : 7;
+                
+                addStep(tempuraStep, `
                     <strong>Приготовьте кляр темпура:</strong>
                     <div class="ingredient-in-step">
                         <strong>Смешайте в миске:</strong><br>
                         • <span class="ingredient-highlight">${formatAmount(flourAmount, 'г')} муки</span><br>
-                        • <span class="ingredient-highlight">${formatAmount(eggAmount, 'шт')} яйца</span><br>
                         • <span class="ingredient-highlight">${formatAmount(bakingPowderAmount, 'г')} разрыхлителя</span><br>
+                        • <span class="ingredient-highlight">${formatAmount(eggAmount, 'шт')} яйца</span><br>
                         • Постепенно вливайте <span class="ingredient-highlight">${formatAmount(tempuraWaterAmount, 'мл')} ледяной воды</span>
                     </div>
-                    Не перемешивайте слишком тщательно - в кляре должны оставаться небольшие комочки муки.
+                    Перемешивайте быстро и недолго - в кляре должны оставаться комочки.
                 `, false);
                 
-                // Шаг 9: Обмакивание в кляр
-                addStep(9, `
-                    <strong>Обмакните роллы в кляр:</strong> Каждый кусочек ролла обмакните в кляр темпура, 
-                    убедившись, что он полностью покрыт со всех сторон.
+                addStep(tempuraStep + 1, `
+                    <strong>Обмакните роллы в кляр:</strong> Обмакните каждый кусочек в кляр.
                     <div class="ingredient-in-step">
-                        <strong>Совет:</strong> Кляр должен быть по консистенции как жидкая сметана. 
-                        Если слишком густой - добавьте немного воды, если жидкий - немного муки.
+                        <strong>Советы:</strong><br>
+                        • Кляр должен покрывать ролл со всех сторон<br>
+                        • Дайте лишнему кляру стечь<br>
+                        • Уложите на решётку аэрогриля
                     </div>
+                    ${hasHatComponents ? 'Затем нанесите шапочку поверх кляра.' : ''}
                 `, false);
+                
+                stepNumber = tempuraStep + (hasHatComponents ? 2 : 2);
             }
             
             // Финальный шаг: Запекание
-            const stepNumber = useTempura ? 10 : 8;
-            const bakingTime = useTempura ? "10-12 минут" : "8-10 минут";
+            const bakingTime = hatSettings.cheese ? "10-15 минут" : "8-12 минут";
+            const hatTypeText = hatSettings.cheese ? "Сырная шапочка расплавится и покроется золотистой корочкой." : "Шапочка зарумянится.";
+            
             addStep(stepNumber, `
-                <strong>Запекайте:</strong> Щедро покройте роллы приготовленным соусом.
+                <strong>Запекайте в аэрогриле:</strong>
                 <div class="ingredient-in-step">
-                    <strong>Режим аэрогриля:</strong><br>
+                    <strong>Настройки аэрогриля:</strong><br>
                     • Температура: <span class="ingredient-highlight">200°C</span><br>
                     • Время: <span class="ingredient-highlight">${bakingTime}</span><br>
+                    • Режим: конвекция (если есть)<br>
                     • До золотистой корочки
                 </div>
-                ${useTempura ? 'Роллы в темпуре получатся особенно хрустящими!' : ''}
-                Подавайте горячими, украсив кунжутом и зеленью.
-            `, true, useTempura ? 12 : 10, "Запекание роллов");
+                ${hatTypeText} ${useTempura ? 'Кляр темпура станет хрустящим.' : ''}
+                Подавайте горячими, украсив кунжутом, зелёным луком и соусом.
+            `, true, hatSettings.cheese ? 15 : 12, "Запекание роллов");
         }
 
         // Добавление шага в список
@@ -1624,7 +2069,6 @@
                     ${hasTimer ? `<span class="step-timer" data-index="${number-1}"><i class="fas fa-hourglass-half"></i> Таймер: ${timerMinutes} мин</span>` : ''}
                 `;
             
-            // Обработчик для таймера
             if (hasTimer) {
                 const timerBtn = li.querySelector('.step-timer');
                 timerBtn.addEventListener('click', function() {
@@ -1638,45 +2082,60 @@
 
         // Обновление стоимости
         function updateCost() {
-            // Расчет стоимости основных ингредиентов
+            // Основные ингредиенты (кроме начинки)
             const riceAmount = calculateAmount(baseProportions.rice, currentPieces);
             const noriAmount = calculateAmount(baseProportions.nori, currentPieces);
-            const cheeseAmount = calculateAmount(baseProportions.cheese, currentPieces);
+            const creamCheeseAmount = calculateAmount(baseProportions.creamCheese, currentPieces);
             const cucumberAmount = calculateAmount(baseProportions.cucumber, currentPieces);
             const avocadoAmount = calculateAmount(baseProportions.avocado, currentPieces);
             
             const mainCost = 
                 (ingredientPrices.rice / baseProportions.rice) * riceAmount +
                 (ingredientPrices.nori / baseProportions.nori) * noriAmount +
-                (ingredientPrices.cheese / baseProportions.cheese) * cheeseAmount +
+                (ingredientPrices.creamCheese / baseProportions.creamCheese) * creamCheeseAmount +
                 (ingredientPrices.cucumber / baseProportions.cucumber) * cucumberAmount +
                 (ingredientPrices.avocado / baseProportions.avocado) * avocadoAmount;
             
-            // Расчет стоимости начинки
+            // Начинка
             const fillingAmount = calculateAmount(currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab, currentPieces);
             const fillingPrice = currentFilling === 'fish' ? ingredientPrices.fish : ingredientPrices.crab;
             const fillingBaseAmount = currentFilling === 'fish' ? baseProportions.fish : baseProportions.crab;
             const fillingCost = (fillingPrice / fillingBaseAmount) * fillingAmount;
             
-            // Расчет стоимости соусов и заправки
-            const mayoAmount = calculateAmount(baseProportions.mayo, currentPieces);
-            const soySauceAmount = calculateAmount(baseProportions.soySauce, currentPieces);
-            const sesameOilAmount = calculateAmount(baseProportions.sesameOil, currentPieces);
-            const garlicAmount = calculateAmount(baseProportions.garlic, currentPieces);
+            // Заправка риса
             const riceVinegarAmount = calculateAmount(baseProportions.riceVinegar, currentPieces);
             const sugarAmount = calculateAmount(baseProportions.sugar, currentPieces);
             const saltAmount = calculateAmount(baseProportions.salt, currentPieces);
             
-            const sauceCost = 
-                (ingredientPrices.mayo / baseProportions.mayo) * mayoAmount +
-                (ingredientPrices.soySauce / baseProportions.soySauce) * soySauceAmount +
-                (ingredientPrices.sesameOil / baseProportions.sesameOil) * sesameOilAmount +
-                (ingredientPrices.garlic / baseProportions.garlic) * garlicAmount +
+            const riceDressingCost = 
                 (ingredientPrices.riceVinegar / baseProportions.riceVinegar) * riceVinegarAmount +
                 (ingredientPrices.sugar / baseProportions.sugar) * sugarAmount +
                 (ingredientPrices.salt / baseProportions.salt) * saltAmount;
             
-            // Расчет стоимости темпуры
+            // Шапочка
+            let hatCost = 0;
+            if (hatSettings.mayo) {
+                const mayoAmount = calculateAmount(baseProportions.mayo, currentPieces);
+                hatCost += (ingredientPrices.mayo / baseProportions.mayo) * mayoAmount;
+            }
+            if (hatSettings.cheese) {
+                const cheeseAmount = calculateAmount(baseProportions.hardCheese, currentPieces);
+                hatCost += (ingredientPrices.hardCheese / baseProportions.hardCheese) * cheeseAmount;
+            }
+            if (hatSettings.soySauce) {
+                const soyAmount = calculateAmount(baseProportions.soySauce, currentPieces);
+                hatCost += (ingredientPrices.soySauce / baseProportions.soySauce) * soyAmount;
+            }
+            if (hatSettings.garlic) {
+                const garlicAmount = calculateAmount(baseProportions.garlic, currentPieces);
+                hatCost += (ingredientPrices.garlic / baseProportions.garlic) * garlicAmount;
+            }
+            if (hatSettings.unagi) {
+                const unagiAmount = calculateAmount(baseProportions.unagiSauce, currentPieces);
+                hatCost += (ingredientPrices.unagiSauce / baseProportions.unagiSauce) * unagiAmount;
+            }
+            
+            // Темпура
             let tempuraCost = 0;
             if (useTempura) {
                 const flourAmount = calculateAmount(baseProportions.flour, currentPieces);
@@ -1690,13 +2149,13 @@
             }
             
             // Итоговые стоимости
-            const totalMainCost = mainCost + sauceCost;
-            const totalCost = totalMainCost + fillingCost + tempuraCost;
+            const totalMainCost = mainCost + riceDressingCost;
+            const totalCost = totalMainCost + fillingCost + hatCost + tempuraCost;
             const costPerPieceValue = totalCost / currentPieces;
             
-            // Обновляем отображение
             costMain.textContent = `${Math.round(totalMainCost)} руб`;
             costFilling.textContent = `${Math.round(fillingCost)} руб`;
+            costHat.textContent = `${Math.round(hatCost)} руб`;
             costExtra.textContent = `${Math.round(tempuraCost)} руб`;
             costTotal.textContent = `${Math.round(totalCost)} руб`;
             costPerPiece.textContent = `~${Math.round(costPerPieceValue)} руб`;
@@ -1712,7 +2171,6 @@
             progressFill.style.width = `${percentage}%`;
             progressPercent.textContent = `${Math.round(percentage)}%`;
             
-            // Анимация
             progressFill.style.transition = 'width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)';
         }
 
@@ -1722,19 +2180,16 @@
                 boughtIngredients = {};
                 localStorage.removeItem('boughtIngredients');
                 
-                // Снимаем все галочки
                 document.querySelectorAll('.ingredient-checkbox').forEach(checkbox => {
                     checkbox.checked = false;
                 });
                 
-                // Обновляем классы
                 document.querySelectorAll('.ingredients-list li').forEach(li => {
                     li.classList.remove('completed');
                 });
                 
                 updateProgress();
                 
-                // Анимация
                 this.innerHTML = '<i class="fas fa-check"></i> Сброшено!';
                 this.style.backgroundColor = '#4CAF50';
                 setTimeout(() => {
@@ -1789,7 +2244,6 @@
                     pauseTimer();
                     playTimerCompleteSound();
                     
-                    // Уведомление
                     if (Notification.permission === "granted") {
                         new Notification("Таймер завершен!", {
                             body: `Время для "${timerTitle.textContent}" истекло!`,
@@ -1819,7 +2273,6 @@
             const progress = ((totalTimerSeconds - timerSeconds) / totalTimerSeconds) * 100;
             timerProgressBar.style.transform = `scaleX(${progress / 100})`;
             
-            // Изменение цвета при завершении
             if (timerSeconds < 10 && timerSeconds > 0) {
                 timerDisplay.style.color = '#ff4444';
             } else {
@@ -1831,7 +2284,6 @@
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // Создаем приятный звук
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
                 
@@ -1849,7 +2301,6 @@
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + 0.8);
                 
-                // Визуальный эффект
                 timerDisplay.style.color = '#ff4444';
                 timerDisplay.classList.add('pulse');
                 setTimeout(() => {
@@ -1870,9 +2321,9 @@
                 const particle = document.createElement('div');
                 particle.className = 'floating-particle';
                 
-                // Случайные параметры
                 const size = Math.random() * 80 + 20;
-                const color = i % 3 === 0 ? 'var(--primary-color)' : i % 3 === 1 ? 'var(--secondary-color)' : 'var(--accent-color)';
+                const colors = ['var(--primary-color)', 'var(--secondary-color)', 'var(--accent-color)', 'var(--cheese-color)', 'var(--sauce-color)'];
+                const color = colors[i % colors.length];
                 const left = Math.random() * 100;
                 const top = Math.random() * 100;
                 const duration = Math.random() * 20 + 10;
@@ -1893,19 +2344,16 @@
 
         // Анимация при загрузке
         function animateOnLoad() {
-            // Анимация появления карточек
             const cards = document.querySelectorAll('.card');
             cards.forEach((card, index) => {
                 card.style.animationDelay = `${0.2 + index * 0.2}s`;
             });
             
-            // Анимация появления таймеров
             const timerItems = document.querySelectorAll('.timer-item');
             timerItems.forEach((item, index) => {
                 item.style.animation = `fadeInUp 0.8s ${0.5 + index * 0.1}s both`;
             });
             
-            // Запрашиваем разрешение на уведомления
             if ("Notification" in window && Notification.permission === "default") {
                 setTimeout(() => {
                     if (confirm("Разрешить уведомления о завершении таймеров?")) {
