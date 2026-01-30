@@ -517,6 +517,37 @@
                 max-width: 400px;
             }
         }
+        
+        /* Новый стиль для детальной нарезки */
+        .cutting-instruction {
+            background-color: rgba(0, 140, 69, 0.05);
+            border-left: 3px solid var(--green);
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .cutting-instruction strong {
+            color: var(--green);
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .highlight-quantity {
+            background-color: rgba(205, 33, 42, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--red);
+            margin: 0 3px;
+        }
+        
+        .step-detail {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -689,6 +720,11 @@
                 <span style="margin-left: auto; color: var(--red); font-weight: bold;" id="pasta-time">15 мин</span>
             </div>
             
+            <div style="margin-bottom: 20px; padding: 15px; background-color: rgba(255, 204, 0, 0.1); border-radius: 10px; border: 1px dashed var(--gold);">
+                <strong><i class="fas fa-cogs"></i> Текущие настройки:</strong>
+                <div id="current-settings-display">Мясо: Гуанчале | Сыр: Пекорино Романо | Сливки: Нет</div>
+            </div>
+            
             <ul class="steps-list" id="steps-list">
                 <!-- Заполнится JavaScript -->
             </ul>
@@ -714,14 +750,17 @@
             <span class="italian-flag" style="width: 20px; height: 15px; margin: 0 5px;"></span>
         </p>
         <p style="margin-top: 10px;">Все ингредиенты доступны в российских супермаркетах</p>
-        <a href="#" class="print-btn" onclick="window.print(); return false;">
+        <a href="javascript:window.print();" class="print-btn">
             <i class="fas fa-print"></i> Распечатать рецепт
+        </a>
+        <br><br>
+        <a href="../" style="color: var(--green); text-decoration: none; font-weight: bold;">
+            <i class="fas fa-arrow-left"></i> Вернуться на главную
         </a>
     </footer>
 
-    <!-- JavaScript -->
     <script>
-        // БАЗА ДАННЫХ РЕЦЕПТОВ ПАСТЫ
+        // БАЗА ДАННЫХ РЕЦЕПТОВ ПАСТЫ (УЛУЧШЕННАЯ ВЕРСИЯ)
         const pastaRecipes = {
             "carbonara": {
                 name: "Паста Карбонара",
@@ -730,7 +769,7 @@
                 baseIngredients: [
                     { id: "pasta", name: "Спагетти", baseAmount: 100, unit: "г", price: 40 },
                     { id: "guanciale", name: "Гуанчале (можно заменить панчеттой или беконом)", baseAmount: 80, unit: "г", price: 150 },
-                    { id: "egg", name: "Яичные желтки", baseAmount: 1, unit: "шт.", price: 15 },
+                    { id: "egg", name: "Яичные желтки (средние яйца)", baseAmount: 1, unit: "шт.", price: 15 },
                     { id: "pecorino", name: "Сыр Пекорино Романо (можно заменить пармезаном)", baseAmount: 40, unit: "г", price: 80 }
                 ],
                 sauceIngredients: [
@@ -739,25 +778,32 @@
                 ],
                 additionalIngredients: [],
                 options: [
-                    { id: "guancialeType", name: "Тип мяса:", type: "radio", options: [
-                        { value: "guanciale", label: "Гуанчале (традиционно)", price: 200 },
-                        { value: "pancetta", label: "Панчетта", price: 180 },
-                        { value: "bacon", label: "Бекон", price: 120 }
-                    ]},
-                    { id: "cheeseType", name: "Сыр:", type: "radio", options: [
-                        { value: "pecorino", label: "Пекорино Романо", price: 200 },
-                        { value: "parmesan", label: "Пармезан", price: 180 }
-                    ]},
-                    { id: "addCream", name: "Добавить сливки (не традиционно)", type: "checkbox", price: 50 }
-                ],
-                steps: [
-                    { text: "Поставьте большую кастрюлю с водой на сильный огонь. Добавьте соль из расчета 10г на литр воды.", timer: 0 },
-                    { text: "Нарежьте мясо небольшими кубиками или полосками. Обжарьте на среднем огне до хрустящей корочки.", timer: 8 },
-                    { text: "Взбейте яичные желтки с большей частью тертого сыра и свежемолотым черным перцем.", timer: 0 },
-                    { text: "Когда вода закипит, добавьте пасту и готовьте согласно времени на упаковке, обычно 8-10 минут.", timer: 10 },
-                    { text: "Отложите немного воды от пасты, затем слейте пасту и быстро смешайте с обжаренным мясом.", timer: 1 },
-                    { text: "Снимите с огня и добавьте яично-сырную смесь, интенсивно перемешивая. При необходимости добавьте немного воды от пасты для кремообразной консистенции.", timer: 0 },
-                    { text: "Подавайте сразу, посыпав оставшимся сыром и черным перцем.", timer: 0 }
+                    { 
+                        id: "guancialeType", 
+                        name: "Тип мяса:", 
+                        type: "radio", 
+                        options: [
+                            { value: "guanciale", label: "Гуанчале (традиционно)", price: 200 },
+                            { value: "pancetta", label: "Панчетта", price: 180 },
+                            { value: "bacon", label: "Бекон", price: 120 }
+                        ]
+                    },
+                    { 
+                        id: "cheeseType", 
+                        name: "Сыр:", 
+                        type: "radio", 
+                        options: [
+                            { value: "pecorino", label: "Пекорино Романо", price: 200 },
+                            { value: "parmesan", label: "Пармезан", price: 180 }
+                        ]
+                    },
+                    { 
+                        id: "addCream", 
+                        name: "Добавить сливки (не традиционно)", 
+                        type: "checkbox", 
+                        price: 50,
+                        additionalIngredient: { id: "cream", name: "Сливки 20%", baseAmount: 50, unit: "мл", price: 20 }
+                    }
                 ],
                 tip: "Настоящую карбонару готовят без сливок! Сливочность соусу придают желтки и сыр."
             },
@@ -770,10 +816,10 @@
                     { id: "pasta", name: "Феттучине или тальятелле", baseAmount: 100, unit: "г", price: 45 },
                     { id: "mushrooms", name: "Шампиньоны свежие", baseAmount: 200, unit: "г", price: 100 },
                     { id: "cream", name: "Сливки 20%", baseAmount: 200, unit: "мл", price: 80 },
-                    { id: "onion", name: "Лук репчатый", baseAmount: 1, unit: "шт.", price: 15 }
+                    { id: "onion", name: "Лук репчатый (средний)", baseAmount: 1, unit: "шт.", price: 15 }
                 ],
                 sauceIngredients: [
-                    { id: "garlic", name: "Чеснок", baseAmount: 2, unit: "зубчика", price: 5 },
+                    { id: "garlic", name: "Чеснок (средние зубчики)", baseAmount: 2, unit: "зубчика", price: 5 },
                     { id: "butter", name: "Сливочное масло", baseAmount: 30, unit: "г", price: 20 },
                     { id: "parsley", name: "Петрушка свежая", baseAmount: 10, unit: "г", price: 15 },
                     { id: "salt", name: "Соль и перец", baseAmount: 5, unit: "г", price: 2 }
@@ -782,22 +828,30 @@
                     { id: "parmesan", name: "Пармезан для подачи", baseAmount: 30, unit: "г", price: 60 }
                 ],
                 options: [
-                    { id: "mushroomType", name: "Тип грибов:", type: "radio", options: [
-                        { value: "champignon", label: "Шампиньоны", price: 100 },
-                        { value: "shiitake", label: "Шиитаке", price: 200 },
-                        { value: "oyster", label: "Вешенки", price: 120 }
-                    ]},
-                    { id: "addChicken", name: "Добавить куриное филе", type: "checkbox", price: 120 },
-                    { id: "addSpinach", name: "Добавить шпинат", type: "checkbox", price: 50 }
-                ],
-                steps: [
-                    { text: "Нарежьте грибы пластинками, лук мелкими кубиками, чеснок измельчите.", timer: 5 },
-                    { text: "Поставьте воду для пасты, добавьте соль и доведите до кипения.", timer: 0 },
-                    { text: "В сковороде растопите сливочное масло, обжарьте лук до прозрачности 3-4 минуты.", timer: 4 },
-                    { text: "Добавьте грибы и обжаривайте до золотистого цвета и испарения жидкости, 7-8 минут.", timer: 8 },
-                    { text: "Влейте сливки, добавьте чеснок, соль и перец по вкусу. Тушите 5 минут на медленном огне.", timer: 5 },
-                    { text: "Отварите пасту согласно инструкции на упаковке, обычно 10-12 минут.", timer: 12 },
-                    { text: "Слейте воду, смешайте пасту с соусом, посыпьте петрушкой и пармезаном.", timer: 0 }
+                    { 
+                        id: "mushroomType", 
+                        name: "Тип грибов:", 
+                        type: "radio", 
+                        options: [
+                            { value: "champignon", label: "Шампиньоны", price: 100, displayName: "шампиньоны" },
+                            { value: "shiitake", label: "Шиитаке", price: 200, displayName: "шиитаке" },
+                            { value: "oyster", label: "Вешенки", price: 120, displayName: "вешенки" }
+                        ]
+                    },
+                    { 
+                        id: "addChicken", 
+                        name: "Добавить куриное филе", 
+                        type: "checkbox", 
+                        price: 120,
+                        additionalIngredient: { id: "chicken", name: "Куриное филе", baseAmount: 150, unit: "г", price: 120 }
+                    },
+                    { 
+                        id: "addSpinach", 
+                        name: "Добавить шпинат", 
+                        type: "checkbox", 
+                        price: 50,
+                        additionalIngredient: { id: "spinach", name: "Шпинат свежий", baseAmount: 100, unit: "г", price: 50 }
+                    }
                 ],
                 tip: "Не пережаривайте грибы - они должны остаться сочными. Для более насыщенного вкуса можно добавить немного белого вина."
             },
@@ -810,10 +864,10 @@
                     { id: "pasta", name: "Тальятелле или феттучине", baseAmount: 100, unit: "г", price: 45 },
                     { id: "beef", name: "Говяжий фарш", baseAmount: 150, unit: "г", price: 180 },
                     { id: "tomato", name: "Помидоры в собственном соку", baseAmount: 200, unit: "г", price: 70 },
-                    { id: "carrot", name: "Морковь", baseAmount: 1, unit: "шт.", price: 10 }
+                    { id: "carrot", name: "Морковь (средняя)", baseAmount: 1, unit: "шт.", price: 10 }
                 ],
                 sauceIngredients: [
-                    { id: "onion", name: "Лук репчатый", baseAmount: 1, unit: "шт.", price: 15 },
+                    { id: "onion", name: "Лук репчатый (средний)", baseAmount: 1, unit: "шт.", price: 15 },
                     { id: "celery", name: "Сельдерей стебель", baseAmount: 1, unit: "шт.", price: 20 },
                     { id: "garlic", name: "Чеснок", baseAmount: 2, unit: "зубчика", price: 5 },
                     { id: "wine", name: "Красное вино (сухое)", baseAmount: 100, unit: "мл", price: 80 }
@@ -823,22 +877,30 @@
                     { id: "basil", name: "Базилик свежий", baseAmount: 10, unit: "г", price: 30 }
                 ],
                 options: [
-                    { id: "meatType", name: "Тип фарша:", type: "radio", options: [
-                        { value: "beef", label: "Говяжий", price: 180 },
-                        { value: "pork", label: "Свино-говяжий", price: 150 },
-                        { value: "turkey", label: "Индейка (диетический)", price: 160 }
-                    ]},
-                    { id: "addMilk", name: "Добавить молоко (традиционно)", type: "checkbox", price: 30 },
-                    { id: "addMushrooms", name: "Добавить грибы", type: "checkbox", price: 80 }
-                ],
-                steps: [
-                    { text: "Мелко нарежьте лук, морковь и сельдерей (софрито). Обжарьте на оливковом масле до мягкости, 8-10 минут.", timer: 10 },
-                    { text: "Добавьте фарш, разбивая комки, и обжаривайте до изменения цвета, 8-10 минут.", timer: 10 },
-                    { text: "Влейте вино и выпарите алкоголь на сильном огне, 3-4 минуты.", timer: 4 },
-                    { text: "Добавьте измельченные помидоры, соль, перец и травы. Уменьшите огонь.", timer: 0 },
-                    { text: "Тушите соус под крышкой на медленном огне минимум 30 минут (лучше 1-2 часа).", timer: 30 },
-                    { text: "За 15 минут до подачи отварите пасту в подсоленной воде.", timer: 15 },
-                    { text: "Смешайте пасту с соусом, подавайте с пармезаном и базиликом.", timer: 0 }
+                    { 
+                        id: "meatType", 
+                        name: "Тип фарша:", 
+                        type: "radio", 
+                        options: [
+                            { value: "beef", label: "Говяжий", price: 180, displayName: "говяжий фарш" },
+                            { value: "pork", label: "Свино-говяжий", price: 150, displayName: "свино-говяжий фарш" },
+                            { value: "turkey", label: "Индейка (диетический)", price: 160, displayName: "фарш из индейки" }
+                        ]
+                    },
+                    { 
+                        id: "addMilk", 
+                        name: "Добавить молоко (традиционно)", 
+                        type: "checkbox", 
+                        price: 30,
+                        additionalIngredient: { id: "milk", name: "Молоко", baseAmount: 100, unit: "мл", price: 30 }
+                    },
+                    { 
+                        id: "addMushrooms", 
+                        name: "Добавить грибы", 
+                        type: "checkbox", 
+                        price: 80,
+                        additionalIngredient: { id: "mushrooms", name: "Шампиньоны", baseAmount: 150, unit: "г", price: 80 }
+                    }
                 ],
                 tip: "Настоящий болоньезе тушится минимум 2 часа на медленном огне - это делает мясо нежным, а соус насыщенным."
             },
@@ -848,14 +910,14 @@
                 cookTime: "60-75 минут",
                 difficulty: "Сложная",
                 baseIngredients: [
-                    { id: "lasagnaSheets", name: "Листы для лазаньи", baseAmount: 6, unit: "шт.", price: 120 },
+                    { id: "lasagnaSheets", name: "Листы для лазаньи (сухие)", baseAmount: 6, unit: "шт.", price: 120 },
                     { id: "beef", name: "Говяжий фарш", baseAmount: 300, unit: "г", price: 180 },
                     { id: "tomato", name: "Помидоры в собственном соку", baseAmount: 400, unit: "г", price: 70 },
                     { id: "mozzarella", name: "Моцарелла", baseAmount: 200, unit: "г", price: 150 }
                 ],
                 sauceIngredients: [
-                    { id: "onion", name: "Лук репчатый", baseAmount: 1, unit: "шт.", price: 15 },
-                    { id: "carrot", name: "Морковь", baseAmount: 1, unit: "шт.", price: 10 },
+                    { id: "onion", name: "Лук репчатый (крупный)", baseAmount: 1, unit: "шт.", price: 15 },
+                    { id: "carrot", name: "Морковь (крупная)", baseAmount: 1, unit: "шт.", price: 10 },
                     { id: "garlic", name: "Чеснок", baseAmount: 3, unit: "зубчика", price: 5 },
                     { id: "milk", name: "Молоко", baseAmount: 500, unit: "мл", price: 40 }
                 ],
@@ -866,22 +928,30 @@
                     { id: "nutmeg", name: "Мускатный орех", baseAmount: 1, unit: "щепотка", price: 5 }
                 ],
                 options: [
-                    { id: "meatType", name: "Начинка:", type: "radio", options: [
-                        { value: "beef", label: "Мясная (говядина)", price: 180 },
-                        { value: "vegetable", label: "Овощная", price: 120 },
-                        { value: "chicken", label: "Куриная", price: 160 }
-                    ]},
-                    { id: "addSpinach", name: "Добавить шпинат в начинку", type: "checkbox", price: 50 },
-                    { id: "addMushrooms", name: "Добавить грибы", type: "checkbox", price: 80 }
-                ],
-                steps: [
-                    { text: "Приготовьте болоньезе: обжарьте лук, морковь и чеснок, добавьте фарш, затем помидоры. Тушите 30 минут.", timer: 30 },
-                    { text: "Приготовьте бешамель: растопите масло, добавьте муку, постепенно влейте молоко, добавьте мускатный орех.", timer: 10 },
-                    { text: "Соберите лазанью: форма -> соус болоньезе -> листы лазаньи -> бешамель -> сыр. Повторите слои 3-4 раза.", timer: 10 },
-                    { text: "Последний слой: бешамель + много сыра. Накройте фольгой.", timer: 0 },
-                    { text: "Выпекайте под фольгой 25 минут при 180°C.", timer: 25 },
-                    { text: "Снимите фольгу и выпекайте еще 15-20 минут до золотистой корочки.", timer: 20 },
-                    { text: "Дайте лазанье отдохнуть 10-15 минут перед нарезкой и подачей.", timer: 15 }
+                    { 
+                        id: "meatType", 
+                        name: "Начинка:", 
+                        type: "radio", 
+                        options: [
+                            { value: "beef", label: "Мясная (говядина)", price: 180, displayName: "говяжий фарш" },
+                            { value: "vegetable", label: "Овощная", price: 120, displayName: "овощная начинка" },
+                            { value: "chicken", label: "Куриная", price: 160, displayName: "куриный фарш" }
+                        ]
+                    },
+                    { 
+                        id: "addSpinach", 
+                        name: "Добавить шпинат в начинку", 
+                        type: "checkbox", 
+                        price: 50,
+                        additionalIngredient: { id: "spinach", name: "Шпинат свежий", baseAmount: 200, unit: "г", price: 50 }
+                    },
+                    { 
+                        id: "addMushrooms", 
+                        name: "Добавить грибы", 
+                        type: "checkbox", 
+                        price: 80,
+                        additionalIngredient: { id: "mushrooms", name: "Шампиньоны", baseAmount: 200, unit: "г", price: 80 }
+                    }
                 ],
                 tip: "Дайте лазанье отдохнуть после духовки 10-15 минут - так она лучше нарезается и слои не распадаются."
             },
@@ -892,7 +962,7 @@
                 difficulty: "Легкая",
                 baseIngredients: [
                     { id: "pasta", name: "Трёхцветная паста или фузилли", baseAmount: 100, unit: "г", price: 50 },
-                    { id: "basil", name: "Базилик свежий", baseAmount: 50, unit: "г", price: 100 },
+                    { id: "basil", name: "Базилик свежий (листья без стеблей)", baseAmount: 50, unit: "г", price: 100 },
                     { id: "pineNuts", name: "Кедровые орешки", baseAmount: 30, unit: "г", price: 120 },
                     { id: "parmesan", name: "Пармезан", baseAmount: 50, unit: "г", price: 100 }
                 ],
@@ -906,22 +976,30 @@
                     { id: "cherryTomato", name: "Помидоры черри для подачи", baseAmount: 100, unit: "г", price: 80 }
                 ],
                 options: [
-                    { id: "nutType", name: "Орехи для песто:", type: "radio", options: [
-                        { value: "pine", label: "Кедровые (традиционно)", price: 120 },
-                        { value: "walnut", label: "Грецкие", price: 70 },
-                        { value: "almond", label: "Миндаль", price: 90 }
-                    ]},
-                    { id: "addSpinach", name: "Добавить шпинат в песто", type: "checkbox", price: 40 },
-                    { id: "addAvocado", name: "Добавить авокадо для кремообразности", type: "checkbox", price: 80 }
-                ],
-                steps: [
-                    { text: "В ступке или блендере измельчите чеснок с солью.", timer: 2 },
-                    { text: "Добавьте кедровые орешки и измельчите до пастообразного состояния.", timer: 2 },
-                    { text: "Добавляйте листья базилика постепенно, продолжая измельчать.", timer: 3 },
-                    { text: "Влейте оливковое масло, продолжая перемешивать.", timer: 1 },
-                    { text: "Добавьте тертый пармезан и перемешайте до однородности.", timer: 1 },
-                    { text: "Отварите пасту в подсоленной воде согласно инструкции на упаковке.", timer: 12 },
-                    { text: "Слейте воду, оставив немного воды от пасты. Смешайте пасту с песто, добавив немного воды от пасты для нужной консистенции.", timer: 0 }
+                    { 
+                        id: "nutType", 
+                        name: "Орехи для песто:", 
+                        type: "radio", 
+                        options: [
+                            { value: "pine", label: "Кедровые (традиционно)", price: 120, displayName: "кедровые орешки" },
+                            { value: "walnut", label: "Грецкие", price: 70, displayName: "грецкие орехи" },
+                            { value: "almond", label: "Миндаль", price: 90, displayName: "миндаль" }
+                        ]
+                    },
+                    { 
+                        id: "addSpinach", 
+                        name: "Добавить шпинат в песто", 
+                        type: "checkbox", 
+                        price: 40,
+                        additionalIngredient: { id: "spinach", name: "Шпинат свежий", baseAmount: 50, unit: "г", price: 40 }
+                    },
+                    { 
+                        id: "addAvocado", 
+                        name: "Добавить авокадо для кремообразности", 
+                        type: "checkbox", 
+                        price: 80,
+                        additionalIngredient: { id: "avocado", name: "Авокадо", baseAmount: 1, unit: "шт.", price: 80 }
+                    }
                 ],
                 tip: "Настоящий песто готовят в ступке, а не в блендере - это сохраняет текстуру и аромат ингредиентов."
             },
@@ -932,8 +1010,8 @@
                 difficulty: "Средняя",
                 baseIngredients: [
                     { id: "pasta", name: "Лингвини или спагетти", baseAmount: 100, unit: "г", price: 45 },
-                    { id: "shrimp", name: "Креветки очищенные", baseAmount: 150, unit: "г", price: 250 },
-                    { id: "mussels", name: "Мидии", baseAmount: 150, unit: "г", price: 200 },
+                    { id: "shrimp", name: "Креветки очищенные (крупные)", baseAmount: 150, unit: "г", price: 250 },
+                    { id: "mussels", name: "Мидии в раковинах", baseAmount: 150, unit: "г", price: 200 },
                     { id: "squid", name: "Кальмары (кольца)", baseAmount: 100, unit: "г", price: 150 }
                 ],
                 sauceIngredients: [
@@ -948,26 +1026,33 @@
                     { id: "chili", name: "Перец чили (по желанию)", baseAmount: 1, unit: "шт.", price: 10 }
                 ],
                 options: [
-                    { id: "seafoodMix", name: "Морепродукты:", type: "radio", options: [
-                        { value: "premium", label: "Премиум (креветки, мидии, кальмары)", price: 600 },
-                        { value: "standard", label: "Стандарт (креветки и мидии)", price: 450 },
-                        { value: "budget", label: "Бюджет (креветки)", price: 250 }
-                    ]},
-                    { id: "sauceType", name: "Соус:", type: "radio", options: [
-                        { value: "tomato", label: "Томатный", price: 50 },
-                        { value: "whiteWine", label: "На белом вине", price: 80 },
-                        { value: "cream", label: "Сливочный", price: 70 }
-                    ]},
-                    { id: "addScallops", name: "Добавить гребешки", type: "checkbox", price: 200 }
-                ],
-                steps: [
-                    { text: "Очистите морепродукты (если нужно). Креветки очистить, оставив хвостики. Мидии промыть.", timer: 10 },
-                    { text: "В большой сковороде разогрейте оливковое масло, обжарьте чеснок и чили 1-2 минуты.", timer: 2 },
-                    { text: "Добавьте креветки и кальмары, обжаривайте 2-3 минуты до изменения цвета.", timer: 3 },
-                    { text: "Добавьте мидии и помидоры черри, влейте белое вино. Тушите 5 минут.", timer: 5 },
-                    { text: "Тем временем отварите пасту в подсоленной воде до состояния al dente.", timer: 10 },
-                    { text: "Добавьте пасту в сковороду с морепродуктами, перемешайте.", timer: 1 },
-                    { text: "Подавайте сразу, сбрызнув лимонным соком и посыпав петрушкой.", timer: 0 }
+                    { 
+                        id: "seafoodMix", 
+                        name: "Морепродукты:", 
+                        type: "radio", 
+                        options: [
+                            { value: "premium", label: "Премиум (креветки, мидии, кальмары)", price: 600, displayName: "креветки, мидии и кальмары" },
+                            { value: "standard", label: "Стандарт (креветки и мидии)", price: 450, displayName: "креветки и мидии" },
+                            { value: "budget", label: "Бюджет (креветки)", price: 250, displayName: "креветки" }
+                        ]
+                    },
+                    { 
+                        id: "sauceType", 
+                        name: "Соус:", 
+                        type: "radio", 
+                        options: [
+                            { value: "tomato", label: "Томатный", price: 50, displayName: "томатный соус" },
+                            { value: "whiteWine", label: "На белом вине", price: 80, displayName: "соус на белом вине" },
+                            { value: "cream", label: "Сливочный", price: 70, displayName: "сливочный соус" }
+                        ]
+                    },
+                    { 
+                        id: "addScallops", 
+                        name: "Добавить гребешки", 
+                        type: "checkbox", 
+                        price: 200,
+                        additionalIngredient: { id: "scallops", name: "Гребешки морские", baseAmount: 100, unit: "г", price: 200 }
+                    }
                 ],
                 tip: "Не пережаривайте морепродукты! Креветки готовы, когда станут розовыми и свернутся в букву 'C'."
             }
@@ -995,6 +1080,7 @@
         const selectedPastaName = document.getElementById('selected-pasta-name');
         const pastaTime = document.getElementById('pasta-time');
         const italianTip = document.getElementById('italian-tip');
+        const currentSettingsDisplay = document.getElementById('current-settings-display');
         
         const costPasta = document.getElementById('cost-pasta');
         const costSauce = document.getElementById('cost-sauce');
@@ -1020,35 +1106,17 @@
             initPortionSlider();
             updateRecipe();
             updateProgress();
-            
-            // Запрашиваем разрешение на уведомления
-            if ("Notification" in window && Notification.permission === "default") {
-                setTimeout(() => {
-                    Notification.requestPermission();
-                }, 1000);
-            }
         });
 
         // ИНИЦИАЛИЗАЦИЯ КНОПОК ТИПА ПАСТЫ
         function initPastaTypeButtons() {
             document.querySelectorAll('.pasta-type-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // Убираем активный класс у всех кнопок
                     document.querySelectorAll('.pasta-type-btn').forEach(b => b.classList.remove('active'));
-                    
-                    // Добавляем активный класс текущей кнопке
                     this.classList.add('active');
-                    
-                    // Обновляем текущий тип пасты
                     currentPastaType = this.getAttribute('data-type');
-                    
-                    // Обновляем рецепт
                     updateRecipe();
                     updateProgress();
-                    
-                    // Анимация
-                    this.style.animation = "pulse 0.5s";
-                    setTimeout(() => this.style.animation = "", 500);
                 });
             });
         }
@@ -1058,18 +1126,10 @@
             portionSlider.addEventListener('input', function() {
                 currentPortions = parseInt(this.value);
                 portionValue.textContent = currentPortions;
-                
-                // Обновляем количество пасты
                 const pastaGrams = currentPortions * 100;
                 pastaAmount.textContent = `(${pastaGrams}г пасты)`;
-                
-                // Обновляем рецепт
                 updateRecipe();
                 updateProgress();
-                
-                // Анимация
-                portionValue.classList.add('pulse');
-                setTimeout(() => portionValue.classList.remove('pulse'), 500);
             });
         }
 
@@ -1077,47 +1137,62 @@
         function updateRecipe() {
             const recipe = pastaRecipes[currentPastaType];
             
-            // Обновляем информацию
             selectedPastaName.textContent = recipe.name;
             pastaTime.textContent = recipe.cookTime;
             cookTime.textContent = recipe.cookTime;
             italianTip.textContent = recipe.tip;
             
-            // Обновляем опции рецепта
+            updateCurrentSettingsDisplay(recipe);
             updateRecipeOptions(recipe);
-            
-            // Обновляем списки ингредиентов
             updateIngredients(recipe);
-            
-            // Обновляем шаги приготовления
             updateSteps(recipe);
-            
-            // Обновляем стоимость
             updateCost(recipe);
+        }
+
+        // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ ТЕКУЩИХ НАСТРОЕК
+        function updateCurrentSettingsDisplay(recipe) {
+            let settingsText = "";
+            
+            recipe.options.forEach(option => {
+                const selectedValue = selectedOptions[currentPastaType][option.id];
+                
+                if (option.type === 'radio') {
+                    const selectedOption = option.options.find(opt => opt.value === selectedValue);
+                    if (selectedOption) {
+                        settingsText += `${option.name.replace(":", "")}: ${selectedOption.label} | `;
+                    }
+                } else if (option.type === 'checkbox') {
+                    const isChecked = selectedOptions[currentPastaType][option.id];
+                    settingsText += `${option.name.replace("Добавить ", "")}: ${isChecked ? "Да" : "Нет"} | `;
+                }
+            });
+            
+            // Убираем последний разделитель
+            if (settingsText.endsWith(" | ")) {
+                settingsText = settingsText.slice(0, -3);
+            }
+            
+            currentSettingsDisplay.textContent = settingsText || "Настройки не выбраны";
         }
 
         // ОБНОВЛЕНИЕ ОПЦИЙ РЕЦЕПТА
         function updateRecipeOptions(recipe) {
             recipeOptions.innerHTML = '';
             
-            // Заголовок
             const title = document.createElement('h3');
             title.innerHTML = '<i class="fas fa-cogs"></i> Настройки рецепта';
             recipeOptions.appendChild(title);
             
-            // Создаем опции
             recipe.options.forEach(option => {
                 const container = document.createElement('div');
                 container.className = 'options-container';
                 
-                // Название опции
                 const optionTitle = document.createElement('div');
                 optionTitle.style.fontWeight = 'bold';
                 optionTitle.style.marginBottom = '10px';
                 optionTitle.textContent = option.name;
                 container.appendChild(optionTitle);
                 
-                // Радиокнопки или чекбоксы
                 if (option.type === 'radio') {
                     option.options.forEach(opt => {
                         const row = document.createElement('div');
@@ -1129,7 +1204,6 @@
                         input.name = `${currentPastaType}-${option.id}`;
                         input.value = opt.value;
                         
-                        // Проверяем, выбрана ли эта опция
                         if (selectedOptions[currentPastaType][option.id] === opt.value) {
                             input.checked = true;
                         }
@@ -1166,7 +1240,6 @@
                     input.id = `${currentPastaType}-${option.id}`;
                     input.name = `${currentPastaType}-${option.id}`;
                     
-                    // Проверяем, выбран ли этот чекбокс
                     if (selectedOptions[currentPastaType][option.id]) {
                         input.checked = true;
                     }
@@ -1201,45 +1274,54 @@
 
         // ОБНОВЛЕНИЕ ИНГРЕДИЕНТОВ
         function updateIngredients(recipe) {
-            // Очищаем списки
             mainIngredientsList.innerHTML = '';
             sauceIngredientsList.innerHTML = '';
             additionalIngredientsList.innerHTML = '';
             
-            // Рендерим основные ингредиенты
-            renderIngredientList(mainIngredientsList, recipe.baseIngredients);
+            const allIngredients = [...recipe.baseIngredients, ...recipe.sauceIngredients, ...recipe.additionalIngredients];
             
-            // Рендерим ингредиенты для соуса
-            renderIngredientList(sauceIngredientsList, recipe.sauceIngredients);
+            // Добавляем дополнительные ингредиенты из выбранных опций
+            recipe.options.forEach(option => {
+                if (option.type === 'checkbox' && selectedOptions[currentPastaType][option.id] && option.additionalIngredient) {
+                    allIngredients.push(option.additionalIngredient);
+                }
+            });
             
-            // Рендерим дополнительные ингредиенты, если они есть
-            if (recipe.additionalIngredients.length > 0) {
+            // Разделяем ингредиенты по категориям
+            const baseIngredients = recipe.baseIngredients;
+            const sauceIngredients = recipe.sauceIngredients;
+            const additionalIngredients = [...recipe.additionalIngredients];
+            
+            // Добавляем дополнительные ингредиенты из чекбоксов
+            recipe.options.forEach(option => {
+                if (option.type === 'checkbox' && selectedOptions[currentPastaType][option.id] && option.additionalIngredient) {
+                    additionalIngredients.push(option.additionalIngredient);
+                }
+            });
+            
+            renderIngredientList(mainIngredientsList, baseIngredients);
+            renderIngredientList(sauceIngredientsList, sauceIngredients);
+            
+            if (additionalIngredients.length > 0) {
                 additionalCategory.style.display = 'block';
-                renderIngredientList(additionalIngredientsList, recipe.additionalIngredients);
+                renderIngredientList(additionalIngredientsList, additionalIngredients);
             } else {
                 additionalCategory.style.display = 'none';
             }
             
-            // Обновляем общее количество ингредиентов
-            const total = recipe.baseIngredients.length + recipe.sauceIngredients.length + recipe.additionalIngredients.length;
+            const total = baseIngredients.length + sauceIngredients.length + additionalIngredients.length;
             totalIngredients.textContent = total;
         }
 
         // РЕНДЕРИНГ СПИСКА ИНГРЕДИЕНТОВ
         function renderIngredientList(container, ingredientList) {
             ingredientList.forEach(ingredient => {
-                // Рассчитываем количество на текущее число порций
                 const calculatedAmount = ingredient.baseAmount * currentPortions;
                 const displayAmount = formatAmount(calculatedAmount, ingredient.unit);
-                
-                // Рассчитываем цену
                 const price = (ingredient.price / ingredient.baseAmount) * calculatedAmount;
-                
-                // Проверяем, куплен ли уже ингредиент
                 const ingredientId = `${currentPastaType}-${ingredient.id}`;
                 const isChecked = boughtIngredients[ingredientId] || false;
                 
-                // Создаем элемент списка
                 const li = document.createElement('li');
                 li.className = isChecked ? 'completed' : '';
                 li.dataset.id = ingredientId;
@@ -1251,17 +1333,12 @@
                     <span class="ingredient-price">~${Math.round(price)} руб</span>
                 `;
                 
-                // Обработчик изменения состояния
                 const checkbox = li.querySelector('.ingredient-checkbox');
                 checkbox.addEventListener('change', function() {
                     boughtIngredients[ingredientId] = this.checked;
                     localStorage.setItem('pastaBoughtIngredients', JSON.stringify(boughtIngredients));
                     li.classList.toggle('completed', this.checked);
                     updateProgress();
-                    
-                    // Анимация
-                    li.classList.add('pulse');
-                    setTimeout(() => li.classList.remove('pulse'), 300);
                 });
                 
                 container.appendChild(li);
@@ -1283,17 +1360,21 @@
         function updateSteps(recipe) {
             stepsList.innerHTML = '';
             
-            recipe.steps.forEach((step, index) => {
+            // Создаем шаги в зависимости от типа пасты
+            const steps = generateStepsForPastaType(recipe);
+            
+            steps.forEach((step, index) => {
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <div class="step-number">${index + 1}</div>
                     <div class="step-content">
                         ${step.text}
+                        ${step.details ? `<div class="step-detail">${step.details}</div>` : ''}
+                        ${step.cuttingInstruction ? `<div class="cutting-instruction">${step.cuttingInstruction}</div>` : ''}
                         ${step.timer > 0 ? `<span class="step-timer" data-time="${step.timer}"><i class="fas fa-hourglass-half"></i> Таймер: ${step.timer} мин</span>` : ''}
                     </div>
                 `;
                 
-                // Добавляем обработчик для таймера
                 if (step.timer > 0) {
                     const timerBtn = li.querySelector('.step-timer');
                     timerBtn.addEventListener('click', function() {
@@ -1306,18 +1387,393 @@
             });
         }
 
+        // ГЕНЕРАЦИЯ ШАГОВ ДЛЯ КАЖДОГО ТИПА ПАСТЫ
+        function generateStepsForPastaType(recipe) {
+            const steps = [];
+            const type = currentPastaType;
+            
+            // Получаем выбранные настройки
+            const options = selectedOptions[type];
+            const recipeOptionsData = pastaRecipes[type].options;
+            
+            if (type === "carbonara") {
+                const meatType = recipeOptionsData.find(o => o.id === "guancialeType");
+                const selectedMeat = meatType.options.find(o => o.value === options.guancialeType);
+                const meatName = selectedMeat ? selectedMeat.displayName || selectedMeat.label : "бекон";
+                const meatAmount = currentPortions * 80;
+                const pastaAmount = currentPortions * 100;
+                const eggYolks = currentPortions;
+                const cheeseAmount = currentPortions * 40;
+                const cheeseType = recipeOptionsData.find(o => o.id === "cheeseType");
+                const selectedCheese = cheeseType.options.find(o => o.value === options.cheeseType);
+                const cheeseName = selectedCheese ? selectedCheese.label : "Пекорино Романо";
+                
+                steps.push({
+                    text: `Подготовьте ингредиенты: нарежьте <span class="highlight-quantity">${formatAmount(meatAmount, 'г')}</span> ${meatName}, натрите <span class="highlight-quantity">${formatAmount(cheeseAmount, 'г')}</span> ${cheeseName}, отделите желтки от белков (нужно <span class="highlight-quantity">${eggYolks}</span> желтков).`,
+                    cuttingInstruction: `<strong>Детальная нарезка:</strong><br>• ${meatName}: нарежьте кубиками 1×1 см или тонкими полосками длиной 3-4 см<br>• ${cheeseName}: натрите на мелкой тёрке`,
+                    timer: 0
+                });
+                
+                steps.push({
+                    text: `В глубокой сковороде без масла обжарьте ${meatName} на среднем огне до хрустящей корочки и выделения жира. Переложите на бумажное полотенце.`,
+                    details: `Жир из мяса не выливайте - он понадобится для соуса.`,
+                    timer: 8
+                });
+                
+                steps.push({
+                    text: `В миске взбейте желтки с <span class="highlight-quantity">${formatAmount(cheeseAmount - 20, 'г')}</span> ${cheeseName} и <span class="highlight-quantity">${currentPortions * 2} ч.л.</span> свежемолотого черного перца.`,
+                    details: `Оставьте немного сыра для подачи. Смесь должна быть однородной.`,
+                    timer: 0
+                });
+                
+                if (options.addCream) {
+                    steps.push({
+                        text: `Добавьте <span class="highlight-quantity">${currentPortions * 50} мл</span> сливок к яично-сырной смеси и тщательно перемешайте.`,
+                        details: `Это не традиционный способ, но делает соус более кремовым.`,
+                        timer: 0
+                    });
+                }
+                
+                steps.push({
+                    text: `В большой кастрюле вскипятите <span class="highlight-quantity">${Math.max(currentPortions, 2)} л</span> воды, добавьте <span class="highlight-quantity">${currentPortions * 10} г</span> соли. Добавьте <span class="highlight-quantity">${formatAmount(pastaAmount, 'г')}</span> спагетти и готовьте на 1 минуту меньше, чем указано на упаковке.`,
+                    timer: 9
+                });
+                
+                steps.push({
+                    text: `Отложите <span class="highlight-quantity">${currentPortions * 50} мл</span> воды от пасты. Слейте пасту и сразу добавьте в сковороду с оставшимся жиром от мяса.`,
+                    details: `Быстро перемешайте, чтобы паста покрылась жиром.`,
+                    timer: 1
+                });
+                
+                steps.push({
+                    text: `Снимите сковороду с огня. Добавьте яично-сырную смесь и обжаренное мясо, интенсивно перемешивая. При необходимости добавьте немного воды от пасты для кремообразной консистенции.`,
+                    details: `Важно снять с огня, чтобы яйца не превратились в омлет.`,
+                    timer: 0
+                });
+                
+                steps.push({
+                    text: `Немедленно подавайте, посыпав оставшимся сыром и черным перцем.`,
+                    details: `Пасту карбонару нужно есть сразу после приготовления.`,
+                    timer: 0
+                });
+                
+            } else if (type === "cream-mushroom") {
+                const mushroomType = recipeOptionsData.find(o => o.id === "mushroomType");
+                const selectedMushroom = mushroomType.options.find(o => o.value === options.mushroomType);
+                const mushroomName = selectedMushroom ? selectedMushroom.displayName : "шампиньоны";
+                const mushroomAmount = currentPortions * 200;
+                const pastaAmount = currentPortions * 100;
+                const onionAmount = currentPortions;
+                const creamAmount = currentPortions * 200;
+                const chickenAmount = options.addChicken ? currentPortions * 150 : 0;
+                
+                steps.push({
+                    text: `Подготовьте ингредиенты: очистите и нарежьте <span class="highlight-quantity">${formatAmount(onionAmount, 'шт')}</span> лука, <span class="highlight-quantity">${currentPortions * 2} зубчика</span> чеснока, <span class="highlight-quantity">${formatAmount(mushroomAmount, 'г')}</span> ${mushroomName}.`,
+                    cuttingInstruction: `<strong>Детальная нарезка:</strong><br>• Лук: мелкий кубик 0.5×0.5 см<br>• Чеснок: измельчить ножом или через пресс<br>• ${mushroomName}: пластинками толщиной 0.5 см<br>${options.addChicken ? `• Куриное филе: кубиками 1.5×1.5 см` : ''}${options.addSpinach ? `<br>• Шпинат: крупно порвать руками` : ''}`,
+                    timer: 0
+                });
+                
+                if (options.addChicken) {
+                    steps.push({
+                        text: `Обжарьте куриное филе на среднем огне до золотистой корочки со всех сторон. Переложите в тарелку.`,
+                        timer: 7
+                    });
+                }
+                
+                steps.push({
+                    text: `В той же сковороде растопите <span class="highlight-quantity">${currentPortions * 30} г</span> сливочного масла. Обжарьте лук до прозрачности.`,
+                    timer: 4
+                });
+                
+                steps.push({
+                    text: `Добавьте ${mushroomName} и обжаривайте до золотистого цвета и испарения жидкости. В конце добавьте чеснок.`,
+                    details: `Грибы нужно жарить на достаточно сильном огне, чтобы они подрумянились.`,
+                    timer: 8
+                });
+                
+                if (options.addChicken) {
+                    steps.push({
+                        text: `Верните курицу в сковороду.`,
+                        timer: 1
+                    });
+                }
+                
+                steps.push({
+                    text: `Влейте <span class="highlight-quantity">${formatAmount(creamAmount, 'мл')}</span> сливок. Добавьте соль и перец по вкусу. Тушите на медленном огне.`,
+                    details: `Не доводите сливки до кипения, иначе могут свернуться.`,
+                    timer: 5
+                });
+                
+                if (options.addSpinach) {
+                    steps.push({
+                        text: `Добавьте <span class="highlight-quantity">${currentPortions * 100} г</span> шпината и перемешайте до увядания.`,
+                        timer: 2
+                    });
+                }
+                
+                steps.push({
+                    text: `Тем временем отварите <span class="highlight-quantity">${formatAmount(pastaAmount, 'г')}</span> пасты в подсоленной воде согласно инструкции на упаковке.`,
+                    timer: 12
+                });
+                
+                steps.push({
+                    text: `Слейте воду, смешайте пасту с соусом. Подавайте, посыпав петрушкой и пармезаном.`,
+                    timer: 0
+                });
+                
+            } else if (type === "bolognese") {
+                const meatType = recipeOptionsData.find(o => o.id === "meatType");
+                const selectedMeat = meatType.options.find(o => o.value === options.meatType);
+                const meatName = selectedMeat ? selectedMeat.displayName : "говяжий фарш";
+                const meatAmount = currentPortions * 150;
+                const pastaAmount = currentPortions * 100;
+                const soffrittoAmount = currentPortions; // лук, морковь, сельдерей
+                
+                steps.push({
+                    text: `Подготовьте софрито: очистите и мелко нарежьте <span class="highlight-quantity">${formatAmount(soffrittoAmount, 'шт')}</span> лука, <span class="highlight-quantity">${formatAmount(soffrittoAmount, 'шт')}</span> моркови, <span class="highlight-quantity">${formatAmount(soffrittoAmount, 'шт')}</span> стебля сельдерея.`,
+                    cuttingInstruction: `<strong>Детальная нарезка:</strong><br>• Лук: очень мелкий кубик 0.3×0.3 см<br>• Морковь: мелкий кубик или натереть на тёрке<br>• Сельдерей: тонкие полукольца<br>• Чеснок: измельчить<br>${options.addMushrooms ? `<br>• Грибы: пластинками или четвертинками` : ''}`,
+                    timer: 0
+                });
+                
+                steps.push({
+                    text: `В толстостенной кастрюле или сотейнике разогрейте оливковое масло. Обжарьте софрито на медленном огне до мягкости.`,
+                    timer: 10
+                });
+                
+                steps.push({
+                    text: `Добавьте <span class="highlight-quantity">${formatAmount(meatAmount, 'г')}</span> ${meatName}, разбивая комки лопаткой. Обжаривайте до изменения цвета.`,
+                    timer: 10
+                });
+                
+                if (options.addMushrooms) {
+                    steps.push({
+                        text: `Добавьте <span class="highlight-quantity">${currentPortions * 150} г</span> нарезанных грибов и обжаривайте 5 минут.`,
+                        timer: 5
+                    });
+                }
+                
+                steps.push({
+                    text: `Влейте <span class="highlight-quantity">${currentPortions * 100} мл</span> красного вина. Увеличьте огонь и выпарите алкоголь.`,
+                    timer: 4
+                });
+                
+                if (options.addMilk) {
+                    steps.push({
+                        text: `Добавьте <span class="highlight-quantity">${currentPortions * 100} мл</span> молока и тушите до полного впитывания.`,
+                        timer: 5
+                    });
+                }
+                
+                steps.push({
+                    text: `Добавьте <span class="highlight-quantity">${currentPortions * 200} г</span> помидоров, соль, перец и травы. Уменьшите огонь до минимума, накройте крышкой.`,
+                    timer: 0
+                });
+                
+                steps.push({
+                    text: `Тушите соус минимум 30 минут (в идеале 1.5-2 часа), периодически помешивая.`,
+                    timer: 30
+                });
+                
+                steps.push({
+                    text: `За 15 минут до подачи отварите <span class="highlight-quantity">${formatAmount(pastaAmount, 'г')}</span> пасты в подсоленной воде. Смешайте с соусом, подавайте с пармезаном.`,
+                    timer: 15
+                });
+                
+            } else if (type === "lasagna") {
+                const meatType = recipeOptionsData.find(o => o.id === "meatType");
+                const selectedMeat = meatType.options.find(o => o.value === options.meatType);
+                const meatName = selectedMeat ? selectedMeat.displayName : "говяжий фарш";
+                const meatAmount = currentPortions * 300;
+                const sheetsAmount = Math.ceil(currentPortions * 6 / 4) * 4; // Округляем до кратного 4
+                
+                steps.push({
+                    text: `Подготовьте ингредиенты для болоньезе и бешамель.`,
+                    cuttingInstruction: `<strong>Детальная нарезка:</strong><br>• Лук: мелкий кубик<br>• Морковь: натереть на тёрке<br>• Чеснок: измельчить<br>• Грибы (если добавляете): пластинками<br>• Шпинат (если добавляете): крупно порвать`,
+                    timer: 0
+                });
+                
+                steps.push({
+                    text: `Приготовьте соус болоньезе: обжарьте лук, морковь и чеснок, добавьте <span class="highlight-quantity">${formatAmount(meatAmount, 'г')}</span> ${meatName}, затем помидоры. Тушите 30 минут.`,
+                    details: options.addMushrooms ? `Добавьте грибы за 10 минут до конца.` : '',
+                    timer: 30
+                });
+                
+                if (options.addSpinach) {
+                    steps.push({
+                        text: `Добавьте <span class="highlight-quantity">${currentPortions * 200} г</span> шпината в болоньезе за 5 минут до конца приготовления.`,
+                        timer: 5
+                    });
+                }
+                
+                steps.push({
+                    text: `Приготовьте бешамель: растопите <span class="highlight-quantity">${currentPortions * 50} г</span> масла, добавьте <span class="highlight-quantity">${currentPortions * 50} г</span> муки, постепенно влейте <span class="highlight-quantity">${currentPortions * 500} мл</span> молока, добавьте мускатный орех.`,
+                    timer: 10
+                });
+                
+                steps.push({
+                    text: `Соберите лазанью: смажьте форму маслом. Выложите слоями: соус болоньезе → листы лазаньи → бешамель → сыр. Повторите 3-4 раза.`,
+                    details: `Нужно примерно <span class="highlight-quantity">${sheetsAmount}</span> листов лазаньи.`,
+                    timer: 10
+                });
+                
+                steps.push({
+                    text: `Последний слой: бешамель + много сыра. Накройте фольгой. Выпекайте под фольгой 25 минут при 180°C.`,
+                    timer: 25
+                });
+                
+                steps.push({
+                    text: `Снимите фольгу и выпекайте еще 15-20 минут до золотистой корочки.`,
+                    timer: 20
+                });
+                
+                steps.push({
+                    text: `Дайте лазанье отдохнуть 10-15 минут перед нарезкой и подачей.`,
+                    timer: 15
+                });
+                
+            } else if (type === "pesto") {
+                const nutType = recipeOptionsData.find(o => o.id === "nutType");
+                const selectedNut = nutType.options.find(o => o.value === options.nutType);
+                const nutName = selectedNut ? selectedNut.displayName : "кедровые орешки";
+                const nutAmount = currentPortions * 30;
+                const pastaAmount = currentPortions * 100;
+                const basilAmount = currentPortions * 50;
+                
+                steps.push({
+                    text: `Подготовьте ингредиенты: промойте и обсушите <span class="highlight-quantity">${formatAmount(basilAmount, 'г')}</span> базилика, натрите <span class="highlight-quantity">${currentPortions * 50} г</span> пармезана.`,
+                    cuttingInstruction: `<strong>Подготовка:</strong><br>• Базилик: отделить листья от стеблей<br>• Пармезан: натереть на мелкой тёрке<br>• Чеснок: очистить<br>• Орехи: слегка подрумянить на сухой сковороде<br>${options.addAvocado ? `<br>• Авокадо: очистить, удалить косточку, нарезать кубиками` : ''}`,
+                    timer: 0
+                });
+                
+                steps.push({
+                    text: `В ступке или блендере измельчите <span class="highlight-quantity">${currentPortions}</span> зубчик чеснока с щепоткой соли.`,
+                    timer: 2
+                });
+                
+                steps.push({
+                    text: `Добавьте <span class="highlight-quantity">${formatAmount(nutAmount, 'г')}</span> ${nutName} и измельчите до пастообразного состояния.`,
+                    timer: 2
+                });
+                
+                steps.push({
+                    text: `Добавляйте листья базилика постепенно, продолжая измельчать.`,
+                    timer: 3
+                });
+                
+                if (options.addSpinach) {
+                    steps.push({
+                        text: `Добавьте <span class="highlight-quantity">${currentPortions * 50} г</span> шпината.`,
+                        timer: 1
+                    });
+                }
+                
+                if (options.addAvocado) {
+                    steps.push({
+                        text: `Добавьте мякоть <span class="highlight-quantity">${currentPortions} шт.</span> авокадо.`,
+                        timer: 1
+                    });
+                }
+                
+                steps.push({
+                    text: `Влейте <span class="highlight-quantity">${currentPortions * 100} мл</span> оливкового масла, продолжая перемешивать.`,
+                    timer: 1
+                });
+                
+                steps.push({
+                    text: `Добавьте тертый пармезан и перемешайте до однородности.`,
+                    timer: 1
+                });
+                
+                steps.push({
+                    text: `Отварите <span class="highlight-quantity">${formatAmount(pastaAmount, 'г')}</span> пасты в подсоленной воде. Слейте, оставив немного воды. Смешайте пасту с песто.`,
+                    timer: 12
+                });
+                
+            } else if (type === "seafood") {
+                const seafoodType = recipeOptionsData.find(o => o.id === "seafoodMix");
+                const selectedSeafood = seafoodType.options.find(o => o.value === options.seafoodMix);
+                const seafoodName = selectedSeafood ? selectedSeafood.displayName : "креветки, мидии и кальмары";
+                const pastaAmount = currentPortions * 100;
+                let seafoodDetails = "";
+                
+                if (options.seafoodMix === "premium") {
+                    seafoodDetails = `<span class="highlight-quantity">${currentPortions * 150} г</span> креветок, <span class="highlight-quantity">${currentPortions * 150} г</span> мидий, <span class="highlight-quantity">${currentPortions * 100} г</span> кальмаров`;
+                } else if (options.seafoodMix === "standard") {
+                    seafoodDetails = `<span class="highlight-quantity">${currentPortions * 200} г</span> креветок, <span class="highlight-quantity">${currentPortions * 150} г</span> мидий`;
+                } else {
+                    seafoodDetails = `<span class="highlight-quantity">${currentPortions * 250} г</span> креветок`;
+                }
+                
+                if (options.addScallops) {
+                    seafoodDetails += `, <span class="highlight-quantity">${currentPortions * 100} г</span> гребешков`;
+                }
+                
+                steps.push({
+                    text: `Подготовьте морепродукты: ${seafoodDetails}.`,
+                    cuttingInstruction: `<strong>Подготовка морепродуктов:</strong><br>• Креветки: очистить, оставить хвостики по желанию<br>• Мидии: промыть, удалить бороду<br>• Кальмары: если целые, очистить от плёнки, нарезать кольцами<br>• Гребешки (если есть): промыть, обсушить<br>• Чеснок: измельчить<br>• Чили: тонкие колечки (по желанию)<br>• Помидоры черри: разрезать пополам`,
+                    timer: 0
+                });
+                
+                steps.push({
+                    text: `В большой сковороде разогрейте оливковое масло. Обжарьте чеснок и чили 1-2 минуты.`,
+                    timer: 2
+                });
+                
+                steps.push({
+                    text: `Добавьте креветки и кальмары (если используете). Обжаривайте 2-3 минуты до изменения цвета.`,
+                    details: `Креветки готовы, когда станут розовыми и свернутся буквой "C".`,
+                    timer: 3
+                });
+                
+                if (options.addScallops) {
+                    steps.push({
+                        text: `Добавьте гребешки, обжаривайте 1-2 минуты с каждой стороны.`,
+                        timer: 3
+                    });
+                }
+                
+                steps.push({
+                    text: `Добавьте мидии (если используете) и помидоры черри. Влейте <span class="highlight-quantity">${currentPortions * 100} мл</span> белого вина. Тушите до открытия мидий.`,
+                    timer: 5
+                });
+                
+                steps.push({
+                    text: `Отварите <span class="highlight-quantity">${formatAmount(pastaAmount, 'г')}</span> пасты в подсоленной воде до состояния al dente.`,
+                    timer: 10
+                });
+                
+                steps.push({
+                    text: `Добавьте пасту в сковороду с морепродуктами, перемешайте.`,
+                    timer: 1
+                });
+                
+                steps.push({
+                    text: `Подавайте сразу, сбрызнув лимонным соком и посыпав петрушкой.`,
+                    timer: 0
+                });
+            }
+            
+            return steps;
+        }
+
         // ОБНОВЛЕНИЕ СТОИМОСТИ
         function updateCost(recipe) {
             let pastaCost = 0;
             let sauceCost = 0;
             let cheeseCost = 0;
             
-            // Стоимость основных ингредиентов
-            recipe.baseIngredients.forEach(ing => {
+            const allIngredients = [...recipe.baseIngredients, ...recipe.sauceIngredients, ...recipe.additionalIngredients];
+            
+            recipe.options.forEach(option => {
+                if (option.type === 'checkbox' && selectedOptions[currentPastaType][option.id] && option.additionalIngredient) {
+                    allIngredients.push(option.additionalIngredient);
+                }
+            });
+            
+            allIngredients.forEach(ing => {
                 const amount = ing.baseAmount * currentPortions;
                 const price = (ing.price / ing.baseAmount) * amount;
                 
-                // Проверяем категорию ингредиента
                 if (ing.name.toLowerCase().includes('сыр') || ing.name.toLowerCase().includes('пармезан') || 
                     ing.name.toLowerCase().includes('моцарелла') || ing.name.toLowerCase().includes('пекорино')) {
                     cheeseCost += price;
@@ -1329,26 +1785,6 @@
                 }
             });
             
-            // Стоимость ингредиентов для соуса
-            recipe.sauceIngredients.forEach(ing => {
-                const amount = ing.baseAmount * currentPortions;
-                const price = (ing.price / ing.baseAmount) * amount;
-                sauceCost += price;
-            });
-            
-            // Стоимость дополнительных ингредиентов
-            recipe.additionalIngredients.forEach(ing => {
-                const amount = ing.baseAmount * currentPortions;
-                const price = (ing.price / ing.baseAmount) * amount;
-                
-                if (ing.name.toLowerCase().includes('сыр') || ing.name.toLowerCase().includes('пармезан')) {
-                    cheeseCost += price;
-                } else {
-                    sauceCost += price;
-                }
-            });
-            
-            // Учитываем выбранные опции
             recipe.options.forEach(option => {
                 if (option.type === 'radio') {
                     const selectedValue = selectedOptions[currentPastaType][option.id];
@@ -1356,18 +1792,12 @@
                     if (selectedOption) {
                         sauceCost += selectedOption.price * currentPortions;
                     }
-                } else if (option.type === 'checkbox') {
-                    if (selectedOptions[currentPastaType][option.id]) {
-                        sauceCost += option.price * currentPortions;
-                    }
                 }
             });
             
-            // Итоговая стоимость
             const totalCost = pastaCost + sauceCost + cheeseCost;
             const costPerServingValue = totalCost / currentPortions;
             
-            // Обновляем отображение
             costPasta.textContent = `${Math.round(pastaCost)} руб`;
             costSauce.textContent = `${Math.round(sauceCost)} руб`;
             costCheese.textContent = `${Math.round(cheeseCost)} руб`;
@@ -1378,9 +1808,14 @@
         // ОБНОВЛЕНИЕ ПРОГРЕССА ПОКУПОК
         function updateProgress() {
             const recipe = pastaRecipes[currentPastaType];
-            const total = recipe.baseIngredients.length + recipe.sauceIngredients.length + recipe.additionalIngredients.length;
+            let total = recipe.baseIngredients.length + recipe.sauceIngredients.length + recipe.additionalIngredients.length;
             
-            // Считаем купленные ингредиенты для текущего рецепта
+            recipe.options.forEach(option => {
+                if (option.type === 'checkbox' && selectedOptions[currentPastaType][option.id] && option.additionalIngredient) {
+                    total++;
+                }
+            });
+            
             let bought = 0;
             recipe.baseIngredients.forEach(ing => {
                 const id = `${currentPastaType}-${ing.id}`;
@@ -1393,6 +1828,13 @@
             recipe.additionalIngredients.forEach(ing => {
                 const id = `${currentPastaType}-${ing.id}`;
                 if (boughtIngredients[id]) bought++;
+            });
+            
+            recipe.options.forEach(option => {
+                if (option.type === 'checkbox' && selectedOptions[currentPastaType][option.id] && option.additionalIngredient) {
+                    const id = `${currentPastaType}-${option.additionalIngredient.id}`;
+                    if (boughtIngredients[id]) bought++;
+                }
             });
             
             const percentage = total > 0 ? (bought / total) * 100 : 0;
@@ -1408,19 +1850,16 @@
                 boughtIngredients = {};
                 localStorage.removeItem('pastaBoughtIngredients');
                 
-                // Снимаем все галочки
                 document.querySelectorAll('.ingredient-checkbox').forEach(checkbox => {
                     checkbox.checked = false;
                 });
                 
-                // Обновляем классы
                 document.querySelectorAll('.ingredients-list li').forEach(li => {
                     li.classList.remove('completed');
                 });
                 
                 updateProgress();
                 
-                // Анимация
                 this.innerHTML = '<i class="fas fa-check"></i> Список сброшен!';
                 this.style.backgroundColor = 'var(--red)';
                 setTimeout(() => {
@@ -1434,7 +1873,6 @@
         function openTimerModal(title, minutes) {
             const seconds = minutes * 60;
             
-            // Создаем модальное окно
             const modal = document.createElement('div');
             modal.id = 'timer-modal';
             modal.style.cssText = `
@@ -1475,13 +1913,11 @@
             
             document.body.appendChild(modal);
             
-            // Переменные таймера
             let timerInterval = null;
             let timerSeconds = seconds;
             let isTimerRunning = false;
             let totalTimerSeconds = seconds;
             
-            // Элементы таймера
             const timerDisplay = document.getElementById('timer-display');
             const timerProgressBar = document.getElementById('timer-progress-bar');
             const startTimerBtn = document.getElementById('start-timer');
@@ -1489,7 +1925,6 @@
             const resetTimerBtn = document.getElementById('reset-timer');
             const closeTimerBtn = document.getElementById('close-timer');
             
-            // Обновление отображения таймера
             function updateTimerDisplay() {
                 const minutes = Math.floor(timerSeconds / 60);
                 const seconds = timerSeconds % 60;
@@ -1498,13 +1933,11 @@
                 const progress = ((totalTimerSeconds - timerSeconds) / totalTimerSeconds) * 100;
                 timerProgressBar.style.transform = `scaleX(${progress / 100})`;
                 
-                // Изменение цвета при завершении
                 if (timerSeconds < 10 && timerSeconds > 0) {
                     timerDisplay.style.color = 'var(--red)';
                 }
             }
             
-            // Запуск таймера
             function startTimer() {
                 if (isTimerRunning) return;
                 
@@ -1520,28 +1953,16 @@
                     if (timerSeconds <= 0) {
                         clearInterval(timerInterval);
                         isTimerRunning = false;
-                        
-                        // Воспроизводим звук
                         playTimerCompleteSound();
-                        
-                        // Уведомление
-                        if (Notification.permission === "granted") {
-                            new Notification("Таймер завершен!", {
-                                body: `Время для "${title}" истекло!`,
-                                icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwOEM0NSI+PHBhdGggZD0iTTEyLDIgQTEwLDEwIDAgMCwwIDIsMTIgQTEwLDEwIDAgMCwwIDEyLDIyIEExMCwxMCAwIDAsMCAyMiwxMiBBMTAsMTAgMCAwLDAgMTIsMiBNMTIsNCABOCw4IDAgMCwxIDIwLDEyIEE4LDggMCAwLDEgMTIsMjAgQTgsOCAwIDAsMSA0LDEyIEE4LDggMCAwLDEgMTIsNCBNMTEuNyw2IEE1LjksNS45IDAgMCwwIDYuMSwxMS43IEExLjYsMS42IDAgMCwwIDYuMSwxNC45IEE1LjksNS45IDAgMCwwIDExLjcsMjAuNSBBMS42LDEuNiAwIDAsMCAxMy4zLDIwLjUgQTUuOSw1LjkgMCAwLDAgMTguOSwxNC45IEExLjYsMS42IDAgMCwwIDE4LjksMTEuNyBBNS45LDUuOSAwIDAsMCAxMy4zLDYgQTEuNiwxLjYgMCAwLDAgMTEuNyw2Ii8+PC9zdmc+"
-                            });
-                        }
                     }
                 }, 100);
             }
             
-            // Пауза таймера
             function pauseTimer() {
                 isTimerRunning = false;
                 clearInterval(timerInterval);
             }
             
-            // Сброс таймера
             function resetTimer() {
                 pauseTimer();
                 timerSeconds = totalTimerSeconds;
@@ -1549,13 +1970,11 @@
                 timerDisplay.style.color = 'var(--red)';
             }
             
-            // Закрытие модального окна
             function closeTimerModal() {
                 pauseTimer();
                 document.body.removeChild(modal);
             }
             
-            // Обработчики событий
             startTimerBtn.addEventListener('click', startTimer);
             pauseTimerBtn.addEventListener('click', pauseTimer);
             resetTimerBtn.addEventListener('click', resetTimer);
@@ -1566,24 +1985,19 @@
                 }
             });
             
-            // Инициализация отображения
             updateTimerDisplay();
         }
 
         // ЗВУК ЗАВЕРШЕНИЯ ТАЙМЕРА
         function playTimerCompleteSound() {
             try {
-                // Создаем звуковой контекст
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Создаем осциллятор
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
                 
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 
-                // Настраиваем звук
                 oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
                 oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
                 oscillator.type = 'sine';
@@ -1597,56 +2011,6 @@
                 console.log("Аудио не поддерживается");
             }
         }
-
-        // ГЕНЕРАЦИЯ ЧЕКА ДЛЯ ПОКУПОК
-        window.generateShoppingList = function() {
-            const recipe = pastaRecipes[currentPastaType];
-            let list = "=== СПИСОК ПОКУПОК: " + recipe.name + " ===\n";
-            list += "Количество порций: " + currentPortions + "\n\n";
-            
-            // Основные ингредиенты
-            list += "ОСНОВНЫЕ ИНГРЕДИЕНТЫ:\n";
-            recipe.baseIngredients.forEach(ing => {
-                const amount = ing.baseAmount * currentPortions;
-                const displayAmount = formatAmount(amount, ing.unit);
-                list += `- ${displayAmount} ${ing.name}\n`;
-            });
-            
-            // Ингредиенты для соуса
-            list += "\nДЛЯ СОУСА:\n";
-            recipe.sauceIngredients.forEach(ing => {
-                const amount = ing.baseAmount * currentPortions;
-                const displayAmount = formatAmount(amount, ing.unit);
-                list += `- ${displayAmount} ${ing.name}\n`;
-            });
-            
-            // Дополнительные ингредиенты
-            if (recipe.additionalIngredients.length > 0) {
-                list += "\nДОПОЛНИТЕЛЬНО:\n";
-                recipe.additionalIngredients.forEach(ing => {
-                    const amount = ing.baseAmount * currentPortions;
-                    const displayAmount = formatAmount(amount, ing.unit);
-                    list += `- ${displayAmount} ${ing.name}\n`;
-                });
-            }
-            
-            // Примерная стоимость
-            const totalCost = document.getElementById('cost-total').textContent;
-            list += "\n=== ПРИМЕРНАЯ СТОИМОСТЬ: " + totalCost + " ===\n";
-            
-            // Создаем и скачиваем файл
-            const blob = new Blob([list], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'список_покупок_' + recipe.name + '.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            alert("Список покупок сохранен как файл!");
-        };
     </script>
 </body>
 </html>
