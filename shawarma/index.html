@@ -33,6 +33,7 @@
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(255, 200, 124, 0.1) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
         }
         
         .container {
@@ -91,6 +92,16 @@
         @media (max-width: 992px) {
             .app-container {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .configurator {
+                position: static !important;
+                margin-bottom: 0;
+            }
+            
+            .shopping-list-container {
+                margin-top: 0;
             }
         }
         
@@ -103,6 +114,8 @@
             position: sticky;
             top: 20px;
             animation: slideInLeft 0.6s ease-out;
+            z-index: 10;
+            margin-bottom: 0;
         }
         
         .configurator h2 {
@@ -300,6 +313,7 @@
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 1rem;
+            width: 100%;
         }
         
         .calorie-input input:focus {
@@ -325,6 +339,8 @@
             box-shadow: 0 6px 15px rgba(255, 107, 53, 0.3);
             position: relative;
             overflow: hidden;
+            z-index: 20;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .generate-btn:hover {
@@ -343,6 +359,8 @@
         /* Список покупок */
         .shopping-list-container {
             animation: slideInRight 0.6s ease-out 0.2s both;
+            position: relative;
+            z-index: 5;
         }
         
         .shopping-list {
@@ -354,6 +372,8 @@
             opacity: 0;
             transform: translateY(20px);
             transition: var(--transition);
+            position: relative;
+            z-index: 5;
         }
         
         .shopping-list.visible {
@@ -408,6 +428,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            flex-shrink: 0;
         }
         
         .ingredient-name {
@@ -436,6 +457,7 @@
             margin-right: 12px;
             min-width: 70px;
             text-align: center;
+            flex-shrink: 0;
         }
         
         .ingredient-price {
@@ -443,6 +465,7 @@
             color: var(--success);
             font-size: 1.1rem;
             margin-left: 15px;
+            flex-shrink: 0;
         }
         
         .ingredient-item.purchased .ingredient-price {
@@ -460,6 +483,7 @@
         @media (max-width: 768px) {
             .summary-container {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
         }
         
@@ -515,6 +539,8 @@
             opacity: 0;
             transform: translateY(20px);
             transition: var(--transition);
+            position: relative;
+            z-index: 5;
         }
         
         .instructions.visible {
@@ -594,7 +620,7 @@
             margin-bottom: 8px;
         }
         
-        /* Советы */
+        /* Советы - перемещены вниз, чтобы не перекрывать кнопку */
         .tips {
             background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             padding: 25px;
@@ -602,6 +628,8 @@
             margin-top: 30px;
             border-left: 5px solid #2196F3;
             animation: fadeIn 0.8s ease-out 0.6s both;
+            position: relative;
+            z-index: 1;
         }
         
         .tips h3 {
@@ -696,6 +724,19 @@
             .calorie-inputs {
                 grid-template-columns: 1fr;
             }
+            
+            .configurator {
+                padding: 20px;
+            }
+            
+            .shopping-list, .instructions, .tips {
+                padding: 20px;
+            }
+            
+            .generate-btn {
+                padding: 16px;
+                font-size: 1.1rem;
+            }
         }
         
         /* Прогресс бар */
@@ -755,10 +796,77 @@
             margin-top: 15px;
             display: inline-block;
             transition: var(--transition);
+            width: 100%;
+            font-size: 1rem;
         }
         
         .reset-purchases:hover {
             background: #e0e0e0;
+        }
+        
+        /* Улучшения для мобильных устройств */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .header {
+                padding: 30px 0 20px;
+                margin-bottom: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+                padding: 0 10px;
+            }
+            
+            .config-section h3 {
+                font-size: 1.1rem;
+            }
+            
+            .slider-value {
+                font-size: 0.9rem;
+                padding: 3px 8px;
+            }
+            
+            .ingredient-quantity {
+                min-width: 60px;
+                font-size: 0.8rem;
+                padding: 3px 8px;
+            }
+            
+            .ingredient-price {
+                font-size: 1rem;
+            }
+            
+            .total-cost, .total-calories {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Улучшение доступности для мобильных кнопок */
+        button, .checkbox-label, .option-label {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        /* Предотвращение скрытия контента за виртуальной клавиатурой на мобильных */
+        @media (max-height: 700px) and (max-width: 768px) {
+            body {
+                padding-bottom: 20px;
+            }
+            
+            .header {
+                padding: 20px 0 15px;
+            }
+            
+            .configurator {
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -876,7 +984,7 @@
                 </button>
             </div>
             
-            <!-- Список покупок -->
+            <!-- Список покупок и инструкции -->
             <div class="shopping-list-container">
                 <div class="shopping-list" id="shopping-list">
                     <h2><i class="fas fa-list-alt"></i> Список покупок</h2>
@@ -933,6 +1041,17 @@
                         <!-- Шаги будут сгенерированы здесь -->
                     </div>
                 </div>
+                
+                <!-- Полезные советы - теперь внизу, после всего -->
+                <div class="tips" id="tips">
+                    <h3><i class="fas fa-lightbulb"></i> Полезные советы</h3>
+                    <ul id="tips-list">
+                        <!-- Советы будут сгенерированы здесь -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div class="notification" id="notification">
         <i class="fas fa-check-circle"></i>
@@ -1016,6 +1135,14 @@
             if (savedSauceCalories) {
                 document.getElementById('sauce-calories').value = savedSauceCalories;
                 config.sauceCalories = parseInt(savedSauceCalories);
+            }
+            
+            // Проверяем, нужно ли сразу сгенерировать список покупок
+            // (например, если пользователь уже что-то настроил и вернулся на страницу)
+            if (localStorage.getItem('shaurma_auto_generate') === 'true') {
+                setTimeout(() => {
+                    generateShoppingList();
+                }, 300);
             }
         });
 
@@ -1114,7 +1241,19 @@
             });
             
             // Кнопка генерации
-            document.getElementById('generate-btn').addEventListener('click', generateShoppingList);
+            const generateBtn = document.getElementById('generate-btn');
+            generateBtn.addEventListener('click', generateShoppingList);
+            // Добавляем обработчик для touch-событий на мобильных устройствах
+            generateBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            generateBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                this.style.transform = 'translateY(0)';
+                generateShoppingList();
+            });
             
             // Кнопка сброса покупок
             document.getElementById('reset-purchases').addEventListener('click', resetPurchasedItems);
@@ -1155,7 +1294,9 @@
             checkboxes.forEach(checkbox => {
                 checkbox.checked = false;
                 const item = checkbox.closest('.ingredient-item');
-                item.classList.remove('purchased');
+                if (item) {
+                    item.classList.remove('purchased');
+                }
             });
             
             // Показываем уведомление
@@ -1164,6 +1305,9 @@
 
         // Генерация списка покупок
         function generateShoppingList() {
+            // Сохраняем настройки для автоматической генерации при следующем посещении
+            localStorage.setItem('shaurma_auto_generate', 'true');
+            
             // Рассчитываем ингредиенты
             const ingredients = calculateIngredients();
             
@@ -1173,7 +1317,7 @@
             // Рассчитываем и отображаем калорийность
             calculateAndDisplayCalories(ingredients);
             
-            // Отображаем пошаговую инструкцию
+            // Отображаем пошаговую инструкция
             renderInstructions();
             
             // Отображаем советы
@@ -1185,6 +1329,16 @@
             // Анимация появления
             document.getElementById('shopping-list').classList.add('visible');
             document.getElementById('instructions').classList.add('visible');
+            
+            // Прокручиваем к началу списка покупок на мобильных устройствах
+            if (window.innerWidth <= 992) {
+                setTimeout(() => {
+                    document.getElementById('shopping-list').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+            }
         }
 
         // Расчет количества ингредиентов
@@ -1543,7 +1697,7 @@
                         ]
                 },
                 {
-                    title: "Подготовка овощей и добавок",
+                    title: "Подготовка овощи и добавки",
                     description: "Нарежьте все овощи и добавки.",
                     details: [
                         `Капусту (${config.servings * 50}г) тонко нашинкуйте.`,
