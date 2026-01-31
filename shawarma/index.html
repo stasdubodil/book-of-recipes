@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор шаурмы с расчетом калорий</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff6b35;
+            --secondary: #ffa500;
+            --light: #fff9f5;
+            --dark: #333;
+            --success: #4CAF50;
+            --info: #2196F3;
+            --shadow: 0 8px 20px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fef8f3;
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 40px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 200, 124, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 20%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 0 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 0 0 30px 30px;
+            color: white;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="white" opacity="0.1" d="M10,10 Q20,5 30,10 T50,10 T70,10 T90,10 T90,30 T90,50 T90,70 T90,90 T70,90 T50,90 T30,90 T10,90 T10,70 T10,50 T10,30 Z"/></svg>');
+            background-size: 60px;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Конфигуратор */
+        .configurator {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 20px;
+            animation: slideInLeft 0.6s ease-out;
+        }
+        
+        .configurator h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .configurator h2 i {
+            color: var(--secondary);
+        }
+        
+        .config-section {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .config-section:last-child {
+            border-bottom: none;
+        }
+        
+        .config-section h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .config-section h3 i {
+            color: var(--primary);
+            width: 24px;
+        }
+        
+        /* Слайдер и контролы */
+        .slider-container {
+            margin-bottom: 15px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .slider-value {
+            background: var(--light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .slider {
+            width: 100%;
+            height: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(to right, #ffd8b8, var(--primary));
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid var(--primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        /* Чекбоксы и радиокнопки */
+        .option-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        
+        .option-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .option-label:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .option-label.selected {
+            border-color: var(--primary);
+            background-color: #fff5eb;
+        }
+        
+        .option-label i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        input[type="radio"], input[type="checkbox"] {
+            display: none;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: var(--light);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .checkbox-label:hover {
+            background: #ffe8d6;
+        }
+        
+        .checkbox-label.selected {
+            background: #ffebd6;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .checkbox-label .checkmark {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .checkbox-label.selected .checkmark {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .checkbox-label.selected .checkmark::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Настройки калорийности */
+        .calorie-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .calorie-input {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .calorie-input label {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .calorie-input input {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .calorie-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+        }
+        
+        /* Кнопка генерации */
+        .generate-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 20px;
+            box-shadow: 0 6px 15px rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .generate-btn i {
+            margin-left: 8px;
+        }
+        
+        /* Список покупок */
+        .shopping-list-container {
+            animation: slideInRight 0.6s ease-out 0.2s both;
+        }
+        
+        .shopping-list {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .shopping-list.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .shopping-list h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ingredient-category {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding-left: 10px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .ingredient-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: var(--light);
+            border-radius: 8px;
+            transition: var(--transition);
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .ingredient-item:hover {
+            background: #ffe8d6;
+            transform: translateX(5px);
+        }
+        
+        .ingredient-item.purchased {
+            opacity: 0.6;
+            background: #f0f0f0;
+        }
+        
+        .ingredient-checkbox {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .ingredient-name {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .ingredient-item.purchased .ingredient-name span {
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        .ingredient-item.purchased .ingredient-quantity {
+            background: #ccc;
+            color: #777;
+        }
+        
+        .ingredient-quantity {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-right: 12px;
+            min-width: 70px;
+            text-align: center;
+        }
+        
+        .ingredient-price {
+            font-weight: bold;
+            color: var(--success);
+            font-size: 1.1rem;
+            margin-left: 15px;
+        }
+        
+        .ingredient-item.purchased .ingredient-price {
+            color: #999;
+        }
+        
+        /* Блок калорий и стоимости */
+        .summary-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .summary-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .cost-summary {
+            background: linear-gradient(135deg, #2e7d32, #4CAF50);
+            color: white;
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3);
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+        
+        .calorie-summary {
+            background: linear-gradient(135deg, #2196F3, #03A9F4);
+            color: white;
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.3);
+            animation: fadeIn 0.8s ease-out 0.5s both;
+        }
+        
+        .cost-row, .calorie-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .total-cost, .total-calories {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffeb3b;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .calorie-details {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+        
+        /* Инструкция */
+        .instructions {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .instructions.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .instructions h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .step-description {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .step-details {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .step-details ul {
+            padding-left: 20px;
+        }
+        
+        .step-details li {
+            margin-bottom: 8px;
+        }
+        
+        /* Советы */
+        .tips {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 25px;
+            border-radius: var(--radius);
+            margin-top: 30px;
+            border-left: 5px solid #2196F3;
+            animation: fadeIn 0.8s ease-out 0.6s both;
+        }
+        
+        .tips h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tips ul {
+            padding-left: 20px;
+        }
+        
+        .tips li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        /* Анимации */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .option-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .calorie-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Прогресс бар */
+        .progress-container {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.8s ease-out;
+        }
+        
+        /* Иконки */
+        .icon {
+            margin-right: 8px;
+        }
+        
+        /* Уведомление */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Сброс покупок */
+        .reset-purchases {
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: inline-block;
+            transition: var(--transition);
+        }
+        
+        .reset-purchases:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-utensils"></i> Конструктор шаурмы из индейки</h1>
+            <p>Настройте свою идеальную шаурму, получите точный список покупок, расчет калорий и пошаговый рецепт</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="app-container">
+            <!-- Конфигуратор -->
+            <div class="configurator">
+                <h2><i class="fas fa-sliders-h"></i> Настройте шаурму</h2>
+                
+                <div class="config-section">
+                    <h3><i class="fas fa-users"></i> Количество порций</h3>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Сколько шаурм приготовим?</span>
+                            <span class="slider-value" id="servings-value">4</span>
+                        </div>
+                        <input type="range" min="1" max="10" value="4" class="slider" id="servings-slider">
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3><i class="fas fa-drumstick-bite"></i> Мясо индейки</h3>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Вес индейки на порцию (г)</span>
+                            <span class="slider-value" id="meat-value">200</span>
+                        </div>
+                        <input type="range" min="100" max="300" value="200" class="slider" id="meat-slider">
+                    </div>
+                    
+                    <div class="calorie-inputs">
+                        <div class="calorie-input">
+                            <label for="turkey-calories">Калорийность индейки (на 100г)</label>
+                            <input type="number" id="turkey-calories" min="50" max="300" value="135">
+                        </div>
+                        <div class="calorie-input">
+                            <label for="turkey-fat">Жирность индейки (%)</label>
+                            <input type="number" id="turkey-fat" min="1" max="30" value="7">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3><i class="fas fa-blender"></i> Соус</h3>
+                    <div class="option-group">
+                        <label class="option-label selected" id="sauce-tzatziki-label">
+                            <i class="fas fa-leaf"></i>
+                            <span>Цацики</span>
+                            <input type="radio" name="sauce" value="tzatziki" checked>
+                        </label>
+                        <label class="option-label" id="sauce-regular-label">
+                            <i class="fas fa-fire"></i>
+                            <span>Обычный</span>
+                            <input type="radio" name="sauce" value="regular">
+                        </label>
+                    </div>
+                    
+                    <div class="calorie-inputs">
+                        <div class="calorie-input">
+                            <label for="sauce-calories">Калорийность соуса (на 100г)</label>
+                            <input type="number" id="sauce-calories" min="50" max="500" value="150">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3><i class="fas fa-pepper-hot"></i> Острота</h3>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Уровень остроты</span>
+                            <span class="slider-value" id="spicy-value">Средняя</span>
+                        </div>
+                        <input type="range" min="0" max="3" value="1" class="slider" id="spicy-slider">
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3><i class="fas fa-layer-group"></i> Добавки</h3>
+                    <label class="checkbox-label" id="olives-label">
+                        <span class="checkmark"></span>
+                        <span>Оливки (черные)</span>
+                        <input type="checkbox" name="addon" value="olives" checked>
+                    </label>
+                    <label class="checkbox-label" id="cheese-label">
+                        <span class="checkmark"></span>
+                        <span>Сыр (фета)</span>
+                        <input type="checkbox" name="addon" value="cheese">
+                    </label>
+                    <label class="checkbox-label" id="pickles-label">
+                        <span class="checkmark"></span>
+                        <span>Маринованные огурцы</span>
+                        <input type="checkbox" name="addon" value="pickles">
+                    </label>
+                    <label class="checkbox-label" id="herbs-label">
+                        <span class="checkmark"></span>
+                        <span>Свежая зелень</span>
+                        <input type="checkbox" name="addon" value="herbs" checked>
+                    </label>
+                </div>
+                
+                <button class="generate-btn" id="generate-btn">
+                    <i class="fas fa-shopping-cart"></i> Сформировать список покупок
+                </button>
+            </div>
+            
+            <!-- Список покупок -->
+            <div class="shopping-list-container">
+                <div class="shopping-list" id="shopping-list">
+                    <h2><i class="fas fa-list-alt"></i> Список покупок</h2>
+                    <div id="ingredients-container">
+                        <!-- Список ингредиентов будет сгенерирован здесь -->
+                    </div>
+                    
+                    <button class="reset-purchases" id="reset-purchases">
+                        <i class="fas fa-redo"></i> Сбросить все отметки о покупках
+                    </button>
+                    
+                    <div class="summary-container">
+                        <div class="cost-summary" id="cost-summary">
+                            <h3><i class="fas fa-ruble-sign"></i> Стоимость</h3>
+                            <div class="cost-row">
+                                <span>Общая стоимость:</span>
+                                <span id="total-cost">0 ₽</span>
+                            </div>
+                            <div class="cost-row">
+                                <span>Стоимость одной шаурмы:</span>
+                                <span id="per-serving-cost">0 ₽</span>
+                            </div>
+                            <div class="total-cost">
+                                <span>Экономия против кафе:</span>
+                                <span id="savings">0 ₽</span>
+                            </div>
+                        </div>
+                        
+                        <div class="calorie-summary" id="calorie-summary">
+                            <h3><i class="fas fa-fire"></i> Калорийность</h3>
+                            <div class="calorie-row">
+                                <span>Калорий на порцию:</span>
+                                <span id="calories-per-serving">0</span>
+                            </div>
+                            <div class="calorie-row">
+                                <span>Белки (на порцию):</span>
+                                <span id="protein-per-serving">0 г</span>
+                            </div>
+                            <div class="total-calories">
+                                <span>Жиры / Углеводы:</span>
+                                <span id="fat-carb-per-serving">0 г / 0 г</span>
+                            </div>
+                            <div class="calorie-details">
+                                *Расчет приблизительный. Точная калорийность зависит от конкретных продуктов.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Пошаговая инструкция -->
+                <div class="instructions" id="instructions">
+                    <h2><i class="fas fa-list-ol"></i> Пошаговый рецепт</h2>
+                    <div id="steps-container">
+                        <!-- Шаги будут сгенерированы здесь -->
+                    </div>
+                </div>
+                
+                <!-- Полезные советы -->
+                <div class="tips" id="tips">
+                    <h3><i class="fas fa-lightbulb"></i> Полезные советы</h3>
+                    <ul id="tips-list">
+                        <!-- Советы будут сгенерированы здесь -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>Список покупок обновлен!</span>
+    </div>
+
+    <script>
+        // Обновленные данные ингредиентов с ценами за единицу и калорийностью
+        const ingredientData = {
+            // Мясо (калорийность будет браться из пользовательского ввода)
+            turkey: { name: "Ножки индейки", pricePer100g: 45, unit: "г", caloriesPer100g: 135, proteinPer100g: 20, fatPer100g: 7, carbPer100g: 0 },
+            
+            // Основа
+            lavash: { name: "Лаваш армянский", pricePerUnit: 150, unit: "шт", caloriesPerUnit: 280, proteinPerUnit: 9, fatPerUnit: 2, carbPerUnit: 55 },
+            
+            // Овощи (обновленные цены)
+            tomato: { name: "Помидоры", pricePerUnit: 100, unit: "шт", caloriesPerUnit: 22, proteinPerUnit: 1, fatPerUnit: 0.2, carbPerUnit: 4.8 },
+            cucumber: { name: "Огурцы свежие", pricePerUnit: 60, unit: "шт", caloriesPerUnit: 15, proteinPerUnit: 0.7, fatPerUnit: 0.1, carbPerUnit: 3.6 },
+            cabbage: { name: "Капуста белокочанная", pricePer100g: 13.3, unit: "г", caloriesPer100g: 25, proteinPer100g: 1.3, fatPer100g: 0.1, carbPer100g: 5.8 },
+            onion: { name: "Лук репчатый", pricePerUnit: 25, unit: "шт", caloriesPerUnit: 40, proteinPerUnit: 1.1, fatPerUnit: 0.1, carbPerUnit: 9.3 },
+            lettuce: { name: "Салат листовой", pricePerUnit: 150, unit: "пучок", caloriesPerUnit: 15, proteinPerUnit: 1.4, fatPerUnit: 0.2, carbPerUnit: 2.9 },
+            
+            // Соусы (ингредиенты)
+            yogurt: { name: "Греческий йогурт", pricePer100g: 100, unit: "г", caloriesPer100g: 66, proteinPer100g: 10, fatPer100g: 0.4, carbPer100g: 3.6 },
+            sourCream: { name: "Сметана 15%", pricePer100g: 40, unit: "г", caloriesPer100g: 160, proteinPer100g: 2.5, fatPer100g: 15, carbPer100g: 3.6 },
+            mayo: { name: "Майонез", pricePer100g: 50, unit: "г", caloriesPer100g: 624, proteinPer100g: 0.3, fatPer100g: 70, carbPer100g: 2.6 },
+            garlic: { name: "Чеснок", pricePerUnit: 70, unit: "головка", caloriesPerUnit: 45, proteinPerUnit: 1.8, fatPerUnit: 0.1, carbPerUnit: 10 },
+            lemon: { name: "Лимон", pricePerUnit: 50, unit: "шт", caloriesPerUnit: 29, proteinPerUnit: 1.1, fatPerUnit: 0.3, carbPerUnit: 9.3 },
+            dill: { name: "Укроп свежий", pricePerUnit: 70, unit: "пучок", caloriesPerUnit: 40, proteinPerUnit: 2.5, fatPerUnit: 0.5, carbPerUnit: 7 },
+            mustard: { name: "Горчица", pricePerUnit: 60, unit: "банка", caloriesPer100g: 67, proteinPer100g: 4.4, fatPer100g: 3.9, carbPer100g: 5.3 },
+            
+            // Добавки
+            olives: { name: "Оливки черные", pricePer100g: 122, unit: "г", caloriesPer100g: 115, proteinPer100g: 0.8, fatPer100g: 11, carbPer100g: 6 },
+            feta: { name: "Сыр фета", pricePer100g: 200, unit: "г", caloriesPer100g: 264, proteinPer100g: 14, fatPer100g: 21, carbPer100g: 4 },
+            pickles: { name: "Огурцы маринованные", pricePer100g: 80, unit: "г", caloriesPer100g: 11, proteinPer100g: 0.3, fatPer100g: 0.2, carbPer100g: 2.3 },
+            parsley: { name: "Петрушка свежая", pricePerUnit: 70, unit: "пучок", caloriesPerUnit: 36, proteinPerUnit: 3, fatPerUnit: 0.8, carbPerUnit: 6.3 },
+            
+            // Специи и масло
+            spices: { name: "Специи для мяса", pricePerUnit: 140, unit: "пакет", caloriesPer100g: 0, proteinPer100g: 0, fatPer100g: 0, carbPer100g: 0 },
+            oil: { name: "Масло растительное", pricePer100ml: 60, unit: "мл", caloriesPer100ml: 884, proteinPer100ml: 0, fatPer100ml: 100, carbPer100ml: 0 },
+            salt: { name: "Соль, перец", pricePerUnit: 80, unit: "комплект", caloriesPer100g: 0, proteinPer100g: 0, fatPer100g: 0, carbPer100g: 0 },
+            chili: { name: "Перец чили", pricePerUnit: 30, unit: "шт", caloriesPerUnit: 40, proteinPerUnit: 2, fatPerUnit: 0.2, carbPerUnit: 9.5 }
+        };
+
+        // Настройки по умолчанию
+        let config = {
+            servings: 4,
+            meatPerServing: 200, // грамм
+            sauce: 'tzatziki',
+            spicyLevel: 1, // 0-3
+            addons: ['olives', 'herbs'],
+            turkeyCalories: 135,
+            turkeyFat: 7,
+            sauceCalories: 150
+        };
+
+        // Хранилище для отмеченных покупок
+        let purchasedItems = JSON.parse(localStorage.getItem('shaurma_purchased_items')) || {};
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initControls();
+            setupEventListeners();
+            updateProgressBar();
+            
+            // Загружаем кастомные значения калорий из localStorage
+            const savedTurkeyCalories = localStorage.getItem('shaurma_turkey_calories');
+            const savedTurkeyFat = localStorage.getItem('shaurma_turkey_fat');
+            const savedSauceCalories = localStorage.getItem('shaurma_sauce_calories');
+            
+            if (savedTurkeyCalories) {
+                document.getElementById('turkey-calories').value = savedTurkeyCalories;
+                config.turkeyCalories = parseInt(savedTurkeyCalories);
+            }
+            
+            if (savedTurkeyFat) {
+                document.getElementById('turkey-fat').value = savedTurkeyFat;
+                config.turkeyFat = parseInt(savedTurkeyFat);
+            }
+            
+            if (savedSauceCalories) {
+                document.getElementById('sauce-calories').value = savedSauceCalories;
+                config.sauceCalories = parseInt(savedSauceCalories);
+            }
+        });
+
+        // Инициализация элементов управления
+        function initControls() {
+            // Устанавливаем значения из конфига
+            document.getElementById('servings-slider').value = config.servings;
+            document.getElementById('servings-value').textContent = config.servings;
+            
+            document.getElementById('meat-slider').value = config.meatPerServing;
+            document.getElementById('meat-value').textContent = config.meatPerServing;
+            
+            document.getElementById('spicy-slider').value = config.spicyLevel;
+            updateSpicyText();
+            
+            // Соус
+            document.querySelector(`input[name="sauce"][value="${config.sauce}"]`).checked = true;
+            updateSauceUI();
+            
+            // Добавки
+            document.querySelectorAll('input[name="addon"]').forEach(checkbox => {
+                checkbox.checked = config.addons.includes(checkbox.value);
+                updateCheckboxUI(checkbox);
+            });
+            
+            // Калорийность
+            document.getElementById('turkey-calories').value = config.turkeyCalories;
+            document.getElementById('turkey-fat').value = config.turkeyFat;
+            document.getElementById('sauce-calories').value = config.sauceCalories;
+        }
+
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            // Слайдер количества порций
+            const servingsSlider = document.getElementById('servings-slider');
+            servingsSlider.addEventListener('input', function() {
+                config.servings = parseInt(this.value);
+                document.getElementById('servings-value').textContent = config.servings;
+                updateProgressBar();
+            });
+            
+            // Слайдер количества мяса
+            const meatSlider = document.getElementById('meat-slider');
+            meatSlider.addEventListener('input', function() {
+                config.meatPerServing = parseInt(this.value);
+                document.getElementById('meat-value').textContent = config.meatPerServing;
+                updateProgressBar();
+            });
+            
+            // Слайдер остроты
+            const spicySlider = document.getElementById('spicy-slider');
+            spicySlider.addEventListener('input', function() {
+                config.spicyLevel = parseInt(this.value);
+                updateSpicyText();
+                updateProgressBar();
+            });
+            
+            // Выбор соуса
+            document.querySelectorAll('input[name="sauce"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        config.sauce = this.value;
+                        updateSauceUI();
+                        updateProgressBar();
+                    }
+                });
+            });
+            
+            // Добавки
+            document.querySelectorAll('input[name="addon"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        config.addons.push(this.value);
+                    } else {
+                        config.addons = config.addons.filter(item => item !== this.value);
+                    }
+                    updateCheckboxUI(this);
+                    updateProgressBar();
+                });
+            });
+            
+            // Ввод калорийности
+            document.getElementById('turkey-calories').addEventListener('change', function() {
+                config.turkeyCalories = parseInt(this.value) || 135;
+                localStorage.setItem('shaurma_turkey_calories', config.turkeyCalories);
+            });
+            
+            document.getElementById('turkey-fat').addEventListener('change', function() {
+                config.turkeyFat = parseInt(this.value) || 7;
+                localStorage.setItem('shaurma_turkey_fat', config.turkeyFat);
+            });
+            
+            document.getElementById('sauce-calories').addEventListener('change', function() {
+                config.sauceCalories = parseInt(this.value) || 150;
+                localStorage.setItem('shaurma_sauce_calories', config.sauceCalories);
+            });
+            
+            // Кнопка генерации
+            document.getElementById('generate-btn').addEventListener('click', generateShoppingList);
+            
+            // Кнопка сброса покупок
+            document.getElementById('reset-purchases').addEventListener('click', resetPurchasedItems);
+        }
+
+        // Обновление текста остроты
+        function updateSpicyText() {
+            const spicyTexts = ['Неострая', 'Слабая', 'Средняя', 'Острая'];
+            document.getElementById('spicy-value').textContent = spicyTexts[config.spicyLevel];
+        }
+
+        // Обновление UI выбора соуса
+        function updateSauceUI() {
+            document.getElementById('sauce-tzatziki-label').classList.toggle('selected', config.sauce === 'tzatziki');
+            document.getElementById('sauce-regular-label').classList.toggle('selected', config.sauce === 'regular');
+        }
+
+        // Обновление UI чекбоксов
+        function updateCheckboxUI(checkbox) {
+            const label = checkbox.closest('.checkbox-label');
+            label.classList.toggle('selected', checkbox.checked);
+        }
+
+        // Обновление прогресс-бара
+        function updateProgressBar() {
+            // Рассчитываем прогресс на основе заполненных параметров
+            const progress = 100; // Всегда полный, так как у нас есть значения по умолчанию
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        // Сброс отмеченных покупок
+        function resetPurchasedItems() {
+            purchasedItems = {};
+            localStorage.setItem('shaurma_purchased_items', JSON.stringify(purchasedItems));
+            
+            // Обновляем отображение списка покупок
+            const checkboxes = document.querySelectorAll('.ingredient-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                const item = checkbox.closest('.ingredient-item');
+                item.classList.remove('purchased');
+            });
+            
+            // Показываем уведомление
+            showNotification('Отметки о покупках сброшены!');
+        }
+
+        // Генерация списка покупок
+        function generateShoppingList() {
+            // Рассчитываем ингредиенты
+            const ingredients = calculateIngredients();
+            
+            // Отображаем список покупок
+            renderShoppingList(ingredients);
+            
+            // Рассчитываем и отображаем калорийность
+            calculateAndDisplayCalories(ingredients);
+            
+            // Отображаем пошаговую инструкцию
+            renderInstructions();
+            
+            // Отображаем советы
+            renderTips();
+            
+            // Показываем уведомление
+            showNotification('Список покупок обновлен!');
+            
+            // Анимация появления
+            document.getElementById('shopping-list').classList.add('visible');
+            document.getElementById('instructions').classList.add('visible');
+        }
+
+        // Расчет количества ингредиентов
+        function calculateIngredients() {
+            const ingredients = [];
+            
+            // Мясо (с обновленной калорийностью)
+            const turkeyAmount = config.meatPerServing * config.servings;
+            ingredients.push({
+                ...ingredientData.turkey,
+                amount: turkeyAmount,
+                price: Math.ceil(turkeyAmount * ingredientData.turkey.pricePer100g / 100),
+                // Обновляем калорийность на основе пользовательского ввода
+                caloriesPer100g: config.turkeyCalories,
+                fatPer100g: config.turkeyFat,
+                // Пересчитываем белки на основе жирности (примерная формула)
+                proteinPer100g: Math.max(15, 25 - config.turkeyFat)
+            });
+            
+            // Лаваш
+            ingredients.push({
+                ...ingredientData.lavash,
+                amount: config.servings,
+                price: config.servings * ingredientData.lavash.pricePerUnit
+            });
+            
+            // Овощи
+            ingredients.push({
+                ...ingredientData.tomato,
+                amount: Math.ceil(config.servings * 0.5), // 0.5 помидора на порцию
+                price: Math.ceil(config.servings * 0.5) * ingredientData.tomato.pricePerUnit
+            });
+            
+            ingredients.push({
+                ...ingredientData.cucumber,
+                amount: Math.ceil(config.servings * 0.5),
+                price: Math.ceil(config.servings * 0.5) * ingredientData.cucumber.pricePerUnit
+            });
+            
+            ingredients.push({
+                ...ingredientData.cabbage,
+                amount: config.servings * 50, // 50г капусты на порцию
+                price: Math.ceil(config.servings * 50 * ingredientData.cabbage.pricePer100g / 100)
+            });
+            
+            ingredients.push({
+                ...ingredientData.onion,
+                amount: Math.ceil(config.servings * 0.25), // 1/4 луковицы на порцию
+                price: Math.ceil(config.servings * 0.25) * ingredientData.onion.pricePerUnit
+            });
+            
+            ingredients.push({
+                ...ingredientData.lettuce,
+                amount: 1,
+                price: ingredientData.lettuce.pricePerUnit
+            });
+            
+            // Соусы
+            if (config.sauce === 'tzatziki') {
+                ingredients.push({
+                    ...ingredientData.yogurt,
+                    amount: config.servings * 60, // 60г йогурта на порцию
+                    price: Math.ceil(config.servings * 60 * ingredientData.yogurt.pricePer100g / 100)
+                });
+            } else {
+                ingredients.push({
+                    ...ingredientData.sourCream,
+                    amount: config.servings * 40,
+                    price: Math.ceil(config.servings * 40 * ingredientData.sourCream.pricePer100g / 100)
+                });
+                
+                ingredients.push({
+                    ...ingredientData.mayo,
+                    amount: config.servings * 30,
+                    price: Math.ceil(config.servings * 30 * ingredientData.mayo.pricePer100g / 100)
+                });
+                
+                ingredients.push({
+                    ...ingredientData.mustard,
+                    amount: 1,
+                    price: ingredientData.mustard.pricePerUnit
+                });
+            }
+            
+            // Общие для соусов
+            ingredients.push({
+                ...ingredientData.garlic,
+                amount: 1,
+                price: ingredientData.garlic.pricePerUnit
+            });
+            
+            ingredients.push({
+                ...ingredientData.lemon,
+                amount: 1,
+                price: ingredientData.lemon.pricePerUnit
+            });
+            
+            ingredients.push({
+                ...ingredientData.dill,
+                amount: 1,
+                price: ingredientData.dill.pricePerUnit
+            });
+            
+            // Добавки
+            if (config.addons.includes('olives')) {
+                ingredients.push({
+                    ...ingredientData.olives,
+                    amount: config.servings * 30, // 30г на порцию
+                    price: Math.ceil(config.servings * 30 * ingredientData.olives.pricePer100g / 100)
+                });
+            }
+            
+            if (config.addons.includes('cheese')) {
+                ingredients.push({
+                    ...ingredientData.feta,
+                    amount: config.servings * 40,
+                    price: Math.ceil(config.servings * 40 * ingredientData.feta.pricePer100g / 100)
+                });
+            }
+            
+            if (config.addons.includes('pickles')) {
+                ingredients.push({
+                    ...ingredientData.pickles,
+                    amount: config.servings * 40,
+                    price: Math.ceil(config.servings * 40 * ingredientData.pickles.pricePer100g / 100)
+                });
+            }
+            
+            if (config.addons.includes('herbs')) {
+                ingredients.push({
+                    ...ingredientData.parsley,
+                    amount: 1,
+                    price: ingredientData.parsley.pricePerUnit
+                });
+            }
+            
+            // Специи и масло
+            ingredients.push({
+                ...ingredientData.spices,
+                amount: 1,
+                price: ingredientData.spices.pricePerUnit
+            });
+            
+            ingredients.push({
+                ...ingredientData.oil,
+                amount: 50, // мл
+                price: Math.ceil(50 * ingredientData.oil.pricePer100ml / 100)
+            });
+            
+            ingredients.push({
+                ...ingredientData.salt,
+                amount: 1,
+                price: ingredientData.salt.pricePerUnit
+            });
+            
+            // Перец чили для остроты
+            if (config.spicyLevel >= 2) {
+                ingredients.push({
+                    ...ingredientData.chili,
+                    amount: config.spicyLevel - 1,
+                    price: (config.spicyLevel - 1) * ingredientData.chili.pricePerUnit
+                });
+            }
+            
+            return ingredients;
+        }
+
+        // Отображение списка покупок
+        function renderShoppingList(ingredients) {
+            const container = document.getElementById('ingredients-container');
+            container.innerHTML = '';
+            
+            // Группируем ингредиенты по категориям
+            const categories = {
+                'Мясо': ingredients.filter(i => i.name.includes('индейки')),
+                'Основа': ingredients.filter(i => i.name.includes('Лаваш')),
+                'Овощи': ingredients.filter(i => ['Помидоры', 'Огурцы', 'Капуста', 'Лук', 'Салат'].some(name => i.name.includes(name))),
+                'Соусы': ingredients.filter(i => ['йогурт', 'Сметана', 'Майонез', 'Чеснок', 'Лимон', 'Укроп', 'Горчица'].some(name => i.name.includes(name))),
+                'Добавки': ingredients.filter(i => ['Оливки', 'Сыр', 'маринованные', 'Петрушка'].some(name => i.name.includes(name))),
+                'Специи и масло': ingredients.filter(i => ['Специи', 'Масло', 'Соль', 'Перец чили'].some(name => i.name.includes(name)))
+            };
+            
+            let totalPrice = 0;
+            let delay = 0;
+            let ingredientIndex = 0;
+            
+            // Рендерим по категориям
+            for (const [categoryName, categoryItems] of Object.entries(categories)) {
+                if (categoryItems.length === 0) continue;
+                
+                // Заголовок категории
+                const categoryEl = document.createElement('div');
+                categoryEl.className = 'ingredient-category';
+                categoryEl.textContent = categoryName;
+                categoryEl.style.animationDelay = `${delay}s`;
+                container.appendChild(categoryEl);
+                delay += 0.05;
+                
+                // Элементы категории
+                categoryItems.forEach(item => {
+                    const itemId = `ingredient-${ingredientIndex}`;
+                    const isPurchased = purchasedItems[itemId] || false;
+                    
+                    const itemEl = document.createElement('div');
+                    itemEl.className = `ingredient-item ${isPurchased ? 'purchased' : ''}`;
+                    itemEl.style.animationDelay = `${delay}s`;
+                    
+                    // Форматируем количество
+                    let amountText = '';
+                    if (item.unit === 'г' || item.unit === 'мл') {
+                        amountText = `${item.amount} ${item.unit}`;
+                    } else if (item.amount === 1) {
+                        amountText = `1 ${item.unit}`;
+                    } else {
+                        amountText = `${item.amount} ${item.unit}`;
+                    }
+                    
+                    itemEl.innerHTML = `
+                        <input type="checkbox" class="ingredient-checkbox" id="${itemId}" ${isPurchased ? 'checked' : ''}>
+                        <label for="${itemId}" class="ingredient-name">
+                            <div class="ingredient-quantity">${amountText}</div>
+                            <span>${item.name}</span>
+                        </label>
+                        <div class="ingredient-price">${item.price} ₽</div>
+                    `;
+                    
+                    container.appendChild(itemEl);
+                    
+                    // Добавляем обработчик для чекбокса
+                    const checkbox = itemEl.querySelector(`#${itemId}`);
+                    checkbox.addEventListener('change', function() {
+                        const itemElement = this.closest('.ingredient-item');
+                        if (this.checked) {
+                            itemElement.classList.add('purchased');
+                            purchasedItems[itemId] = true;
+                        } else {
+                            itemElement.classList.remove('purchased');
+                            purchasedItems[itemId] = false;
+                        }
+                        localStorage.setItem('shaurma_purchased_items', JSON.stringify(purchasedItems));
+                    });
+                    
+                    totalPrice += item.price;
+                    ingredientIndex++;
+                    delay += 0.05;
+                });
+            }
+            
+            // Обновляем стоимость
+            const perServingCost = totalPrice / config.servings;
+            const savings = (350 * config.servings) - totalPrice; // Предполагаемая стоимость в кафе: 350 ₽ за шаурму
+            
+            document.getElementById('total-cost').textContent = `${Math.round(totalPrice)} ₽`;
+            document.getElementById('per-serving-cost').textContent = `${Math.round(perServingCost)} ₽`;
+            document.getElementById('savings').textContent = `${Math.round(savings)} ₽`;
+        }
+
+        // Расчет и отображение калорийности
+        function calculateAndDisplayCalories(ingredients) {
+            let totalCalories = 0;
+            let totalProtein = 0;
+            let totalFat = 0;
+            let totalCarbs = 0;
+            
+            ingredients.forEach(item => {
+                // Рассчитываем калории в зависимости от единицы измерения
+                if (item.unit === 'г' || item.unit === 'мл') {
+                    // Для ингредиентов в граммах или мл
+                    const amountIn100g = item.amount / 100;
+                    totalCalories += (item.caloriesPer100g || 0) * amountIn100g;
+                    totalProtein += (item.proteinPer100g || 0) * amountIn100g;
+                    totalFat += (item.fatPer100g || item.fatPerUnit || 0) * amountIn100g;
+                    totalCarbs += (item.carbPer100g || item.carbPerUnit || 0) * amountIn100g;
+                } else {
+                    // Для ингредиентов в штуках
+                    totalCalories += (item.caloriesPerUnit || 0) * item.amount;
+                    totalProtein += (item.proteinPerUnit || 0) * item.amount;
+                    totalFat += (item.fatPerUnit || 0) * item.amount;
+                    totalCarbs += (item.carbPerUnit || 0) * item.amount;
+                }
+            });
+            
+            // Для соуса используем пользовательское значение калорийности
+            if (config.sauce === 'tzatziki') {
+                // Для цацики используем примерно 60г на порцию
+                const sauceCalories = (config.sauceCalories / 100) * 60 * config.servings;
+                totalCalories += sauceCalories;
+                // Примерное распределение БЖУ для соуса
+                totalProtein += (config.sauceCalories * 0.05 / 100) * 60 * config.servings; // 5% белка
+                totalFat += (config.sauceCalories * 0.30 / 100) * 60 * config.servings; // 30% жира
+                totalCarbs += (config.sauceCalories * 0.65 / 100) * 60 * config.servings; // 65% углеводов
+            } else {
+                // Для обычного соуса используем пользовательское значение
+                const sauceCalories = (config.sauceCalories / 100) * 70 * config.servings;
+                totalCalories += sauceCalories;
+                // Примерное распределение БЖУ для обычного соуса
+                totalProtein += (config.sauceCalories * 0.03 / 100) * 70 * config.servings; // 3% белка
+                totalFat += (config.sauceCalories * 0.70 / 100) * 70 * config.servings; // 70% жира
+                totalCarbs += (config.sauceCalories * 0.27 / 100) * 70 * config.servings; // 27% углеводов
+            }
+            
+            // Рассчитываем на одну порцию
+            const caloriesPerServing = Math.round(totalCalories / config.servings);
+            const proteinPerServing = Math.round(totalProtein / config.servings);
+            const fatPerServing = Math.round(totalFat / config.servings);
+            const carbsPerServing = Math.round(totalCarbs / config.servings);
+            
+            // Отображаем результаты
+            document.getElementById('calories-per-serving').textContent = `${caloriesPerServing} ккал`;
+            document.getElementById('protein-per-serving').textContent = `${proteinPerServing} г`;
+            document.getElementById('fat-carb-per-serving').textContent = `${fatPerServing} г / ${carbsPerServing} г`;
+        }
+
+        // Отображение пошаговой инструкции
+        function renderInstructions() {
+            const container = document.getElementById('steps-container');
+            container.innerHTML = '';
+            
+            const steps = [
+                {
+                    title: "Подготовка индейки",
+                    description: `Нарежьте ножки индейки (${config.meatPerServing * config.servings}г) на куски среднего размера.`,
+                    details: [
+                        `В миске смешайте индейку с 2 ст.л. растительного масла, 1 ч.л. специй для мяса, солью и перцем по вкусу.`,
+                        `Для остроты добавьте ${config.spicyLevel > 0 ? 'мелко нарезанный перец чили по вкусу' : 'щепотку паприки'}.`,
+                        `Оставьте мариноваться на 30 минут при комнатной температуре.`
+                    ]
+                },
+                {
+                    title: "Приготовление в аэрогриле",
+                    description: "Разогрейте аэрогриль до 180°C.",
+                    details: [
+                        "Выложите куски индейки на решетку в один слой.",
+                        "Готовьте 25-30 минут, перевернув через 15 минут.",
+                        "Проверьте готовность: мясо должно быть румяным и легко разделяться на волокна.",
+                        "Дайте остыть 5-10 минут, затем нарежьте тонкими ломтиками или разделите на волокна."
+                    ]
+                },
+                {
+                    title: "Приготовление соуса " + (config.sauce === 'tzatziki' ? 'Цацики' : 'Обычного'),
+                    description: config.sauce === 'tzatziki' 
+                        ? `Смешайте ${Math.ceil(config.servings * 60)}г греческого йогурта с другими ингредиентами.` 
+                        : `Смешайте сметану и майонез (${Math.ceil(config.servings * 40)}г и ${Math.ceil(config.servings * 30)}г соответственно).`,
+                    details: config.sauce === 'tzatziki' 
+                        ? [
+                            `Натрите ½ огурца на терке, отожмите сок.`,
+                            `Смешайте йогурт, огурец, 2 раздавленных зубчика чеснока, 1 ст.л. оливкового масла, 1 ст.л. лимонного сока.`,
+                            `Добавьте мелко нарезанный укроп, соль и перец по вкусу.`,
+                            `Тщательно перемешайте и дайте настояться 15-20 минут в холодильнике.`
+                        ]
+                        : [
+                            `В миске смешайте сметану и майонез до однородности.`,
+                            `Добавьте 2 раздавленных зубчика чеснока, 1 ч.л. горчицы, 1 ч.л. лимонного сока.`,
+                            `Приправьте паприкой, солью и перцем по вкусу.`,
+                            `Тщательно перемешайте и дайте соусу настояться 10-15 минут.`
+                        ]
+                },
+                {
+                    title: "Подготовка овощей и добавок",
+                    description: "Нарежьте все овощи и добавки.",
+                    details: [
+                        `Капусту (${config.servings * 50}г) тонко нашинкуйте.`,
+                        `Помидоры (${Math.ceil(config.servings * 0.5)} шт.) и огурцы (${Math.ceil(config.servings * 0.5)} шт.) нарежьте тонкими ломтиками.`,
+                        `Лук (${Math.ceil(config.servings * 0.25)} шт.) нарежьте полукольцами.`,
+                        config.addons.includes('olives') ? `Оливки (${config.servings * 30}г) нарежьте колечками.` : '',
+                        config.addons.includes('cheese') ? `Сыр фета (${config.servings * 40}г) раскрошите.` : '',
+                        config.addons.includes('pickles') ? `Маринованные огурцы (${config.servings * 40}г) нарежьте соломкой.` : '',
+                        config.addons.includes('herbs') ? `Петрушку и другую зелень мелко нарежьте.` : ''
+                    ].filter(detail => detail !== '')
+                },
+                {
+                    title: "Сборка шаурмы",
+                    description: `Разложите ${config.servings} лавашей на рабочей поверхности.`,
+                    details: [
+                        "На каждый лаваш выложите в центр: слой капусты, затем индейку, помидоры, огурцы, лук.",
+                        config.addons.includes('olives') ? "Добавьте оливки." : '',
+                        config.addons.includes('cheese') ? "Добавьте сыр фета." : '',
+                        config.addons.includes('pickles') ? "Добавьте маринованные огурцы." : '',
+                        "Полейте соусом по вкусу.",
+                        "Посыпьте зеленью, если используете."
+                    ].filter(detail => detail !== '')
+                },
+                {
+                    title: "Завершение",
+                    description: "Аккуратно заверните шаурму.",
+                    details: [
+                        "Сначала поднимите нижний край лаваша, затем боковые.",
+                        "Плотно заверните рулетом, чтобы начинка не выпадала.",
+                        "Можно слегка обжарить на сухой сковороде с двух сторон для хрустящей корочки.",
+                        "Подавайте сразу или заверните в бумагу для выпечки для удобства."
+                    ]
+                }
+            ];
+            
+            let delay = 0;
+            steps.forEach((step, index) => {
+                const stepEl = document.createElement('div');
+                stepEl.className = 'step';
+                stepEl.style.animationDelay = `${delay}s`;
+                
+                stepEl.innerHTML = `
+                    <div class="step-number">${index + 1}</div>
+                    <div class="step-content">
+                        <h3 class="step-title">${step.title}</h3>
+                        <p class="step-description">${step.description}</p>
+                        <div class="step-details">
+                            <ul>
+                                ${step.details.map(detail => `<li>${detail}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(stepEl);
+                delay += 0.1;
+            });
+        }
+
+        // Отображение советов
+        function renderTips() {
+            const tipsList = document.getElementById('tips-list');
+            tipsList.innerHTML = '';
+            
+            const tips = [
+                "Для более сочной индейки замаринуйте её на 2-4 часа в холодильнике.",
+                "Если нет аэрогриля, запекайте индейку в духовке при 200°C 35-40 минут.",
+                "Лаваш можно слегка сбрызнуть водой и подогреть в микроволновке 10-15 секунд, чтобы он стал мягче.",
+                "Соус цацики лучше приготовить за час до подачи, чтобы вкусы лучше соединились.",
+                "Для вегетарианского варианта замените индейку на обжаренные грибы и баклажаны.",
+                "Храните соус отдельно от шаурмы, чтобы лаваш не размок.",
+                "Добавьте немного кунжута или семян льна для дополнительной пользы и хруста.",
+                "Для диетического варианта используйте лаваш из цельнозерновой муки и увеличьте долю овощей.",
+                "Если шаурму нужно взять с собой, заверните её в фольгу или бумагу для выпечки.",
+                "Оставшуюся начинку можно использовать для салата на следующий день.",
+                "Для снижения калорийности используйте обезжиренный йогурт в соусе цацики.",
+                "Мясо индейки можно приготовить заранее и хранить в холодильнике до 3 дней.",
+                "Для более насыщенного вкуса добавьте в маринад для индейки немного соевого соуса.",
+                "Если вы считаете калории, уменьшите количество масла в маринаде до 1 ст.л."
+            ];
+            
+            // Выбираем 5 случайных советов
+            const selectedTips = tips.sort(() => 0.5 - Math.random()).slice(0, 5);
+            
+            selectedTips.forEach((tip, index) => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                li.style.animationDelay = `${0.6 + index * 0.1}s`;
+                tipsList.appendChild(li);
+            });
+        }
+
+        // Показать уведомление
+        function showNotification(message = 'Список покупок обновлен!') {
+            const notification = document.getElementById('notification');
+            notification.querySelector('span').textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
